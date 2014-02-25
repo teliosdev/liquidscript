@@ -1,5 +1,7 @@
 # Liquidscript
 
+[![Build Status](https://travis-ci.org/redjazz96/liquidscript.png?branch=master)](https://travis-ci.org/redjazz96/liquidscript)
+
 TODO: Write a gem description
 
 ## Installation
