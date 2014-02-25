@@ -31,7 +31,17 @@ module Liquidscript
     
     protected
     
-    def expect(hash)
+    def expect(*args)
+      hash = if args.last.is_a? Hash
+        args.pop
+      else 
+        {}
+      end
+
+      args.each do |arg|
+        hash[arg] = arg
+      end
+
       block = hash.fetch(peek.type) do
         hash.fetch(:_)
       end
