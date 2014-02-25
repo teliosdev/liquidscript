@@ -2,6 +2,8 @@ require "liquidscript/buffer"
 require "liquidscript/compiler/expressions"
 
 module Liquidscript
+
+  class CompileError < StandardError; end
   class Compiler
 
     extend Forwardable
@@ -25,6 +27,29 @@ module Liquidscript
       end
     rescue StopIteration
       @buffer
+    end
+    
+    protected
+    
+    def expect(hash)
+      block = hash.fetch(peek.type) do
+        hash.fetch(:_)
+      end
+      
+      if block.is_a? Symbol
+        block = method(:"compile_#{block}")
+      end
+    
+      if block.arity == 1
+        block.call pop
+      else
+        block.call
+      end
+      
+    rescue KeyError
+      raise CompileError, "Expected one of " +
+        "#{hash.keys.map(&:to_s).map(&:upcase).join(', ')}, " +
+        "got #{peek.type.to_s.upcase}"
     end
 
   end
