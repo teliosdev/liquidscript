@@ -6,7 +6,7 @@ RSpec::Matchers.define :be_token do |type, value|
   end
 
   description do
-    "be token #{expected}"
+    "be token #{[type, value].inspect}"
   end
 end
 
