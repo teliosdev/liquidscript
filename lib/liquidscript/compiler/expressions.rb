@@ -3,12 +3,7 @@ module Liquidscript
     module Expressions
 
       def compile_expression
-        case peek.type
-        when :number
-          compile_number
-        else
-          error
-        end
+        expect :number
       end
 
       def compile_number
