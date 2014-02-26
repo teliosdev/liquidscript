@@ -30,9 +30,8 @@ module Liquidscript
       # @param action [Symbol]
       # @param arguments [Array]
       def initialize(action, *arguments)
-        puts "CREATING CODE FOR #{action}"
         @action = action
-        @arguments = arguments.flatten(1)
+        @arguments = arguments
       end
 
       # Turns the code into an array, containing the
@@ -41,7 +40,7 @@ module Liquidscript
       #
       # @return [Array]
       def to_a
-        [[@action], @arguments].flatten(1)
+        [@action, *@arguments]
       end
 
       # If we don't respond to it, the @arguments array

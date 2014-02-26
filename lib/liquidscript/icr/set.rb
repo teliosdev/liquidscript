@@ -49,9 +49,9 @@ module Liquidscript
       # @return [Array]
       def to_a
         [
-          @metadata.to_a.map { |(m, i)| [:"_#{m}", i] },
-          @code
-        ].flatten(1)
+          *@metadata.to_a.map { |(m, i)| [:"_#{m}", i] },
+          *@code
+        ]
       end
 
       # Tells ruby that we respond to some methods.

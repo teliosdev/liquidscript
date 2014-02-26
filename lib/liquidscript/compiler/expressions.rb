@@ -27,12 +27,14 @@ module Liquidscript
       end
 
       def compile_assignment(identifier)
-        _, value, name, ref = pop, compile_expression,
-          identifier.value.intern, top.context.set(name)
+        pop
+        value    = compile_expression
+        name     = identifier.value.to_sym
+        variable = top.context.set(name)
 
-        ref.value = value
+        variable.value = value
 
-        ICR::Code.new :set, ref, value
+        ICR::Code.new :set, variable, value
       end
 
     end

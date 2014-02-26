@@ -39,7 +39,7 @@ module Liquidscript
       #
       # @return [Array<(Symbol, Symbol, Set)>]
       def to_a
-        [:_variable, @name, @value]
+        [:_variable, @name]
       end
     end
   end

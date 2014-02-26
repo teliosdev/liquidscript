@@ -37,6 +37,7 @@ module Liquidscript
           if type == :get && parent
             parent.get(name)
           elsif type == :set
+            raise StandardError if name == nil
             @variables[name] = Variable.new(self, name)
           else
             raise InvalidReferenceError.new(name)
@@ -59,8 +60,7 @@ module Liquidscript
       end
 
       def to_a
-        #[@variables.to_a.map { |(m,i)| [:variable, m, i]}].flatten(1)
-        [@variables.to_a]
+        @variables.keys
       end
 
     end
