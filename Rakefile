@@ -4,7 +4,7 @@ require "rspec/core/rake_task"
 
 RSpec::Core::RakeTask.new('spec')
 
-namespace :liquidscript do
+namespace :ls do
   rule '.rb' => ['.rl'] do |t|
     sh "ragel -R #{t.source}"
   end

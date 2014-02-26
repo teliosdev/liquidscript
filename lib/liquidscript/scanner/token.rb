@@ -24,6 +24,10 @@ module Liquidscript
         [@type, @value]
       end
 
+      def type?(type)
+        @type == type
+      end
+
       alias_method :to_ary, :to_a
 
     end

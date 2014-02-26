@@ -3,7 +3,6 @@ require "liquidscript/compiler/expressions"
 
 module Liquidscript
 
-  class CompileError < StandardError; end
   class Compiler
 
     extend Forwardable
@@ -11,30 +10,36 @@ module Liquidscript
     def_delegators :@scanner, :peek
 
     attr_reader :buffer
+    attr_reader :set
 
     def initialize(scanner)
       @scanner = scanner.each
       @buffer = Buffer.new
+      @top = ICR::Set.new
+      @top.metadata[:context] = ICR::Context.new
+      @set = [@top]
     end
 
     def pop
       @scanner.next
     end
 
+    def top
+      @set.last
+    end
+
     def compile
       while peek
-        compile_expression
+        top.push compile_expression
       end
     rescue StopIteration
       @buffer
     end
-    
-    protected
-    
+
     def expect(*args)
       hash = if args.last.is_a? Hash
         args.pop
-      else 
+      else
         {}
       end
 
@@ -45,17 +50,21 @@ module Liquidscript
       block = hash.fetch(peek.type) do
         hash.fetch(:_)
       end
-      
+
       if block.is_a? Symbol
         block = method(:"compile_#{block}")
       end
-    
-      if block.arity == 1
-        block.call pop
-      else
-        block.call
+
+      if block.respond_to?(:call)
+        if block.respond_to?(:arity) && block.arity == 1
+          block.call pop
+        else
+          block.call
+        end
       end
-      
+
+      # discard it...
+
     rescue KeyError
       raise CompileError, "Expected one of " +
         "#{hash.keys.map(&:to_s).map(&:upcase).join(', ')}, " +

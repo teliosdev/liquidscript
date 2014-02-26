@@ -9,9 +9,9 @@
   number = number_integer number_frac? number_exp?;
 
   string_double = '"' ( any -- '"' | '\\"' )* '"';
-  string_single = "'" ( any -- "'" | "\\'" )* "'";
+  string_single = "'" ( any -- [' ])+;
 
-  identifier = [A-Za-z0-9]+;
+  identifier = [A-Za-z_$][A-Za-z0-9_$]*;
 
   main := |*
     number => { emit.(:number) };
@@ -22,6 +22,7 @@
     '{' => { emit.(:lbrack) };
     '}' => { emit.(:rbrack) };
     space => {};
+    any => { error.() };
   *|;
 }%%
 
@@ -53,6 +54,10 @@ module Liquidscript
 
         emit = lambda do |type|
           self.emit(type, data[ts..(te - 1)])
+        end
+
+        error = lambda do
+          raise SyntaxError, "Unexpected #{data[ts..(te-1)].pack('c*')}"
         end
 
         %% write exec;

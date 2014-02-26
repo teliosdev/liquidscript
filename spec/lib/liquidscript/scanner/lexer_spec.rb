@@ -31,8 +31,8 @@ describe Liquidscript::Scanner::Lexer, :lexer_helper do
         [:dstring, '"hello world"']
       ]
 
-      scan(" 'foobar'").should eq [
-        [:sstring, "'foobar'"]
+      scan(" 'foobar").should eq [
+        [:sstring, "'foobar"]
       ]
     end
 

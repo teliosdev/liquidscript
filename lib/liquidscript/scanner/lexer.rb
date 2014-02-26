@@ -1,7 +1,7 @@
 
 # line 1 "lib/liquidscript/scanner/lexer.rl"
 
-# line 26 "lib/liquidscript/scanner/lexer.rl"
+# line 27 "lib/liquidscript/scanner/lexer.rl"
 
 
 module Liquidscript
@@ -20,12 +20,11 @@ class << self
 	private :_lexer_actions, :_lexer_actions=
 end
 self._lexer_actions = [
-	0, 1, 2, 1, 3, 1, 8, 1, 
-	9, 1, 10, 1, 11, 1, 12, 1, 
-	13, 1, 14, 1, 15, 1, 16, 1, 
-	17, 1, 18, 1, 19, 2, 0, 1, 
-	2, 3, 4, 2, 3, 5, 2, 3, 
-	6, 2, 3, 7
+	0, 1, 0, 1, 1, 1, 2, 1, 
+	6, 1, 7, 1, 8, 1, 9, 1, 
+	10, 1, 11, 1, 12, 1, 13, 1, 
+	14, 1, 15, 1, 16, 2, 2, 3, 
+	2, 2, 4, 2, 2, 5
 ]
 
 class << self
@@ -33,9 +32,8 @@ class << self
 	private :_lexer_key_offsets, :_lexer_key_offsets=
 end
 self._lexer_key_offsets = [
-	0, 0, 2, 4, 6, 8, 10, 12, 
-	16, 18, 33, 35, 37, 42, 46, 48, 
-	58, 64, 72
+	0, 2, 4, 6, 10, 12, 29, 31, 
+	39, 41, 43, 48, 52
 ]
 
 class << self
@@ -43,16 +41,13 @@ class << self
 	private :_lexer_trans_keys, :_lexer_trans_keys=
 end
 self._lexer_trans_keys = [
-	34, 92, 34, 92, 39, 92, 39, 92, 
-	48, 57, 48, 57, 43, 45, 48, 57, 
-	48, 57, 32, 34, 39, 45, 61, 123, 
-	125, 9, 13, 48, 57, 65, 90, 97, 
-	122, 34, 92, 39, 92, 46, 69, 101, 
-	49, 57, 69, 101, 48, 57, 48, 57, 
-	46, 48, 69, 101, 49, 57, 65, 90, 
-	97, 122, 48, 57, 65, 90, 97, 122, 
-	43, 45, 48, 57, 65, 90, 97, 122, 
-	48, 57, 65, 90, 97, 122, 0
+	34, 92, 34, 92, 48, 57, 43, 45, 
+	48, 57, 48, 57, 32, 34, 36, 39, 
+	45, 61, 95, 123, 125, 9, 13, 48, 
+	57, 65, 90, 97, 122, 34, 92, 36, 
+	95, 48, 57, 65, 90, 97, 122, 32, 
+	39, 48, 57, 46, 69, 101, 49, 57, 
+	69, 101, 48, 57, 48, 57, 0
 ]
 
 class << self
@@ -60,9 +55,8 @@ class << self
 	private :_lexer_single_lengths, :_lexer_single_lengths=
 end
 self._lexer_single_lengths = [
-	0, 2, 2, 2, 2, 0, 0, 2, 
-	0, 7, 2, 2, 3, 2, 0, 4, 
-	0, 2, 0
+	2, 2, 0, 2, 0, 9, 2, 2, 
+	2, 0, 3, 2, 0
 ]
 
 class << self
@@ -70,9 +64,8 @@ class << self
 	private :_lexer_range_lengths, :_lexer_range_lengths=
 end
 self._lexer_range_lengths = [
-	0, 0, 0, 0, 0, 1, 1, 1, 
-	1, 4, 0, 0, 1, 1, 1, 3, 
-	3, 3, 3
+	0, 0, 1, 1, 1, 4, 0, 3, 
+	0, 1, 1, 1, 1
 ]
 
 class << self
@@ -80,9 +73,8 @@ class << self
 	private :_lexer_index_offsets, :_lexer_index_offsets=
 end
 self._lexer_index_offsets = [
-	0, 0, 3, 6, 9, 12, 14, 16, 
-	20, 22, 34, 37, 40, 45, 49, 51, 
-	59, 63, 69
+	0, 3, 6, 8, 12, 14, 28, 31, 
+	37, 40, 42, 47, 51
 ]
 
 class << self
@@ -90,16 +82,13 @@ class << self
 	private :_lexer_indicies, :_lexer_indicies=
 end
 self._lexer_indicies = [
-	2, 3, 1, 4, 3, 1, 6, 7, 
-	5, 8, 7, 5, 9, 10, 12, 11, 
-	13, 13, 14, 11, 14, 0, 15, 1, 
-	5, 16, 18, 20, 21, 15, 17, 19, 
-	19, 10, 2, 3, 1, 6, 7, 5, 
-	25, 26, 26, 9, 24, 26, 26, 12, 
-	24, 14, 24, 25, 19, 27, 27, 17, 
-	19, 19, 24, 19, 19, 19, 28, 13, 
-	13, 29, 19, 19, 28, 29, 19, 19, 
-	24, 0
+	2, 3, 1, 4, 3, 1, 6, 5, 
+	7, 7, 8, 5, 8, 5, 10, 11, 
+	12, 13, 14, 16, 12, 17, 18, 10, 
+	15, 12, 12, 9, 2, 3, 1, 12, 
+	12, 12, 12, 12, 19, 0, 0, 20, 
+	15, 21, 23, 24, 24, 15, 22, 24, 
+	24, 6, 22, 8, 22, 0
 ]
 
 class << self
@@ -107,10 +96,10 @@ class << self
 	private :_lexer_trans_targs, :_lexer_trans_targs=
 end
 self._lexer_trans_targs = [
-	9, 1, 9, 2, 10, 3, 9, 4, 
-	11, 12, 0, 9, 13, 8, 14, 9, 
-	5, 15, 9, 16, 9, 9, 9, 9, 
-	9, 6, 7, 17, 9, 18
+	5, 0, 5, 1, 6, 5, 11, 4, 
+	12, 5, 5, 6, 7, 8, 9, 10, 
+	5, 5, 5, 5, 8, 5, 5, 2, 
+	3
 ]
 
 class << self
@@ -118,10 +107,10 @@ class << self
 	private :_lexer_trans_actions, :_lexer_trans_actions=
 end
 self._lexer_trans_actions = [
-	27, 0, 5, 0, 35, 0, 7, 0, 
-	38, 32, 0, 25, 32, 0, 0, 15, 
-	0, 3, 9, 0, 11, 13, 19, 21, 
-	17, 0, 0, 41, 23, 0
+	27, 0, 7, 0, 29, 25, 5, 0, 
+	0, 17, 15, 35, 0, 35, 0, 5, 
+	9, 11, 13, 21, 32, 23, 19, 0, 
+	0
 ]
 
 class << self
@@ -129,9 +118,8 @@ class << self
 	private :_lexer_to_state_actions, :_lexer_to_state_actions=
 end
 self._lexer_to_state_actions = [
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 29, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0
+	0, 0, 0, 0, 0, 1, 0, 0, 
+	0, 0, 0, 0, 0
 ]
 
 class << self
@@ -139,9 +127,8 @@ class << self
 	private :_lexer_from_state_actions, :_lexer_from_state_actions=
 end
 self._lexer_from_state_actions = [
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 1, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0
+	0, 0, 0, 0, 0, 3, 0, 0, 
+	0, 0, 0, 0, 0
 ]
 
 class << self
@@ -149,31 +136,30 @@ class << self
 	private :_lexer_eof_trans, :_lexer_eof_trans=
 end
 self._lexer_eof_trans = [
-	0, 1, 1, 1, 1, 0, 12, 12, 
-	1, 0, 23, 24, 25, 25, 25, 25, 
-	29, 29, 25
+	1, 1, 6, 6, 6, 0, 1, 20, 
+	1, 22, 23, 23, 23
 ]
 
 class << self
 	attr_accessor :lexer_start
 end
-self.lexer_start = 9;
+self.lexer_start = 5;
 class << self
 	attr_accessor :lexer_first_final
 end
-self.lexer_first_final = 9;
+self.lexer_first_final = 5;
 class << self
 	attr_accessor :lexer_error
 end
-self.lexer_error = 0;
+self.lexer_error = -1;
 
 class << self
 	attr_accessor :lexer_en_main
 end
-self.lexer_en_main = 9;
+self.lexer_en_main = 5;
 
 
-# line 38 "lib/liquidscript/scanner/lexer.rl"
+# line 39 "lib/liquidscript/scanner/lexer.rl"
         # %% # fix
         @tokens = []
       end
@@ -189,7 +175,7 @@ self.lexer_en_main = 9;
         @tokens = []
 
         
-# line 193 "lib/liquidscript/scanner/lexer.rb"
+# line 179 "lib/liquidscript/scanner/lexer.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -199,14 +185,18 @@ begin
 	act = 0
 end
 
-# line 53 "lib/liquidscript/scanner/lexer.rl"
+# line 54 "lib/liquidscript/scanner/lexer.rl"
 
         emit = lambda do |type|
           self.emit(type, data[ts..(te - 1)])
         end
 
+        error = lambda do
+          raise SyntaxError, "Unexpected #{data[ts..(te-1)].pack('c*')}"
+        end
+
         
-# line 210 "lib/liquidscript/scanner/lexer.rb"
+# line 200 "lib/liquidscript/scanner/lexer.rb"
 begin
 	_klen, _trans, _keys, _acts, _nacts = nil
 	_goto_level = 0
@@ -222,10 +212,6 @@ begin
 		_goto_level = _test_eof
 		next
 	end
-	if cs == 0
-		_goto_level = _out
-		next
-	end
 	end
 	if _goto_level <= _resume
 	_acts = _lexer_from_state_actions[cs]
@@ -235,12 +221,12 @@ begin
 		_nacts -= 1
 		_acts += 1
 		case _lexer_actions[_acts - 1]
-			when 2 then
+			when 1 then
 # line 1 "NONE"
 		begin
 ts = p
 		end
-# line 244 "lib/liquidscript/scanner/lexer.rb"
+# line 230 "lib/liquidscript/scanner/lexer.rb"
 		end # from state action switch
 	end
 	if _trigger_goto
@@ -307,119 +293,98 @@ ts = p
 			_nacts -= 1
 			_acts += 1
 			case _lexer_actions[_acts - 1]
-when 3 then
+when 2 then
 # line 1 "NONE"
 		begin
 te = p+1
 		end
-when 4 then
-# line 17 "lib/liquidscript/scanner/lexer.rl"
-		begin
-act = 1;		end
-when 5 then
+when 3 then
 # line 18 "lib/liquidscript/scanner/lexer.rl"
 		begin
 act = 2;		end
-when 6 then
+when 4 then
 # line 19 "lib/liquidscript/scanner/lexer.rl"
 		begin
 act = 3;		end
-when 7 then
-# line 20 "lib/liquidscript/scanner/lexer.rl"
+when 5 then
+# line 25 "lib/liquidscript/scanner/lexer.rl"
 		begin
-act = 4;		end
-when 8 then
+act = 9;		end
+when 6 then
 # line 18 "lib/liquidscript/scanner/lexer.rl"
 		begin
 te = p+1
  begin  emit.(:dstring)  end
 		end
-when 9 then
-# line 19 "lib/liquidscript/scanner/lexer.rl"
-		begin
-te = p+1
- begin  emit.(:sstring)  end
-		end
-when 10 then
+when 7 then
 # line 21 "lib/liquidscript/scanner/lexer.rl"
 		begin
 te = p+1
  begin  emit.(:equal)  end
 		end
-when 11 then
+when 8 then
 # line 22 "lib/liquidscript/scanner/lexer.rl"
 		begin
 te = p+1
  begin  emit.(:lbrack)  end
 		end
-when 12 then
+when 9 then
 # line 23 "lib/liquidscript/scanner/lexer.rl"
 		begin
 te = p+1
  begin  emit.(:rbrack)  end
 		end
-when 13 then
+when 10 then
 # line 24 "lib/liquidscript/scanner/lexer.rl"
 		begin
 te = p+1
 		end
-when 14 then
+when 11 then
+# line 25 "lib/liquidscript/scanner/lexer.rl"
+		begin
+te = p+1
+ begin  error.()  end
+		end
+when 12 then
 # line 17 "lib/liquidscript/scanner/lexer.rl"
 		begin
 te = p
 p = p - 1; begin  emit.(:number)  end
 		end
-when 15 then
-# line 18 "lib/liquidscript/scanner/lexer.rl"
-		begin
-te = p
-p = p - 1; begin  emit.(:dstring)  end
-		end
-when 16 then
-# line 19 "lib/liquidscript/scanner/lexer.rl"
-		begin
-te = p
-p = p - 1; begin  emit.(:sstring)  end
-		end
-when 17 then
+when 13 then
 # line 20 "lib/liquidscript/scanner/lexer.rl"
 		begin
 te = p
 p = p - 1; begin  emit.(:identifier)  end
 		end
-when 18 then
+when 14 then
+# line 25 "lib/liquidscript/scanner/lexer.rl"
+		begin
+te = p
+p = p - 1; begin  error.()  end
+		end
+when 15 then
 # line 17 "lib/liquidscript/scanner/lexer.rl"
 		begin
  begin p = ((te))-1; end
  begin  emit.(:number)  end
 		end
-when 19 then
+when 16 then
 # line 1 "NONE"
 		begin
 	case act
-	when 0 then
-	begin	begin
-		cs = 0
-		_trigger_goto = true
-		_goto_level = _again
-		break
-	end
-end
-	when 1 then
-	begin begin p = ((te))-1; end
- emit.(:number) end
 	when 2 then
 	begin begin p = ((te))-1; end
  emit.(:dstring) end
 	when 3 then
 	begin begin p = ((te))-1; end
  emit.(:sstring) end
-	when 4 then
+	when 9 then
 	begin begin p = ((te))-1; end
- emit.(:identifier) end
+ error.() end
 end 
 			end
-# line 423 "lib/liquidscript/scanner/lexer.rb"
+# line 388 "lib/liquidscript/scanner/lexer.rb"
 			end # action switch
 		end
 	end
@@ -439,19 +404,10 @@ when 0 then
 # line 1 "NONE"
 		begin
 ts = nil;		end
-when 1 then
-# line 1 "NONE"
-		begin
-act = 0
-		end
-# line 448 "lib/liquidscript/scanner/lexer.rb"
+# line 408 "lib/liquidscript/scanner/lexer.rb"
 		end # to state action switch
 	end
 	if _trigger_goto
-		next
-	end
-	if cs == 0
-		_goto_level = _out
 		next
 	end
 	p += 1
@@ -475,7 +431,7 @@ end
 	end
 	end
 
-# line 59 "lib/liquidscript/scanner/lexer.rl"
+# line 64 "lib/liquidscript/scanner/lexer.rl"
 
         @tokens
       end

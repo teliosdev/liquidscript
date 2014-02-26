@@ -1,7 +1,10 @@
 require "liquidscript/icr/code"
 require "liquidscript/icr/set"
+require "liquidscript/icr/context"
+require "liquidscript/icr/variable"
 
 module Liquidscript
+
   # The ICR (rather, Intermediate Code Representation)
   # is a method used to transform compiled code into
   # the corresponding javascript code.  It can be used

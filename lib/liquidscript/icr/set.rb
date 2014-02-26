@@ -1,27 +1,44 @@
 module Liquidscript
   module ICR
-  
+
     # Represents a set of instruction codes.  Can contain
     # metadata about the set, like whether or not it can
     # be inlined, if a new context needs to be applied,
     # etc.
     class Set
-    
+
       # The metadata that is applied to the set.
       #
       # @return [Hash]
       attr_reader :metadata
-      
+
       extend Forwardable
-      
+
       def_delegators :to_a, :to_s, :inspect
-      
+
       # Initialize the set.
       def initialize
         @metadata = {}
         @code = []
       end
-      
+
+      #
+      def context
+        @metadata.fetch(:context) do
+          @metadata.fetch(:parent).context
+        end
+      end
+
+      # Adds a code to the code list.  This is just a
+      # convienince method.
+      #
+      # @param action [Symbol] a symbol representing
+      #   the action.
+      # @param arguments the arguments for the code.
+      def add(action, *arguments)
+        @code << Code.new(action, arguments)
+      end
+
       # Turns the set into an array.  Includes the
       # metadata information and the actual internal
       # array.
@@ -32,11 +49,11 @@ module Liquidscript
       # @return [Array]
       def to_a
         [
-          @metadata.to_a.map { |(m, i)| [:"_#{m}", i] }, 
+          @metadata.to_a.map { |(m, i)| [:"_#{m}", i] },
           @code
         ].flatten(1)
       end
-      
+
       # Tells ruby that we respond to some methods.
       # Passes the method name to the internal
       # array, asking if it responds to it.
@@ -49,7 +66,7 @@ module Liquidscript
       def respond_to_missing?(method, include_private = false)
         @code.respond_to?(method, include_private)
       end
-      
+
       # For methods that we don't respond to, send
       # them to the interal array.
       #
@@ -57,7 +74,7 @@ module Liquidscript
       def method_missing(method, *args, &block)
         @code.public_send(method, *args, &block)
       end
-    
+
     end
   end
 end
