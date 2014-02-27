@@ -3,27 +3,8 @@ module Liquidscript
     module Expressions
 
       def compile_expression
-        expect :number, :identifier
-      end
-
-      def compile_number
-        ICR::Code.new :number, pop.value
-      end
-
-      def compile_identifier(identifier)
-        if peek.type?(:equal)
-          compile_assignment(identifier)
-        else
-          ICR::Code.new :get, top.context.get(identifier.value.intern)
-        end
-      end
-
-      def compile_dstring
-        ICR::Code.new :dstring, pop.value[1..-2]
-      end
-
-      def compile_sstring
-        ICR::Code.new :sstring, pop.value[1..-1]
+        expect :number, :identifier, :sstring,
+          :lbrack => :object
       end
 
       def compile_assignment(identifier)

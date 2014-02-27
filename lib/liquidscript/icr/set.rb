@@ -12,9 +12,7 @@ module Liquidscript
       # @return [Hash]
       attr_reader :metadata
 
-      extend Forwardable
-
-      def_delegators :to_a, :to_s, :inspect
+      include Representable
 
       # Initialize the set.
       def initialize

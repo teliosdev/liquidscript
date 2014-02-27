@@ -19,9 +19,7 @@ module Liquidscript
       # @return [Array]
       attr_reader :arguments
 
-      extend Forwardable
-
-      def_delegators :to_a, :to_s, :inspect
+      include Representable
 
       # Initializes the code.  It takes an action and
       # an argument as its arguments.  The action

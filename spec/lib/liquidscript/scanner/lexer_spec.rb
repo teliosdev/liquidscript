@@ -1,15 +1,5 @@
 require "spec_helper"
 
-RSpec::Matchers.define :be_token do |type, value|
-  match do |data|
-    data == Liquidscript::Scanner::Token.new(type, value)
-  end
-
-  description do
-    "be token #{[type, value].inspect}"
-  end
-end
-
 describe Liquidscript::Scanner::Lexer, :lexer_helper do
   subject { described_class.new }
   describe "#emit" do
@@ -41,6 +31,16 @@ describe Liquidscript::Scanner::Lexer, :lexer_helper do
         [:identifier, "test"],
         [:equal, "="],
         [:number, "4"]
+      ]
+    end
+
+    it "scans brackets" do
+      scan("{ test = 3 }").should eq [
+        [:lbrack, "{"],
+        [:identifier, "test"],
+        [:equal, "="],
+        [:number, "3"],
+        [:rbrack, "}"]
       ]
     end
   end

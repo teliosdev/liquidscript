@@ -1,7 +1,5 @@
 require "spec_helper"
 
-include Liquidscript
-
 describe Compiler do
 
   let(:scanner) do
@@ -92,5 +90,19 @@ describe Compiler do
       end
     end
 
+  end
+
+  describe "#compile" do
+    specify {
+      expect("hello = 3").to compile.and_produce([
+        [:_context, [:hello]], [:set, [:_variable, :hello], [:number, "3"]]
+      ])
+    }
+
+    specify {
+      expect("{hello: 'world}").to compile.and_produce([
+        [:_context, []], [:object, [[[:identifier, "hello"], [:sstring, "world"]]]]
+      ])
+  }
   end
 end

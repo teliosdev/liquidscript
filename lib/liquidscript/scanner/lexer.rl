@@ -9,27 +9,33 @@
   number = number_integer number_frac? number_exp?;
 
   string_double = '"' ( any -- '"' | '\\"' )* '"';
-  string_single = "'" ( any -- [' ])+;
-
   identifier = [A-Za-z_$][A-Za-z0-9_$]*;
+  string_single = "'" [A-Za-z0-9_$\-]+;
+
 
   main := |*
-    number => { emit.(:number) };
-    string_double => { emit.(:dstring) };
-    string_single => { emit.(:sstring) };
-    identifier => { emit.(:identifier) };
-    '=' => { emit.(:equal) };
-    '{' => { emit.(:lbrack) };
-    '}' => { emit.(:rbrack) };
-    space => {};
-    any => { error.() };
+    number        => { emit.(:number)     };
+    string_double => { emit.(:dstring)    };
+    string_single => { emit.(:sstring)    };
+    identifier    => { emit.(:identifier) };
+    '->'          => { emit.(:arrow)      };
+    '='           => { emit.(:equal)      };
+    '{'           => { emit.(:lbrack)     };
+    '('           => { emit.(:lparen)     };
+    '['           => { emit.(:lbrace)     };
+    '}'           => { emit.(:rbrack)     };
+    ')'           => { emit.(:rparen)     };
+    ']'           => { emit.(:rbrace)     };
+    ':'           => { emit.(:colon)      };
+    ','           => { emit.(:comma)      };
+    space         => {                    };
+    any           => { error.()           };
   *|;
 }%%
 
 module Liquidscript
   class Scanner
 
-    class SyntaxError < StandardError; end
     class Lexer
 
       attr_reader :tokens

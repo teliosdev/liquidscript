@@ -1,3 +1,5 @@
+require "liquidscript/icr/representable"
+
 module Liquidscript
   class Scanner
     class Token
@@ -5,11 +7,8 @@ module Liquidscript
       attr_accessor :type
       attr_accessor :value
 
-      extend Forwardable
       include Enumerable
-      include Comparable
-
-      def_delegators :to_a, :to_s, :inspect, :each, :'<=>'
+      include ICR::Representable
 
       def initialize(type, value)
         @type = type

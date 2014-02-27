@@ -25,9 +25,7 @@ module Liquidscript
       # @return [Code]
       attr_accessor :value
 
-      extend Forwardable
-
-      def_delegators :to_a, :inspect, :to_s
+      include Representable
 
       def initialize(context, name)
         @context = context

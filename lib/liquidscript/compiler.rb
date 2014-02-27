@@ -1,20 +1,21 @@
 require "liquidscript/buffer"
 require "liquidscript/compiler/expressions"
+require "liquidscript/compiler/literals"
 
 module Liquidscript
 
   class Compiler
 
     extend Forwardable
-    include Expressions
     def_delegators :@scanner, :peek
 
-    attr_reader :buffer
+    include Expressions
+    include Literals
+
     attr_reader :set
 
     def initialize(scanner)
       @scanner = scanner.each
-      @buffer = Buffer.new
       @top = ICR::Set.new
       @top.metadata[:context] = ICR::Context.new
       @set = [@top]
@@ -33,7 +34,30 @@ module Liquidscript
         top.push compile_expression
       end
     rescue StopIteration
-      @buffer
+      top
+    end
+
+    def compile?
+      compile
+      true
+    rescue CompileError
+      false
+    ensure
+      @top = ICR::Set.new
+      @top.metadata[:context] = ICR::Context.new
+      @set = [@top]
+    end
+
+    def shift_if(*types)
+      if peek?(*types)
+        pop
+      else
+        raise CompileError.new(types, peek.type)
+      end
+    end
+
+    def peek?(*types)
+      types.any? { |type| peek.type? type }
     end
 
     def expect(*args)
@@ -66,9 +90,7 @@ module Liquidscript
       # discard it...
 
     rescue KeyError
-      raise CompileError, "Expected one of " +
-        "#{hash.keys.map(&:to_s).map(&:upcase).join(', ')}, " +
-        "got #{peek.type.to_s.upcase}"
+      raise UnexpectedError.new(hash.keys, peek.type)
     end
 
   end

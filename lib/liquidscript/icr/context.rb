@@ -14,8 +14,7 @@ module Liquidscript
       # @returns [Parent]
       attr_accessor :parent
 
-      extend Forwardable
-      def_delegators :to_a, :to_s, :inspect
+      include Representable
 
       # Initializes the context.
       def initialize
