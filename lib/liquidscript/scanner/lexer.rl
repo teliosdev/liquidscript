@@ -69,7 +69,7 @@ module Liquidscript
       end
 
       def error
-        raise SyntaxError, "Unexpected #{@data[ts..(te-1)].pack('c*')}"
+        raise SyntaxError, "Unexpected #{@data[@ts..(@te-1)].pack('c*')}"
       end
 
       def perform(data)
