@@ -1,6 +1,6 @@
 # Liquidscript
 
-[![Build Status](https://travis-ci.org/redjazz96/liquidscript.png?branch=master)](https://travis-ci.org/redjazz96/liquidscript)
+[![Build Status](https://travis-ci.org/redjazz96/liquidscript.png?branch=master)](https://travis-ci.org/redjazz96/liquidscript) [![Coverage Status](https://coveralls.io/repos/redjazz96/liquidscript/badge.png?branch=master)](https://coveralls.io/r/redjazz96/liquidscript?branch=master) [![Code Climate](https://codeclimate.com/github/redjazz96/liquidscript.png)](https://codeclimate.com/github/redjazz96/liquidscript)
 
 TODO: Write a gem description
 

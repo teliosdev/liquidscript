@@ -18,4 +18,8 @@ namespace :ls do
     require File.expand_path("../lib/liquidscript", __FILE__)
     Pry.start
   end
+
+  task :clean do
+    File.unlink("lib/liquidscript/scanner/lexer.rb")
+  end
 end
