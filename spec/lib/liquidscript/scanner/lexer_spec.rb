@@ -4,7 +4,8 @@ describe Liquidscript::Scanner::Lexer, :lexer_helper do
   subject { described_class.new }
   describe "#emit" do
     it "pushes a token" do
-      subject.emit(:test, "hello")
+      subject.instance_exec { @data = "hello"; @ts = 0; @te = 6 }
+      subject.emit(:test)
       expect(subject.tokens.first).to be_token(:test, "hello")
     end
   end

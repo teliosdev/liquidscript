@@ -2,6 +2,12 @@
 
   machine lexer;
 
+  variable data @data;
+  variable p    @p;
+  variable pe   @pe;
+  variable eof  @eof;
+  access @;
+
   number_integer = '-'? [0-9][1-9]*;
   number_frac = '.' [0-9]+;
   number_e = ('e' | 'E') ('+' | '-' | '');
@@ -14,22 +20,22 @@
 
 
   main := |*
-    number        => { emit.(:number)     };
-    string_double => { emit.(:dstring)    };
-    string_single => { emit.(:sstring)    };
-    identifier    => { emit.(:identifier) };
-    '->'          => { emit.(:arrow)      };
-    '='           => { emit.(:equal)      };
-    '{'           => { emit.(:lbrack)     };
-    '('           => { emit.(:lparen)     };
-    '['           => { emit.(:lbrace)     };
-    '}'           => { emit.(:rbrack)     };
-    ')'           => { emit.(:rparen)     };
-    ']'           => { emit.(:rbrace)     };
-    ':'           => { emit.(:colon)      };
-    ','           => { emit.(:comma)      };
-    space         => {                    };
-    any           => { error.()           };
+    number        => { emit :number      };
+    string_double => { emit :dstring     };
+    string_single => { emit :sstring     };
+    identifier    => { emit :identifier  };
+    '->'          => { emit :arrow       };
+    '='           => { emit :equal       };
+    '{'           => { emit :lbrack      };
+    '('           => { emit :lparen      };
+    '['           => { emit :lbrace      };
+    '}'           => { emit :rbrack      };
+    ')'           => { emit :rparen      };
+    ']'           => { emit :rbrace      };
+    ':'           => { emit :colon       };
+    ','           => { emit :comma       };
+    space         => {                   };
+    any           => { error             };
   *|;
 }%%
 
@@ -46,27 +52,36 @@ module Liquidscript
         @tokens = []
       end
 
-      def emit(type, data)
-        @tokens << Token.new(type, data)
+      def clean!
+        @p = nil
+        @pe = nil
+        @te = nil
+        @ts = nil
+        @act = nil
+        @eof = nil
+        @top = nil
+        @data = nil
+        @stack = nil
+      end
+
+      def emit(type)
+        @tokens << Token.new(type, @data[@ts..(@te - 1)])
+      end
+
+      def error
+        raise SyntaxError, "Unexpected #{@data[ts..(te-1)].pack('c*')}"
       end
 
       def perform(data)
-        data = data.unpack("c*") if data.is_a? String
-        eof = data.length
+        @data = data.unpack("c*") if data.is_a? String
+        @eof = data.length
 
         @tokens = []
 
         %% write init;
-
-        emit = lambda do |type|
-          self.emit(type, data[ts..(te - 1)])
-        end
-
-        error = lambda do
-          raise SyntaxError, "Unexpected #{data[ts..(te-1)].pack('c*')}"
-        end
-
         %% write exec;
+
+        clean!
 
         @tokens
       end
