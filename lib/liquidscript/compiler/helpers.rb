@@ -4,6 +4,8 @@ module Liquidscript
 
       def pop
         @scanner.next
+      rescue StopIteration
+        Scanner::NilToken.new
       end
 
       def action(act = nil)

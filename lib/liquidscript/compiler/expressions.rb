@@ -6,9 +6,6 @@ module Liquidscript
         expect :number, :identifier, :sstring,
           :lparen, :lbrack => :object,
           :arrow => :function
-
-      rescue StopIteration
-        nil
       end
 
       def compile_assignment(identifier)
