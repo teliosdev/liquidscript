@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Liquidscript::VERSION
   spec.authors       = ["Jeremy Rodi"]
   spec.email         = ["redjazz96@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.summary       = %q{A javascript-based language that compiles to javascript.}
+  spec.description   = %q{A javascript-based language that compiles to javascript.}
+  spec.homepage      = "https://github.com/redjazz96/liquidscript"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")

@@ -8,3 +8,4 @@ gem 'guard'
 gem 'guard-rspec'
 gem 'guard-rake'
 gem 'coveralls', require: false
+gem 'rb-readline'

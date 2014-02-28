@@ -5,21 +5,29 @@ RSpec::Matchers.define :compile do
   end
 
   match do |data|
-    compiler(data).compile?
+    begin
+      if @prod
+        (@_out = compiler(data).compile) == @prod
+      else
+        @_out = compiler(data).compile
+        true
+      end
+
+    rescue CompileError => e
+      false
+    end
   end
 
   failure_message_for_should do |data|
-    begin
-      compiler(data).compile
-    rescue StandardError => e
-      "expected #{data} to compile (got: #{e.message})"
+    if @prod && !@_error
+      "expected #{data} to produce #{@prod} (got: #{@_out})"
+    else
+      "expected #{data} to compile (got: #{@_error.message})"
     end
-
-    "no."
   end
 
   failure_message_for_should_not do |data|
-    "expected #{data} not to compile (compiled anyway)"
+    "expected #{data} not to compile (compiled anyway, got: #{@_out})"
   end
 
   description do |data|

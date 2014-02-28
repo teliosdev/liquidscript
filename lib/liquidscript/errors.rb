@@ -19,4 +19,6 @@ module Liquidscript
         "got #{got.to_s.upcase}"
     end
   end
+
+  class UnexpectedEndError < CompileError; end
 end

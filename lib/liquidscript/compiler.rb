@@ -1,96 +1,79 @@
 require "liquidscript/buffer"
 require "liquidscript/compiler/expressions"
 require "liquidscript/compiler/literals"
+require "liquidscript/compiler/helpers"
+require "liquidscript/compiler/action"
 
 module Liquidscript
 
   class Compiler
 
-    extend Forwardable
-    def_delegators :@scanner, :peek
-
     include Expressions
     include Literals
+    include Helpers
 
     attr_reader :set
 
+    # Initializes the compiler.
+    #
+    # @param scanner [Scanner, #each] the scanner.  Used to
+    #   manage the  tokens.  This could be stubbed out, if
+    #   the #each function returns an Enumerator, which yields
+    #   {Scanner::Token}s.
     def initialize(scanner)
       @scanner = scanner.each
-      @top = ICR::Set.new
-      @top.metadata[:context] = ICR::Context.new
-      @set = [@top]
+      @action  = Action.new
+      reset!
     end
 
-    def pop
-      @scanner.next
-    end
-
+    # The top {Set}.  This is used with variables to handle
+    # references.  New functions introduce new {ICR::Set}s, along with
+    # a new context.  The top context is the most inner {Set} scope.
+    #
+    # @return [Set]
     def top
       @set.last
     end
 
+    # Begins the compiliation.  Continues until the iterator raises
+    # a `StopIteration` error, and then returns the top set with
+    # {#top}.
+    #
+    # @raises [CompileError] if there's an error compiling.
+    # @raises [UnexpectedEndError] if the top {Set} isn't the topmost
+    #   set.
+    # @return [Set] the topmost set.
     def compile
-      while peek
+      while peek.value do
         top.push compile_expression
       end
-    rescue StopIteration
+
       top
     end
 
+    # Checks to see if the given input compiles.
+    #
+    # @see [#compile]
+    # @return [Boolean] if it compiles.
     def compile?
       compile
       true
     rescue CompileError
       false
     ensure
-      @top = ICR::Set.new
-      @top.metadata[:context] = ICR::Context.new
-      @set = [@top]
+      reset!
     end
 
-    def shift_if(*types)
-      if peek?(*types)
-        pop
-      else
-        raise CompileError.new(types, peek.type)
-      end
-    end
-
-    def peek?(*types)
-      types.any? { |type| peek.type? type }
-    end
-
-    def expect(*args)
-      hash = if args.last.is_a? Hash
-        args.pop
-      else
-        {}
-      end
-
-      args.each do |arg|
-        hash[arg] = arg
-      end
-
-      block = hash.fetch(peek.type) do
-        hash.fetch(:_)
-      end
-
-      if block.is_a? Symbol
-        block = method(:"compile_#{block}")
-      end
-
-      if block.respond_to?(:call)
-        if block.respond_to?(:arity) && block.arity == 1
-          block.call pop
-        else
-          block.call
-        end
-      end
-
-      # discard it...
-
-    rescue KeyError
-      raise UnexpectedError.new(hash.keys, peek.type)
+    # Resets the state of the compiler.  This will bring the scanner
+    # back to the beginning, and the {Set} and {Context} will be
+    # reset.
+    #
+    # @return [void]
+    def reset!
+      @top         = ICR::Set.new
+      @top.context = ICR::Context.new
+      @set         = [@top]
+      @scanner.rewind
     end
 
   end

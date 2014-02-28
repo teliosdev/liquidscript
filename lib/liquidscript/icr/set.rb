@@ -27,6 +27,11 @@ module Liquidscript
         end
       end
 
+      #
+      def context=(new_context)
+        @metadata[:context] = new_context
+      end
+
       # Adds a code to the code list.  This is just a
       # convienince method.
       #
@@ -50,6 +55,32 @@ module Liquidscript
           *@metadata.to_a.map { |(m, i)| [:"_#{m}", i] },
           *@code
         ]
+      end
+
+      # Access either the metadata or the codes.  If
+      # the accessor is a Symbol, it access the metadata;
+      # if it the accessor is a Numeric, it access the
+      # codes.
+      #
+      # @param key [Symbol, Numeric] the key.
+      # @return [Object]
+      def [](key)
+        if key.is_a? Numeric
+          @code[key]
+        else
+          @metadata[key]
+        end
+      end
+
+      # Sets something from the metadata.  Unlike the
+      # accessor, it does not distinguish between
+      # Numeric and Symbol keys.
+      #
+      # @param key [Object] the key.
+      # @param value [Object] the value.
+      # @return [Object]
+      def []=(key, value)
+        @metadata[key] = value
       end
 
       # Tells ruby that we respond to some methods.

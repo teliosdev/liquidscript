@@ -11,6 +11,11 @@ module Liquidscript
 
       def_delegators :to_a, :to_s, :inspect, :[], :each, :'<=>'
 
+
+      def to_ary
+        to_a
+      end
+
     end
   end
 end

@@ -12,6 +12,7 @@ describe Compiler do
       Scanner::Token.new(:number, "10")])
     allow(iterator).to receive(:peek).and_return(
       Scanner::Token.new(:number, "32"))
+    allow(iterator).to receive(:rewind)
     scanner
   end
 
@@ -103,6 +104,22 @@ describe Compiler do
       expect("{hello: 'world}").to compile.and_produce([
         [:_context, []], [:object, [[[:identifier, "hello"], [:sstring, "world"]]]]
       ])
-  }
+    }
+
+    specify {
+      expect("(test)-> { 2 }").to compile.and_produce([
+        [:_context, []], [:function,
+          [
+            [:_context, []],
+            [:_arguments, [[:identifier, "test"]]],
+            [:number, "2"]
+          ]
+      ]])
+    }
+
+    specify { expect("(2)").to compile         }
+    specify { expect("(2)->").to_not compile   }
+    specify { expect("()-> {}").to compile     }
+    specify { expect("(test)-> {}").to compile }
   end
 end

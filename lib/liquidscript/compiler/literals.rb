@@ -1,49 +1,77 @@
 module Liquidscript
   class Compiler
     module Literals
+
       def compile_number
-        ICR::Code.new :number, pop.value
+        code :number, pop.value
       end
 
       def compile_identifier(identifier)
-        if peek.type?(:equal)
-          compile_assignment(identifier)
-        else
-          ICR::Code.new :get, top.context.get(identifier.value.intern)
+        default = action do
+          code :get, top.context.get(identifier.value.intern)
         end
+
+        expect :equal => action { compile_assignment(identifier) },
+               :prop  => action { compile_property(identifier)   },
+               :_     => default
       end
 
       def compile_dstring
-        ICR::Code.new :dstring, pop.value[1..-2]
+        code :dstring, pop.value[1..-2]
       end
 
       def compile_sstring
-        ICR::Code.new :sstring, pop.value[1..-1]
+        code :sstring, pop.value[1..-1]
       end
 
       def compile_object
-        shift_if :lbrack
+        shift :lbrack
 
         objects = []
-        do_loop = true
-
-        while do_loop do
-          expect :rbrack => proc { |_|
-            do_loop = false
-          }, :identifier => proc {
-            objects << [compile_object_key, compile_expression]
-          }, :comma => proc { |_| }
+        compile_object = action do
+          objects << [compile_object_key, compile_expression]
         end
 
-        ICR::Code.new :object, objects
+        loop do
+          expect :rbrack => action.end_loop,
+          :comma         => action.shift,
+          :identifier    => compile_object,
+          :dstring       => compile_object
+        end
+
+        code :object, objects
       end
 
       def compile_object_key
-        key = shift_if :identifier
-        shift_if :colon
+        key = shift :identifier, :dstring
+        shift :colon
 
         key
       end
+
+      def compile_function(components)
+        shift :arrow
+        shift :lbrack
+
+        expressions = ICR::Set.new
+        expressions.context = ICR::Context.new
+        expressions.context.parent = top.context
+        expressions.metadata[:arguments] = components
+
+        @set << expressions
+
+        expression = action do
+          expressions << compile_expression
+        end
+
+        loop do
+          expect :rbrack => action.end_loop,
+            :_           => expression
+        end
+
+        code :function, @set.pop
+      end
+
     end
   end
 end

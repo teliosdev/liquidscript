@@ -27,7 +27,13 @@ module Liquidscript
         @type == type
       end
 
-      alias_method :to_ary, :to_a
+    end
+
+    class NilToken < Token
+
+      def initialize
+        super :end, nil
+      end
 
     end
   end

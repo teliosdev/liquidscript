@@ -33,6 +33,7 @@
     ')'           => { emit :rparen      };
     ']'           => { emit :rbrace      };
     ':'           => { emit :colon       };
+    '.'           => { emit :prop        };
     ','           => { emit :comma       };
     space         => {                   };
     any           => { error             };
