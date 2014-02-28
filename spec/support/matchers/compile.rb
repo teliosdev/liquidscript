@@ -14,6 +14,7 @@ RSpec::Matchers.define :compile do
       end
 
     rescue CompileError => e
+      @_error = e
       false
     end
   end

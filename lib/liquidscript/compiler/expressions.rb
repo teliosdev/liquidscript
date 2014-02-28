@@ -50,7 +50,7 @@ module Liquidscript
           when 2
             expect :rparen => action.end_loop,
               :comma       => action.shift,
-              :identifer   => action { |i| components << i }
+              :identifier  => action { |i| components << i }
           end
         end
 

@@ -121,5 +121,6 @@ describe Compiler do
     specify { expect("(2)->").to_not compile   }
     specify { expect("()-> {}").to compile     }
     specify { expect("(test)-> {}").to compile }
+    specify { expect("(test, foo)-> {}").to compile }
   end
 end

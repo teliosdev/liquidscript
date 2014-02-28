@@ -56,7 +56,7 @@ module Liquidscript
         expressions = ICR::Set.new
         expressions.context = ICR::Context.new
         expressions.context.parent = top.context
-        expressions.metadata[:arguments] = components
+        expressions[:arguments] = components
 
         @set << expressions
 
