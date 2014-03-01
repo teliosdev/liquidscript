@@ -22,7 +22,9 @@ Or install it yourself as:
 
 To use liquidscript:
 
-```TODO: usage example```
+```
+TODO: usage example
+```
 
 The language of liquidscript:
 
@@ -38,7 +40,7 @@ The language of liquidscript:
 }
 ```
 
-```
+```coffeescript
 # This is a function
 
 func = ()-> {
