@@ -43,6 +43,9 @@
 module Liquidscript
   class Scanner
 
+    # A lexer, built from ragel.
+    #
+    # @private
     class Lexer
 
       attr_reader :tokens

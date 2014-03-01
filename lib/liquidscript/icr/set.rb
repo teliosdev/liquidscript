@@ -46,7 +46,7 @@ module Liquidscript
       # metadata information and the actual internal
       # array.
       # Note that this is _not_ the array used in
-      # {method_missing} - that actually operates on
+      # {#method_missing} - that actually operates on
       # the internal array.
       #
       # @return [Array]
@@ -55,6 +55,13 @@ module Liquidscript
           *@metadata.to_a.map { |(m, i)| [:"_#{m}", i] },
           *@code
         ]
+      end
+
+      # Outputs the codes in this set.
+      #
+      # @return [Array<Code>]
+      def codes
+        @code
       end
 
       # Access either the metadata or the codes.  If

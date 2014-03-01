@@ -1,6 +1,7 @@
 require "spec_helper"
+require "yaml"
 
-describe Compiler do
+describe Compiler::ICR do
 
   let(:scanner) do
     iterator = double("iterator")
@@ -17,7 +18,7 @@ describe Compiler do
   end
 
   subject do
-    Compiler.new(scanner)
+    described_class.new(scanner)
   end
 
   describe "#peek" do
@@ -60,6 +61,7 @@ describe Compiler do
         expect(block).to_not receive(:arity)
         expect(block).to_not receive(:call)
       end
+
       context "and a symbol value" do
         before do
           expect(subject).to receive(:compile_something).once
@@ -110,7 +112,7 @@ describe Compiler do
       expect("(test)-> { 2 }").to compile.and_produce([
         [:_context, []], [:function,
           [
-            [:_context, []],
+            [:_context, [:test]],
             [:_arguments, [[:identifier, "test"]]],
             [:number, "2"]
           ]
@@ -122,5 +124,16 @@ describe Compiler do
     specify { expect("()-> {}").to compile     }
     specify { expect("(test)-> {}").to compile }
     specify { expect("(test, foo)-> {}").to compile }
+  end
+
+  describe "with fixtures" do
+    Dir.glob("spec/fixtures/*.compile.yml") do |file|
+      content = YAML.load_file file
+      file =~ /spec\/fixtures\/(.*)\.compile\.yml/
+
+      it "compiles #{$1}" do
+        expect(content["data"]).to compile.and_produce content["compiled"]
+      end
+    end
   end
 end

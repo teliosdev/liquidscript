@@ -11,8 +11,13 @@ module Liquidscript
 
       # The parent of the current context.
       #
-      # @returns [Parent]
+      # @return [Parent]
       attr_accessor :parent
+
+      # The variables that are a part of this context.
+      #
+      # @return [Hash<Symbol, Variable>]
+      attr_reader :variables
 
       include Representable
 
@@ -30,7 +35,7 @@ module Liquidscript
       # @param name [Symbol] the name of the variable.
       # @param type [Symbol] the type of use.  Should be `:get` or
       #   `:set`.
-      # @returns [Variable]
+      # @return [Variable]
       def variable(name, type)
         @variables.fetch(name) do
           if type == :get && parent

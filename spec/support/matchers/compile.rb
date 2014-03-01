@@ -35,7 +35,17 @@ RSpec::Matchers.define :compile do
     "compile #{data}"
   end
 
+  diffable
+
+  def expected
+    @prod
+  end
+
+  def actual
+    @_out.to_a!
+  end
+
   def compiler(data)
-    Liquidscript::Compiler.new(Liquidscript::Scanner.new(data))
+    Liquidscript::Compiler::ICR.new(Liquidscript::Scanner.new(data))
   end
 end

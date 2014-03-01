@@ -16,6 +16,23 @@ module Liquidscript
         to_a
       end
 
+      def to_yaml
+        to_a!.to_yaml
+      end
+
+      def to_a!
+        do_map = proc do |e|
+          if e.is_a?(Representable)
+            e.to_a!
+          elsif e.is_a? Array
+            e.map(&do_map)
+          else
+            e
+          end
+        end
+
+        to_a.map(&do_map)
+      end
     end
   end
 end

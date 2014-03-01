@@ -29,12 +29,5 @@ module Liquidscript
 
     end
 
-    class NilToken < Token
-
-      def initialize
-        super :end, nil
-      end
-
-    end
   end
 end

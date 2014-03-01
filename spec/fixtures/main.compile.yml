@@ -1,0 +1,30 @@
+data: |
+  console = 2
+  func = ()-> {
+    console.log("hello world")
+  }
+compiled:
+  - - :_context
+    - - :console
+      - :func
+  - - :set
+    - - :_variable
+      - :console
+    - - :number
+      - "2"
+  - - :set
+    - - :_variable
+      - :func
+    - - :function
+      - - - :_context
+          - []
+        - - :_arguments
+          - []
+        - - :call
+          - - :property
+            - - :_variable
+              - :console
+            - - :identifier
+              - log
+          - - :dstring
+            - hello world

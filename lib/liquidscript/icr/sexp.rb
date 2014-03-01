@@ -1,5 +1,7 @@
 module Liquidscript
   module ICR
+
+    # @private
     class Sexp
 
       def initialize(compiler)

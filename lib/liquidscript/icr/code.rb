@@ -19,6 +19,8 @@ module Liquidscript
       # @return [Array]
       attr_reader :arguments
 
+      alias_method :type, :action
+
       include Representable
 
       # Initializes the code.  It takes an action and

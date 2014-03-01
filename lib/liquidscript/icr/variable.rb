@@ -35,7 +35,7 @@ module Liquidscript
 
       # Turns the variable into an array.
       #
-      # @return [Array<(Symbol, Symbol, Set)>]
+      # @return [Array<(Symbol, Symbol)>]
       def to_a
         [:_variable, @name]
       end
