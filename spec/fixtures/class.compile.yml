@@ -1,0 +1,23 @@
+data: |
+  module Something {
+    class SomeClass {
+      test: -> {}
+    }
+  }
+
+compiled:
+  - - :_context
+    - []
+  - - :module
+    - - :identifier
+      - Something
+    - - - :class
+        - - :identifier
+          - SomeClass
+        - - - - :identifier
+              - test
+            - - :function
+              - - - :_context
+                  - []
+                - - :_arguments
+                  - []

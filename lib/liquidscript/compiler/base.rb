@@ -41,7 +41,7 @@ module Liquidscript
       def compile
         # We're using this cool property of Base::Blank such that it
         # will return a nil to any method call.
-        while peek.is_a?(Object) do
+        while !peek.is_a?(Blank) do
           top.push compile_start
         end
 

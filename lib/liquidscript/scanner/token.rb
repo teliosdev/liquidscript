@@ -6,13 +6,17 @@ module Liquidscript
 
       attr_accessor :type
       attr_accessor :value
+      attr_reader :line
+      attr_reader :column
 
       include Enumerable
       include ICR::Representable
 
-      def initialize(type, value)
-        @type = type
-        @value = begin
+      def initialize(type, value, line, column)
+        @type   = type
+        @line   = line
+        @column = column
+        @value  = begin
           value.pack("c*")
         rescue NoMethodError, TypeError
           value

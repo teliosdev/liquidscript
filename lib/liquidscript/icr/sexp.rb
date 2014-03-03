@@ -10,7 +10,7 @@ module Liquidscript
       end
 
       def output
-        out(@compiler.top).strip
+        out(@compiler).strip
       end
 
       private

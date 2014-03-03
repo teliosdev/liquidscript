@@ -45,6 +45,15 @@ module Liquidscript
           expect types => action.shift
         end
 
+        # Shifts a token if its one of the given types; if it's not,
+        # it returns the value of {#scanner_nil}.
+        #
+        # @param types [Symbol] the token types to look for.
+        # @return [#type] the token.
+        def maybe(*types)
+          expect types => action.shift, :_ => action { scanner_nil }
+        end
+
         # Checks to see if the next token is of any of the given
         # types.  Note that the special type `:_` does not work here.
         #
@@ -117,7 +126,7 @@ module Liquidscript
           end
 
         rescue KeyError
-          raise UnexpectedError.new(hash.keys, peek.type)
+          raise UnexpectedError.new(hash.keys, peek)
         end
 
         private

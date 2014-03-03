@@ -1,6 +1,7 @@
 require "liquidscript/compiler/icr/expressions"
 require "liquidscript/compiler/icr/functions"
 require "liquidscript/compiler/icr/literals"
+require "liquidscript/compiler/icr/classes"
 require "liquidscript/compiler/icr/helpers"
 
 module Liquidscript
@@ -10,6 +11,7 @@ module Liquidscript
       include Expressions
       include Functions
       include Literals
+      include Classes
       include Helpers
 
       # (see Base#reset!)
@@ -24,7 +26,7 @@ module Liquidscript
       #
       # @return [ICR::Code]
       def compile_start
-        compile_expression
+        expect :class, :module, :_ => :expression
       end
     end
   end

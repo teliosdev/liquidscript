@@ -3,7 +3,7 @@ module Liquidscript
     class Base
 
       # Responds to all methods with `nil`.
-      class Blank < BasicObject
+      class Blank
 
         # Respond to all methods, with `nil`.
         #

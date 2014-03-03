@@ -50,7 +50,11 @@ module Liquidscript
           key
         end
 
-        def compile_function(components)
+        def compile_function
+          compile_function_with_components([])
+        end
+
+        def compile_function_with_components(components)
           shift :arrow
           shift :lbrack
 

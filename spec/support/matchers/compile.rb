@@ -5,26 +5,15 @@ RSpec::Matchers.define :compile do
   end
 
   match do |data|
-    begin
-      if @prod
-        (@_out = compiler(data).compile) == @prod
-      else
-        @_out = compiler(data).compile
-        true
-      end
-
-    rescue CompileError => e
-      @_error = e
-      false
+    if @prod
+      (@_out = compiler(data).compile) == @prod
+    else
+      @_out = compiler(data).compile?
     end
   end
 
   failure_message_for_should do |data|
-    if @prod && !@_error
-      "expected #{data} to produce #{@prod} (got: #{@_out})"
-    else
-      "expected #{data} to compile (got: #{@_error.message})"
-    end
+    "expected #{data} to compile correctly"
   end
 
   failure_message_for_should_not do |data|
@@ -42,7 +31,11 @@ RSpec::Matchers.define :compile do
   end
 
   def actual
-    @_out.to_a!
+    if @_out
+      @_out
+    else
+      []
+    end
   end
 
   def compiler(data)

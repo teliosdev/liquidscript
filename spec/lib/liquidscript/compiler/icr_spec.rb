@@ -9,10 +9,10 @@ describe Compiler::ICR do
 
     expect(scanner).to receive(:each).once.and_return(iterator)
     allow(iterator).to receive(:next).and_return([
-      Scanner::Token.new(:number, "32"),
-      Scanner::Token.new(:number, "10")])
+      Scanner::Token.new(:number, "32", 0, 0),
+      Scanner::Token.new(:number, "10", 0, 0)])
     allow(iterator).to receive(:peek).and_return(
-      Scanner::Token.new(:number, "32"))
+      Scanner::Token.new(:number, "32", 0, 0))
     allow(iterator).to receive(:rewind)
     scanner
   end

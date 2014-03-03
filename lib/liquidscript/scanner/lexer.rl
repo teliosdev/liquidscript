@@ -23,6 +23,8 @@
     number        => { emit :number      };
     string_double => { emit :dstring     };
     string_single => { emit :sstring     };
+    'class'       => { emit :class       };
+    'module'      => { emit :module      };
     identifier    => { emit :identifier  };
     '->'          => { emit :arrow       };
     '='           => { emit :equal       };
@@ -35,6 +37,7 @@
     ':'           => { emit :colon       };
     '.'           => { emit :prop        };
     ','           => { emit :comma       };
+    '\n'          => { line.call         };
     space         => {                   };
     any           => { error             };
   *|;
@@ -54,6 +57,7 @@ module Liquidscript
         %% write data;
         # %% # fix
         @tokens = []
+        clean!
       end
 
       def clean!
@@ -64,12 +68,14 @@ module Liquidscript
         @act = nil
         @eof = nil
         @top = nil
+        @line = { :start => 0, :num => 0 }
         @data = nil
         @stack = nil
       end
 
       def emit(type)
-        @tokens << Token.new(type, @data[@ts..(@te - 1)])
+        @tokens << Token.new(type, @data[@ts..(@te - 1)],
+          @line[:num], @ts - @line[:start])
       end
 
       def error
@@ -81,6 +87,11 @@ module Liquidscript
         @eof = data.length
 
         @tokens = []
+
+        line = proc do
+          @line[:start] = @ts
+          @line[:num] += 1
+        end
 
         %% write init;
         %% write exec;
