@@ -36,7 +36,7 @@ The language of liquidscript:
 
   # Note here that a single-quoted string does not have an ending
   # delimiter.  This is on purpose.
-  foo: 'bar
+  foo: 'bar # ' syntax highlighting fix
 }
 ```
 
