@@ -1,0 +1,6 @@
+data: |
+  test = "hello"
+  foo  = 'world
+
+compiled: |
+  var test,foo; test = "hello"; foo = 'world';

@@ -10,8 +10,9 @@ module Liquidscript
         def compile_expression
           expect :number,     :identifier,
                  :dstring,    :lparen,
-                 :sstring,
+                 :sstring,    :keyword,
                  :lbrack   => :object,
+                 :lbrace   => :array,
                  :arrow    => :function
         end
 
@@ -23,10 +24,13 @@ module Liquidscript
         def compile_assignment(identifier)
           shift :equal
           value    = compile_expression
-          name     = identifier.value.to_sym
-          variable = top.context.set(name)
 
-          variable.value = value
+          if identifier.type == :identifier
+            variable = set(identifier)
+            variable.value = value
+          else
+            variable = identifier
+          end
 
           code :set, variable, value
         end
@@ -72,9 +76,15 @@ module Liquidscript
             (maybe_func == 2)
 
           if func_decl
-            compile_function_with_components(components)
+            compile_function_with_parameters(components)
           else
-            code :expression, components
+            code(:expression, components.map do |c|
+              if c.is_a?(Scanner::Token)
+               compile_identifier(c)
+              else
+                c
+              end
+            end)
           end
         end
 

@@ -14,12 +14,19 @@ module Liquidscript
       include Classes
       include Helpers
 
+      always :keyword
+
       # (see Base#reset!)
       def reset!
         @top         = Liquidscript::ICR::Set.new
         @top.context = Liquidscript::ICR::Context.new
         @set         = [@top]
         super
+      end
+
+      # (see Base#top)
+      def top
+        @set.last
       end
 
       # Sets the starting point for compiliation.

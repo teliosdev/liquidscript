@@ -97,21 +97,21 @@ describe Compiler::ICR do
 
   describe "#compile" do
     specify {
-      expect("hello = 3").to compile.and_produce([
+      expect("hello = 3").to compile.and_produce([:exec,
         [:_context, [:hello]], [:set, [:_variable, :hello], [:number, "3"]]
       ])
     }
 
     specify {
-      expect("{hello: 'world}").to compile.and_produce([
+      expect("{hello: 'world}").to compile.and_produce([:exec,
         [:_context, []], [:object, [[[:identifier, "hello"], [:sstring, "world"]]]]
       ])
     }
 
     specify {
-      expect("(test)-> { 2 }").to compile.and_produce([
+      expect("(test)-> { 2 }").to compile.and_produce([:exec,
         [:_context, []], [:function,
-          [
+          [:exec,
             [:_context, [:test]],
             [:_arguments, [[:identifier, "test"]]],
             [:number, "2"]

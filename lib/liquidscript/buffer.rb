@@ -2,13 +2,19 @@ module Liquidscript
   class Buffer
 
     def initialize(*args)
-      @_buf = args
+      @_buf   = args
       @_cache = nil
+      @_join  = ''
     end
 
     def append(*a)
       @_cache = nil
       @_buf.push(*a)
+      self
+    end
+
+    def set_join!(to)
+      @_join = to
     end
 
     alias_method :<<, :append
@@ -16,7 +22,7 @@ module Liquidscript
 
     def to_s
       @_cache ||= begin
-        @_buf.join ''
+        @_buf.join @_join
       end
     end
 

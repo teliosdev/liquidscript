@@ -18,13 +18,14 @@
   identifier = [A-Za-z_$][A-Za-z0-9_$]*;
   string_single = "'" [A-Za-z0-9_$\-]+;
 
-
   main := |*
     number        => { emit :number      };
     string_double => { emit :dstring     };
     string_single => { emit :sstring     };
     'class'       => { emit :class       };
     'module'      => { emit :module      };
+    'new'         => { emit :keyword     };
+    'return'      => { emit :keyword     };
     identifier    => { emit :identifier  };
     '->'          => { emit :arrow       };
     '='           => { emit :equal       };

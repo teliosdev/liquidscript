@@ -44,5 +44,15 @@ describe Liquidscript::Scanner::Lexer, :lexer_helper do
         [:rbrack, "}"]
       ]
     end
+
+    it "scans keywords" do
+      scan("return test = new foo").should eq [
+        [:keyword, "return"],
+        [:identifier, "test"],
+        [:equal, "="],
+        [:keyword, "new"],
+        [:identifier, "foo"]
+      ]
+    end
   end
 end

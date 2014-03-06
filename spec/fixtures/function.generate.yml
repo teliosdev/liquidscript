@@ -1,0 +1,11 @@
+data: |
+  console = 2
+  some_function = ()-> {
+    console = 3
+  }
+
+compiled: |
+  var some_function;
+  console = 2;
+
+  some_function = function() { console = 3; };

@@ -33,6 +33,30 @@ module Liquidscript
         @value = nil
       end
 
+      # Make this class compatible with the #type based system.
+      #
+      # @return [Symbol]
+      def type
+        :variable
+      end
+
+      # Marks this variable as an argument to a function.  This is to
+      # let the context know not to show it in certain cases.
+      #
+      # @return [self]
+      def parameter!
+        @parameter = true
+        self
+      end
+
+      # Whether or not the variable is an argument to a function.
+      #
+      # @see {#parameter!}
+      # @return [Boolean]
+      def parameter?
+        @parameter
+      end
+
       # Turns the variable into an array.
       #
       # @return [Array<(Symbol, Symbol)>]

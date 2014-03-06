@@ -7,6 +7,10 @@ module Liquidscript
           top.context.get(literal.value.intern)
         end
 
+        def set(literal)
+          top.context.set(literal.value.intern)
+        end
+
         def code(type, *args)
           Liquidscript::ICR::Code.new type, *args
         end

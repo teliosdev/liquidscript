@@ -2,16 +2,17 @@ module Liquidscript
 
   class Error < ::StandardError; end
 
-  class CompileError < Error; end
   class SyntaxError < Error; end
+  class CompileError < Error; end
+  class GeneratorError < Error; end
 
+  class UnexpectedEndError < CompileError; end
   class InvalidReferenceError < CompileError
 
     def initialize(name)
       super "No variable named #{name}"
     end
   end
-
   class UnexpectedError < CompileError
     def initialize(expected, got)
       @expected = expected
@@ -41,5 +42,10 @@ module Liquidscript
     end
   end
 
-  class UnexpectedEndError < CompileError; end
+  class InvalidCodeError < GeneratorError
+    def initialize(code)
+      super "Could not generate code for `#{code.to_s.upcase}`"
+    end
+  end
+
 end

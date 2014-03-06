@@ -5,7 +5,7 @@ module Liquidscript
     # metadata about the set, like whether or not it can
     # be inlined, if a new context needs to be applied,
     # etc.
-    class Set
+    class Set < Code
 
       # The metadata that is applied to the set.
       #
@@ -18,6 +18,7 @@ module Liquidscript
       def initialize
         @metadata = {}
         @code = []
+        @action = :exec
       end
 
       #
@@ -42,6 +43,35 @@ module Liquidscript
         @code << Code.new(action, arguments)
       end
 
+      # A list of all the local variables in the
+      # current scope.  Local variables are defined
+      # as variables that were a) not passed in by
+      # function execution as arguments and b) are
+      # set within the current context.
+      #
+      # @return [Array<Symbol>]
+      def locals
+        variables - parameters
+      end
+
+      # A list of components (or arguments) that are
+      # in the current scope.  Defined as variables
+      # that were passed in by function execution as
+      # arguments.
+      #
+      # @return [Array<Symbol>]
+      def parameters
+        context.parameters.map(&:name)
+      end
+
+      # A list of _all_ variables in the current
+      # scope.
+      #
+      # @return [Array<Symbol>]
+      def variables
+        context.variables.keys - context.allowed_variables
+      end
+
       # Turns the set into an array.  Includes the
       # metadata information and the actual internal
       # array.
@@ -52,6 +82,7 @@ module Liquidscript
       # @return [Array]
       def to_a
         [
+          @action,
           *@metadata.to_a.map { |(m, i)| [:"_#{m}", i] },
           *@code
         ]

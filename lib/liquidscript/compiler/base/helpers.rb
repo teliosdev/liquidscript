@@ -3,6 +3,25 @@ module Liquidscript
     class Base
       module Helpers
 
+        module ClassMethods
+          def allowable
+            @_allowable ||= {}
+          end
+
+          def always(type)
+            case type
+            when Hash
+              allowable.merge!(type)
+            when Symbol
+              allowable[type] = type
+            end
+          end
+        end
+
+        def self.included(base)
+          base.extend ClassMethods
+        end
+
         # Normalizes an action for the hash passed to {#expect}.  If
         # a block is given, it returns that block.  If the argument is
         # a proc, it returns that proc.  If none of those conditions are
@@ -114,22 +133,40 @@ module Liquidscript
         # @return [Object] the result of the block/method call.
         def expect(*args)
           hash = normalize_arguments(args)
+          allowable = false
 
           block = hash.fetch(peek.type) do
-            hash.fetch(:_)
+            hash.fetch(:_) do
+              allowable = true
+              self.allowable.fetch(peek.type)
+            end
           end
 
-          if block.arity == 1
+          out = if block.arity == 1
             block.call pop
           else
             block.call
+          end
+
+          if allowable
+            expect(*args)
+          else
+            out
           end
 
         rescue KeyError
           raise UnexpectedError.new(hash.keys, peek)
         end
 
-        private
+        protected
+
+        def allowable
+          @_allowable ||= begin
+            self.class.allowable.to_a.inject({}) do |m, (k, v)|
+              m.merge! k => Callable.new(self, v)
+            end
+          end
+        end
 
         # Normalizes the arguments for {#expect}.  Turns all of the
         # values into {Callable}s, and everything that's not a hash
@@ -138,23 +175,21 @@ module Liquidscript
         # @param args [Array<Hash, Symbol>]
         # @return [Hash]
         def normalize_arguments(args)
-          out = {}
-
           hash = if args.last.is_a? Hash
             args.pop
           else
             {}
           end
 
-          args.each do |arg|
-            hash[arg] = if arg == :_
+          args.inject(hash) do |h, a|
+            h.merge! a => if a == :_
               peek.type
             else
-              arg
+              a
             end
           end
 
-          hash.each do |key, value|
+          hash.inject({}) do |out, (key, value)|
             c = Callable.new(self, value)
 
             if key.is_a? Array
@@ -162,9 +197,9 @@ module Liquidscript
             else
               out[key] = c
             end
-          end
 
-          out
+            out
+          end
         end
       end
     end

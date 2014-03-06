@@ -9,6 +9,12 @@ module Liquidscript
     # forcibly created.
     class Context
 
+      # The variables that are allowed to be used as a global scope,
+      # i.e. used in a `get` context without a previous `set`.
+      DEFAULT_ALLOWED_VARIABLES = [
+        :window, :global, :exports, :console, :this
+      ]
+
       # The parent of the current context.
       #
       # @return [Parent]
@@ -19,11 +25,19 @@ module Liquidscript
       # @return [Hash<Symbol, Variable>]
       attr_reader :variables
 
+      # The variables that are allowed to be used as a global scope,
+      # i.e. used in a `get` context without a previous set.
+      #
+      # @see [DEFAULT_ALLOWED_VARIABLES]
+      # @return [Array<Symbol>]
+      attr_reader :allowed_variables
+
       include Representable
 
       # Initializes the context.
       def initialize
         @variables = {}
+        @allowed_variables = [DEFAULT_ALLOWED_VARIABLES].flatten
       end
 
       # Returns a variable reference.  If checks the local variables
@@ -38,15 +52,23 @@ module Liquidscript
       # @return [Variable]
       def variable(name, type)
         @variables.fetch(name) do
-          if type == :get && parent
-            parent.get(name)
-          elsif type == :set
-            raise StandardError if name == nil
+          if type == :set
             @variables[name] = Variable.new(self, name)
+          elsif allowed_variables.include?(name)
+            Variable.new(self, name)
+          elsif type == :get && parent
+            parent.get(name)
           else
             raise InvalidReferenceError.new(name)
           end
         end
+      end
+
+      # All of the parameter variables.
+      #
+      # @return [Array<Variable>]
+      def parameters
+        @variables.values.select(&:parameter?)
       end
 
       # (see #variable).

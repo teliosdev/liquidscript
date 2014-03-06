@@ -1,0 +1,31 @@
+data: |
+  module Something {
+    class Test {
+      wee: -> {
+        console.log(2)
+      }
+
+      initialize: -> {
+        "this should be init"
+      }
+    }
+  }
+
+compiled: |
+  var Test, Something;
+
+  Something = {};
+  Test = function Test() {
+    if(this.initialize) {
+      this.initialize.apply(this, arguments);
+    }
+  };
+
+  Test.prototype.wee = function() {
+    console.log(2)
+  };
+
+  Test.prototype.initialize = function() {
+    "this should be init"
+  };
+  Something.Test = Test;

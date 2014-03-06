@@ -3,17 +3,25 @@ module Liquidscript
     class ICR < Base
       module Functions
 
-        def compile_property(identifier)
+        def compile_property(prop)
           shift :prop
 
+          ref = if prop.type == :identifier
+            ref(prop)
+          else
+            prop
+          end
+
           property = action do |ident|
-            code :property, ref(identifier), ident
+            code :property, ref, ident
           end
 
           code = expect :identifier => property
 
-          expect :lparen => action { compile_call(code) },
-                 :_      => action { code }
+          expect :lparen => action { compile_call(code)       },
+                 :equal  => action { compile_assignment(code) },
+                 :prop   => action { compile_property(code)   },
+                 :_      => action { code                     }
         end
 
         def compile_call(subject)

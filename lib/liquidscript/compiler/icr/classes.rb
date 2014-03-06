@@ -6,29 +6,29 @@ module Liquidscript
         def compile_class
           shift :class
           name = shift :identifier
-
           body = _compile_class_body
 
+          set name
           code :class, name, body
         end
 
         def compile_module
           shift :module
           name = shift :identifier
+          body = _compile_class_body(true)
 
-          body = _compile_class_body
-
+          set name
           code :module, name, body
         end
 
-        def _compile_class_body
+        def _compile_class_body(mod = false)
           shift :lbrack
 
           components = []
 
           compile_object = action do
             components << [
-              _compile_class_body_key,
+              _compile_class_body_key(mod),
               compile_expression
             ]
           end
@@ -44,11 +44,11 @@ module Liquidscript
           components
         end
 
-        def _compile_class_body_key
+        def _compile_class_body_key(mod)
           item = shift :identifier, :dstring
 
           item = compile_property(item) if item.type == :identifier &&
-            peek?(:prop)
+            peek?(:prop) && mod
 
           shift :colon
           item

@@ -1,4 +1,5 @@
 RSpec::Matchers.define :compile do
+  include Liquidscript
 
   chain :and_produce do |prod|
     @prod = prod
@@ -31,14 +32,10 @@ RSpec::Matchers.define :compile do
   end
 
   def actual
-    if @_out
-      @_out
-    else
-      []
-    end
+    @_out || []
   end
 
   def compiler(data)
-    Liquidscript::Compiler::ICR.new(Liquidscript::Scanner.new(data))
+    Compiler::ICR.new(Scanner.new(data))
   end
 end

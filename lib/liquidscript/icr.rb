@@ -1,6 +1,7 @@
 require "liquidscript/icr/representable"
 require "liquidscript/icr/code"
 require "liquidscript/icr/set"
+require "liquidscript/icr/sexp"
 require "liquidscript/icr/context"
 require "liquidscript/icr/variable"
 

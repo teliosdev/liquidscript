@@ -1,0 +1,20 @@
+data: |
+  thing = {
+    test: -> {
+      "hello"
+    }
+  }
+
+  thing.test()
+
+compiled: |
+  var thing;
+
+  thing = {
+    "test": function() {
+      "hello"
+    }
+  };
+
+  thing.test()
+

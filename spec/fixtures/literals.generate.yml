@@ -1,0 +1,8 @@
+data: |
+  object = { hello: "world" }
+  test = [1, 2]
+
+compiled: |
+  var object, test;
+  object = { "hello": "world" };
+  test = [1, 2];

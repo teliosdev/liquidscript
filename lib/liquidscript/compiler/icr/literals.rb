@@ -26,6 +26,10 @@ module Liquidscript
           code :sstring, pop.value[1..-1]
         end
 
+        def compile_keyword
+          code :keyword, shift(:keyword), compile_expression
+        end
+
         def compile_object
           shift :lbrack
 
@@ -43,6 +47,21 @@ module Liquidscript
           code :object, objects
         end
 
+        def compile_array
+          shift :lbrace
+
+          parts = []
+          compile_part = action { parts << compile_expression }
+
+          loop do
+            expect :rbrace => action.end_loop,
+            :comma         => action.shift,
+            :_             => compile_part
+          end
+
+          code :array, parts
+        end
+
         def compile_object_key
           key = shift :identifier, :dstring
           shift :colon
@@ -51,23 +70,23 @@ module Liquidscript
         end
 
         def compile_function
-          compile_function_with_components([])
+          compile_function_with_parameters([])
         end
 
-        def compile_function_with_components(components)
+        def compile_function_with_parameters(parameter)
           shift :arrow
           shift :lbrack
 
           expressions = Liquidscript::ICR::Set.new
           expressions.context = Liquidscript::ICR::Context.new
           expressions.context.parent = top.context
-          expressions[:arguments] = components
+          expressions[:arguments] = parameter
+          @set << expressions
 
-          components.each do |component|
-            expressions.context.set(component.value.intern)
+          parameter.each do |parameter|
+            set(parameter).parameter!
           end
 
-          @set << expressions
 
           expression = action do
             expressions << compile_expression

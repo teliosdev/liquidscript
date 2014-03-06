@@ -4,6 +4,7 @@ data: |
     console.log("hello world")
   }
 compiled:
+  - :exec
   - - :_context
     - - :console
       - :func
@@ -16,7 +17,8 @@ compiled:
     - - :_variable
       - :func
     - - :function
-      - - - :_context
+      - - :exec
+        - - :_context
           - []
         - - :_arguments
           - []

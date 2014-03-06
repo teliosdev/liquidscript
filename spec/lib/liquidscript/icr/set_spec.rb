@@ -8,7 +8,7 @@ describe ICR::Set do
 
   describe "#to_a" do
     specify { expect(subject.to_a).to be_an Array }
-    specify { expect(subject.to_a).to have(0).items }
+    specify { expect(subject.to_a).to have(1).item }
 
     context "with metadata" do
       subject do
@@ -17,8 +17,8 @@ describe ICR::Set do
         set
       end
 
-      specify { expect(subject.to_a).to have(1).item }
-      specify { expect(subject.to_a).to eq [[:_hello, "world"]] }
+      specify { expect(subject.to_a).to have(2).items }
+      specify { expect(subject.to_a).to eq [:exec, [:_hello, "world"]] }
 
     end
 
@@ -29,8 +29,8 @@ describe ICR::Set do
         set
       end
 
-      specify { expect(subject.to_a).to have(1).item }
-      specify { expect(subject.to_a).to eq ["test"] }
+      specify { expect(subject.to_a).to have(2).item }
+      specify { expect(subject.to_a).to eq [:exec, "test"] }
 
     end
 
@@ -42,8 +42,8 @@ describe ICR::Set do
         set
       end
 
-      specify { expect(subject.to_a).to have(2).items }
-      specify { expect(subject.to_a).to eq [[:_hello, "world"], "test"] }
+      specify { expect(subject.to_a).to have(3).items }
+      specify { expect(subject.to_a).to eq [:exec, [:_hello, "world"], "test"] }
 
     end
   end
@@ -52,8 +52,8 @@ describe ICR::Set do
     it "adds a code to the set" do
       subject.add(:number, "32")
 
-      expect(subject.to_a).to have(1).item
-      expect(subject.to_a.first).to be_a ICR::Code
+      expect(subject.to_a).to have(2).items
+      expect(subject.to_a.last).to be_a ICR::Code
     end
   end
 end

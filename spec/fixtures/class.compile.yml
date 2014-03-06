@@ -6,8 +6,10 @@ data: |
   }
 
 compiled:
+  - :exec
   - - :_context
-    - []
+    - - :SomeClass
+      - :Something
   - - :module
     - - :identifier
       - Something
@@ -17,7 +19,8 @@ compiled:
         - - - - :identifier
               - test
             - - :function
-              - - - :_context
+              - - :exec
+                - - :_context
                   - []
                 - - :_arguments
                   - []

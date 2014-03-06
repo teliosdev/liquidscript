@@ -1,0 +1,33 @@
+data: |
+  Test = require("some_module/test")
+
+  module SomeModule {
+    class Thing {
+      initialize: -> {
+        this.test = new Test()
+      }
+
+      do: (thing)-> {
+        return this.test.do(thing)
+      }
+    }
+  }
+
+compiled: |
+  var Test, Thing, SomeModule;
+  Test = require("some_module/test");
+  SomeModule = {};
+  Thing = function Thing() {
+    if(this.initialize) {
+      this.initialize.apply(this, arguments);
+    }
+  };
+
+  Thing.prototype.initialize = function() {
+    this.test = new Test();
+  };
+
+  Thing.prototype.do = function(thing) {
+    return this.test.do(thing)
+  };
+  SomeModule.Thing = Thing;

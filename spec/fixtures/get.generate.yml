@@ -1,0 +1,5 @@
+data: |
+  something = 2
+  test = something
+
+compiled: "var something,test; something = 2; test = something;"
