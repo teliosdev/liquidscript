@@ -11,8 +11,8 @@ module Liquidscript
     # - `:get`         ✔
     # - `:exec`        ✔
     # - `:expression`  ✔
-    # - `:class`
-    # - `:module`
+    # - `:class`       ✔
+    # - `:module`      ✔
     # - `:property`    ✔
     # - `:call`        ✔
     # - `:number`      ✔
