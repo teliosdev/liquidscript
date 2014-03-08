@@ -1,6 +1,11 @@
 data: |
   test = "hello"
   foo  = 'world
+  thing = "hello \" test
+  world"
 
 compiled: |
-  var test,foo; test = "hello"; foo = 'world';
+  var test, foo, thing;
+  test = "hello";
+  foo = 'world';
+  thing = "hello \" test \n world";

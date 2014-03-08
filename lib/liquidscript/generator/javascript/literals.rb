@@ -19,7 +19,7 @@ module Liquidscript
 
         def generate_dstring(code)
 
-          "\"#{code.first.gsub(/"/, '\\"')}\""
+          "\"#{code.first.gsub("\n", "\\n")}\""
         end
 
         def generate_sstring(code)
