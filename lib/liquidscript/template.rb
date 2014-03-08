@@ -9,7 +9,7 @@ module Liquidscript
       @_render ||= begin
         compiler = Compiler::ICR.new(Scanner.new(@data))
         compiler.compile
-        Generator::Javascript.new(compiler).generate
+        Generator::Javascript.new(compiler.top).generate
       end
     end
   end

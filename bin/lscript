@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require "liquidscript"
+
+if ARGV.length < 1
+  puts "Usage: #{File.basename($0)} infile [outfile]"
+  exit 1
+end
+
+infile = ARGV.shift
+outfile = ARGV.shift || infile.gsub(/\.ls\Z/, ".js")
+
+File.open(infile, "r") do |f|
+  out = Liquidscript::Template.new(f.read).render
+
+  File.open(outfile, "w") { |f| f.write out }
+end
