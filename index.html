@@ -268,7 +268,7 @@ new Greeter("Alice").greet()
         console.log("Hello %s!", this.name)
     }
 
-    self.meet: (first, second)-&gt; {
+    this.meet: (first, second)-&gt; {
         new Greeter(first).greet()
         new Greeter(second).greet()
     }
