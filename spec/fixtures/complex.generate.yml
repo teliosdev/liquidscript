@@ -1,7 +1,13 @@
 data: |
   thing = {
     test: -> {
-      "hello"
+      if(undefined) {
+        "test"
+      } elsif(null) {
+        "um"
+      } else {
+        "hello"
+      }
     }
   }
 
@@ -12,7 +18,13 @@ compiled: |
 
   thing = {
     "test": function() {
-      "hello"
+      if(undefined) {
+        "test"
+      } else if(null) {
+        "um"
+      } else {
+        "hello"
+      }
     }
   };
 

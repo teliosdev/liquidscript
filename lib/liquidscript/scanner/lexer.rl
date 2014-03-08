@@ -17,6 +17,12 @@
   string_double = '"' ( any -- '"' | '\\"' )* '"';
   identifier = [A-Za-z_$][A-Za-z0-9_$]*;
   string_single = "'" [A-Za-z0-9_$\-]+;
+  keywords = 'undefined' | 'null' | 'true' | 'false';
+  unops = '!' | '++' | '--' | '~' | 'new' | 'return' |
+    'typeof';
+  binops = '+' | '-' | '*' | '/' | '&' | '|' | '^' | '<<' | '>>' |
+    '>>>' | '==' | '!=' | '===' | '!==' | '>' | '>=' | '<' | '<=' |
+    '&&' | '||' | 'instanceof' | 'or' | 'and';
 
   main := |*
     number        => { emit :number      };
@@ -24,8 +30,13 @@
     string_single => { emit :sstring     };
     'class'       => { emit :class       };
     'module'      => { emit :module      };
-    'new'         => { emit :keyword     };
-    'return'      => { emit :keyword     };
+    'if'          => { emit :if          };
+    'unless'      => { emit :unless      };
+    'elsif'       => { emit :elsif       };
+    'else'        => { emit :else        };
+    unops         => { emit :unop        };
+    binops        => { emit :binop       };
+    keywords      => { emit :keyword     };
     identifier    => { emit :identifier  };
     '->'          => { emit :arrow       };
     '='           => { emit :equal       };

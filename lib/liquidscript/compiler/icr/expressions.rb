@@ -8,12 +8,36 @@ module Liquidscript
         #
         # @return [ICR::Code]
         def compile_expression
-          expect :number,     :identifier,
-                 :dstring,    :lparen,
-                 :sstring,    :keyword,
-                 :lbrack   => :object,
-                 :lbrace   => :array,
-                 :arrow    => :function
+          expect :if, :unless, :class, :module, :_ => :vexpression
+        end
+
+        # Compiles an expression that returns a value.
+        #
+        # @return [ICR::Code]
+        def compile_vexpression
+          out = expect :number,     :identifier,
+                       :dstring,    :lparen,
+                       :sstring,    :operator,
+                       :keyword,    :unop,
+                       :lbrack   => :object,
+                       :lbrace   => :array,
+                       :arrow    => :function
+
+          if peek? :binop
+            compile_binop out
+          elsif peek? :prop
+            compile_property(out)
+          else
+            out
+          end
+        end
+
+        def compile_binop(left)
+          code :binop, shift(:binop), left, compile_vexpression
+        end
+
+        def compile_unop
+          code :unop, shift(:unop), compile_vexpression
         end
 
         # Handles an assignment of the form `identifier = expression`,
@@ -23,7 +47,7 @@ module Liquidscript
         # @return [ICR::Code]
         def compile_assignment(identifier)
           shift :equal
-          value    = compile_expression
+          value    = compile_vexpression
 
           if identifier.type == :identifier
             variable = set(identifier)
@@ -52,7 +76,7 @@ module Liquidscript
 
           expression = action do
             maybe_func = 0
-            components << compile_expression
+            components << compile_vexpression
           end
 
           loop do
@@ -86,6 +110,44 @@ module Liquidscript
               end
             end)
           end
+        end
+
+        [:if, :elsif].each do |key|
+          define_method(:"compile_#{key}") do
+            shift key
+            shift :lparen
+            conditional = compile_vexpression
+            shift :rparen
+            shift :lbrack
+
+            body = collect_compiles(:expression, :rbrack)
+
+            if peek?(:elsif, :else)
+              code key, conditional, body, expect(:elsif, :else)
+            else
+              code key, conditional, body
+            end
+          end
+        end
+
+        def compile_unless
+          shift :unless
+          shift :lparen
+          conditional = compile_vexpression
+          shift :rparen
+          shift :lbrack
+
+          body = collect_compiles(:expression, :rbrack)
+          code :unless, conditional, body
+        end
+
+        def compile_else
+          shift :else
+          shift :lbrack
+
+          body = collect_compiles(:expression, :rbrack)
+
+          code :else, body
         end
 
       end

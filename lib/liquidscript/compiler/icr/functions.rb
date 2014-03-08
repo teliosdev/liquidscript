@@ -6,7 +6,7 @@ module Liquidscript
         def compile_property(prop)
           shift :prop
 
-          ref = if prop.type == :identifier
+          ref = if [:identifier, :class, :module].include?(prop.type)
             ref(prop)
           else
             prop
@@ -16,7 +16,8 @@ module Liquidscript
             code :property, ref, ident
           end
 
-          code = expect :identifier => property
+          # Just in case there is a property named 'class' or 'module'
+          code = expect [:identifier, :class, :module] => property
 
           expect :lparen => action { compile_call(code)       },
                  :equal  => action { compile_assignment(code) },
@@ -26,13 +27,9 @@ module Liquidscript
 
         def compile_call(subject)
           shift :lparen
-          arguments = []
 
-          loop do
-            expect :comma  => action.shift,
-                   :rparen => action.end_loop,
-                   :_      => action { arguments << compile_expression }
-          end
+          arguments = collect_compiles :expression, :rparen,
+            :comma => action.shift
 
           code :call, subject, *arguments
         end

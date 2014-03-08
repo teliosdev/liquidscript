@@ -3,6 +3,15 @@ module Liquidscript
     class Javascript < Base
       module Literals
 
+        BINOP_SWITCH = {
+          "==" => "===",
+          "===" => "==",
+          "!=" => "!==",
+          "!==" => "!=",
+          "or" => "||",
+          "and" => "&&"
+        }.freeze
+
         def generate_number(code)
 
           "#{code.first}"
@@ -18,8 +27,20 @@ module Liquidscript
           "'#{code.first.gsub(/'/, "\\'")}'"
         end
 
-        def generate_keyword(code)
+        def generate_unop(code)
           " #{code[1].value} #{replace(code[2])}"
+        end
+
+        def generate_binop(code)
+          op = BINOP_SWITCH.fetch(code[1].value) do
+            code[1].value
+          end
+
+          " #{replace(code[2])} #{op} #{replace(code[3])}"
+        end
+
+        def generate_keyword(code)
+          " #{code[1].value} "
         end
 
         def generate_object(code)

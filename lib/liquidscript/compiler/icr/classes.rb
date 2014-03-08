@@ -29,7 +29,7 @@ module Liquidscript
           compile_object = action do
             components << [
               _compile_class_body_key(mod),
-              compile_expression
+              compile_vexpression
             ]
           end
 

@@ -83,6 +83,75 @@ module Liquidscript
           types.any? { |type| peek.type == type }
         end
 
+        # @overload collect_compiles(compile, *end_on)
+        #   Calls the method `:compile_#{compile}` for every peeked
+        #   token that isn't a part of `end_on`.  Once it encounters
+        #   that, it returns the values of all of those calls.  If the
+        #   last element of `end_on` is a Hash, it is merged with the
+        #   default actions that this takes and passes it to `expect`.
+        #
+        #   @example
+        #     def compile_if
+        #       shift :if
+        #       shift :lparen
+        #       conditional = compile_expression
+        #       shift :rparen
+        #       shift :lbrack
+        #       body = collect_compiles(:expression, :rbrack)
+        #       [:if, conditional, body]
+        #     end
+        #   @param compile [Symbol] the method to call.
+        #   @param end_on [Array<Symbol>] an array of symbols to end
+        #     the loop.
+        #   @return [Array<Object>]
+        #
+        # @overload collect_compiles(*end_on, &block)
+        #    Calls the block for every peeked token that isn't in
+        #    `end_on`.  Once it encounters a token that it, it returns
+        #    the value of all of the block calls. If the
+        #   last element of `end_on` is a Hash, it is merged with the
+        #   default actions that this takes and passes it to `expect`.
+        #
+        #    @example
+        #      collect_compiles(:test) { shift :_ }
+        #
+        #    @yieldreturn The value you want to be placed in the
+        #      array.
+        #    @param end_on [Array<Symbol>] an array of symbols to end
+        #      the loop.
+        #    @return [Array<Object>] the results of all of the block
+        #      calls.
+        def collect_compiles(*end_on)
+          compiles = []
+
+          if block_given?
+            compile = Proc.new
+          else
+            compile = end_on.shift
+          end
+
+          block = Callable.new(self, compile)
+
+          hash = if end_on.last.is_a? Hash
+            end_on.pop.dup
+          else
+            {}
+          end
+
+          do_compile = action do
+            compiles << block.call
+          end
+
+          hash.merge! end_on => action.end_loop,
+                      :_     => do_compile
+
+          loop do
+            expect hash
+          end
+
+          compiles
+        end
+
         # The meat and potatos of the compiler.  This maps actions to
         # tokens.  In its basic form, it is passed a hash, with the
         # keys being token types, and the values the corresponding
@@ -176,7 +245,7 @@ module Liquidscript
         # @return [Hash]
         def normalize_arguments(args)
           hash = if args.last.is_a? Hash
-            args.pop
+            args.pop.dup
           else
             {}
           end

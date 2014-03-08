@@ -26,22 +26,20 @@ module Liquidscript
           code :sstring, pop.value[1..-1]
         end
 
+        def compile_operator
+          code :operator, shift(:operator), compile_vexpression
+        end
+
         def compile_keyword
-          code :keyword, shift(:keyword), compile_expression
+          code :keyword, shift(:keyword)
         end
 
         def compile_object
           shift :lbrack
 
-          objects = []
-          compile_object = action do
-            objects << [compile_object_key, compile_expression]
-          end
-
-          loop do
-            expect :rbrack => action.end_loop,
-            :comma         => action.shift,
-            [:identifier, :dstring] => compile_object
+          objects = collect_compiles :rbrack,
+            :comma => action.shift do
+            [compile_object_key, compile_vexpression]
           end
 
           code :object, objects
@@ -50,14 +48,8 @@ module Liquidscript
         def compile_array
           shift :lbrace
 
-          parts = []
-          compile_part = action { parts << compile_expression }
-
-          loop do
-            expect :rbrace => action.end_loop,
-            :comma         => action.shift,
-            :_             => compile_part
-          end
+          parts = collect_compiles(:vexpression, :rbrace,
+            :comma => action.shift)
 
           code :array, parts
         end
@@ -73,17 +65,17 @@ module Liquidscript
           compile_function_with_parameters([])
         end
 
-        def compile_function_with_parameters(parameter)
+        def compile_function_with_parameters(parameters)
           shift :arrow
           shift :lbrack
 
           expressions = Liquidscript::ICR::Set.new
           expressions.context = Liquidscript::ICR::Context.new
           expressions.context.parent = top.context
-          expressions[:arguments] = parameter
+          expressions[:arguments] = parameters
           @set << expressions
 
-          parameter.each do |parameter|
+          parameters.each do |parameter|
             set(parameter).parameter!
           end
 

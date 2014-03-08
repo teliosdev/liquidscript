@@ -1,0 +1,23 @@
+data: |
+  nodejs = -> {
+    out = false
+
+    if(typeof global != 'undefined) {
+      out = true
+    }
+
+    return out
+  }
+
+compiled: |
+  var nodejs;
+
+  nodejs = function() {
+    var out;
+    out = false;
+    if(typeof global !== 'undefined') {
+      out = true;
+    }
+
+    return out
+  };

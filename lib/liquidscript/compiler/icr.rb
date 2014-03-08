@@ -14,8 +14,6 @@ module Liquidscript
       include Classes
       include Helpers
 
-      always :keyword
-
       # (see Base#reset!)
       def reset!
         @top         = Liquidscript::ICR::Set.new
@@ -33,7 +31,7 @@ module Liquidscript
       #
       # @return [ICR::Code]
       def compile_start
-        expect :class, :module, :_ => :expression
+        compile_expression
       end
     end
   end
