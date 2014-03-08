@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Liquidscript : " />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Liquidscript</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/redjazz96/liquidscript">View on GitHub</a>
+
+          <h1 id="project_title">Liquidscript</h1>
+          <h2 id="project_tagline"></h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/redjazz96/liquidscript/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/redjazz96/liquidscript/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="" class="anchor" href="#"><span class="octicon octicon-link"></span></a><img src="http://i.imgur.com/xbdhTsr.png" alt="Liquidscript">
+</h1>
+
+<p><strong>A javascript-based language that compiles to javascript.</strong>  It compiles directly to javascript, requiring no runtime libraries.  It means to take away the awkwardness of javascript, but keep the very essence and ideals of javascript.  It incorporates some of the most well-used concepts, and allows you to write the code as you like.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Add this line to your application's Gemfile:</p>
+
+<pre><code>gem 'liquidscript'
+</code></pre>
+
+<p>And then execute:</p>
+
+<pre><code>$ bundle
+</code></pre>
+
+<p>Or install it yourself as:</p>
+
+<pre><code>$ gem install liquidscript
+</code></pre>
+
+<h2>
+<a name="syntax" class="anchor" href="#syntax"><span class="octicon octicon-link"></span></a>Syntax</h2>
+
+<p>Liquidscript has a very similar syntax to Javascript.</p>
+
+<pre><code># This is a comment
+something = 2
+some_string = something.toString()
+
+if(some_string == '2) {
+  console.log("It lives!")
+}
+</code></pre>
+
+<p>The thing that should stand out to you the most there is the lack of an end quote to the single quotes in the if conditional.  This is on purpose - a ending single quote is optional.</p>
+
+<p>Note that there are also no semicolons (they don't exist in the language), and no <code>var</code> statement.  The <code>var</code> statement is made automagically by liquidscript, so you don't have to.</p>
+
+<h3>
+<a name="literals" class="anchor" href="#literals"><span class="octicon octicon-link"></span></a>Literals</h3>
+
+<h4>
+<a name="string" class="anchor" href="#string"><span class="octicon octicon-link"></span></a>String</h4>
+
+<p>Liquidscript has a very finite set of string literals - the only two options (so far) are double quotes and single quotes.  There are plans to introduce heredocs.  Double quotes are multiline, whereas <strong>single quotes are limited to the same characters that identifiers are limited to</strong>.  This is so that keys for objects (in the <code>object[key]</code> syntax feels more natural (i.e., <code>object['key]</code>).  Some examples:</p>
+
+<pre><code>string = "hello
+
+world" # this'll translate to "hello\n\nworld"
+
+single = 'test # there doesn't need to be an endquote here.
+</code></pre>
+
+<p>That's it!</p>
+
+<h4>
+<a name="functions" class="anchor" href="#functions"><span class="octicon octicon-link"></span></a>Functions</h4>
+
+<p>Functions are defined using the arrow syntax:</p>
+
+<pre><code>some_function = -&gt; {}
+</code></pre>
+
+<p>Brackets are <strong>not</strong> optional.  The parameter list before the arrow, however, is.  If you want something like coffeescript's fat arrow syntax, something like the following would have to be done:</p>
+
+<pre><code>self = this
+
+some_function = -&gt; {
+    # Change this to whatever property you wanted.
+    self.whatever
+}
+</code></pre>
+
+<p>A parameter list works exactly like you'd expect:</p>
+
+<pre><code>some_function = (a, b, c)-&gt; {
+    console.log(a, b, c)
+}
+
+some_function(1, 2, 3)
+</code></pre>
+
+<h4>
+<a name="numeric" class="anchor" href="#numeric"><span class="octicon octicon-link"></span></a>Numeric</h4>
+
+<p>There are numbers in liquidscript as well.  It follows the JSON spec on this to the letter.</p>
+
+<pre><code>some_number = -2e+5
+</code></pre>
+
+<h4>
+<a name="array-object" class="anchor" href="#array-object"><span class="octicon octicon-link"></span></a>Array, Object</h4>
+
+<p>Arrays and objects are exactly like in javascript:</p>
+
+<pre><code>array = [1, "test", 'foo, bar]
+
+object = {
+    test: "hello",
+    foo: "world" # a colon here is allowed
+}
+</code></pre>
+
+<h3>
+<a name="controls" class="anchor" href="#controls"><span class="octicon octicon-link"></span></a>Controls</h3>
+
+<p>Liquidscript has control statements like <code>if</code>, and <code>else</code>.  Liquidscript uses <code>elsif</code> instead of <code>else if</code>.</p>
+
+<pre><code>if(some_variable == 2) {
+    console.log("It's 2!")
+} elsif(some_variable == 3) {
+    console.log("It's a 3!")
+} else {
+    console.log("I don't know what it is!")
+}
+</code></pre>
+
+<p>Liquidscript lacks <code>for</code>, <code>switch</code>, and <code>while</code>, but they will be added as well.</p>
+
+<h3>
+<a name="classes-and-modules" class="anchor" href="#classes-and-modules"><span class="octicon octicon-link"></span></a>Classes and Modules</h3>
+
+<h4>
+<a name="modules" class="anchor" href="#modules"><span class="octicon octicon-link"></span></a>Modules</h4>
+
+<p>This is where liquidscript gets interesting, in my opinion.  Modules are extreme syntaxic sugar:</p>
+
+<pre><code>module SomeModule {
+    VERSION: "1.7.0"
+}
+
+SomeModule.VERSION # =&gt; 1.7.0
+</code></pre>
+
+<p>That compiles directly to:</p>
+
+<pre><code>var SomeModule;
+SomeModule = {
+    VERSION: "1.7.0"
+};
+
+SomeModule.VERSION; // =&gt; 1.7.0
+</code></pre>
+
+<p>The point of modules, however, is to bind code together into units, in an easier to read syntax.  Commas are not needed between definitions, and other modules and classes can be defined within modules.</p>
+
+<pre><code>module SomeModule {
+    module OtherModule {
+        VERSION: "1.7.0"
+        VERSION_MAJOR: 1
+        VERSION_MINOR: 7
+        VERSION_PATCH: 0
+
+        version: -&gt; {
+            return SomeModule.OtherModule.VERSION.split('.')
+        }
+    }
+}
+</code></pre>
+
+<p>Which compiles directly to:</p>
+
+<pre><code>var SomeModule, OtherModule;
+
+SomeModule = {
+    OtherModule: {
+        VERSION: "1.7.0",
+        VERSION_MAJOR: 1,
+        VERSION_MINOR: 7,
+        VERSION_PATCH: 0,
+        version: function() {
+            return SomeModule.OtherModule.VERSION.split('.');
+        }
+    }
+};
+</code></pre>
+
+<h4>
+<a name="classes" class="anchor" href="#classes"><span class="octicon octicon-link"></span></a>Classes</h4>
+
+<p>Classes are meant to be instantized with the <code>new</code> keyword.  They are defined very similarly to modules, but when values are defined, they default to being defined on the instance of the class:</p>
+
+<pre><code>class Greeter {
+    # This is a special function that is called whenever a 
+    # new greeter is created.
+    initialize: (name)-&gt; {
+        this.name = name
+    }
+
+    greet: -&gt; {
+        console.log("Hello %s!", this.name)
+    }
+}
+
+new Greeter("Alice").greet()
+</code></pre>
+
+<p>This would translate directly to this:</p>
+
+<pre><code>var Greeter;
+
+Greeter = function Greeter() {
+    if(this.initialize) {
+        this.initialize.apply(this, arguments);
+    }
+};
+
+Greeter.prototype.initialize = function(name) {
+    this.name = name;
+};
+
+Greeter.prototype.greet = function() {
+    console.log("Hello %s!", this.name);
+};
+
+new Greeter("Alice").greet()
+</code></pre>
+
+<p>This uses the functional prototype system in order to create instances of classes.  Inheritance is not yet supported, but there will be progress towards it.</p>
+
+<p>If you want a method defined on the class itself instead of the instance, prefix the function name with <code>this</code>:</p>
+
+<pre><code>class Greeter {
+    # This is a special function that is called whenever a 
+    # new greeter is created.
+    initialize: (name)-&gt; {
+        this.name = name
+    }
+
+    greet: -&gt; {
+        console.log("Hello %s!", this.name)
+    }
+
+    self.meet: (first, second)-&gt; {
+        new Greeter(first).greet()
+        new Greeter(second).greet()
+    }
+}
+
+Greeter.meet("Alice", "Bob")
+</code></pre>
+
+<p>This translates roughly to:</p>
+
+<pre><code>// ...
+
+Greeter.meet = function(first, second) {
+    new Greeter(first).greet()
+    new Greeter(second).greet()
+}
+
+// ...
+</code></pre>
+
+<h1>
+<a name="the-end" class="anchor" href="#the-end"><span class="octicon octicon-link"></span></a>The End!</h1>
+
+<p>That wraps it all up!  If you're interested in more, checkout the <a href="https://github.com/redjazz96/liquidscript">github repository</a> and read the documentation.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Liquidscript maintained by <a href="https://github.com/redjazz96">redjazz96</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
