@@ -8,7 +8,7 @@ require "liquidscript/generator"
 require "liquidscript/template"
 
 module Liquidscript
-  def compile(data)
+  def self.compile(data)
     compiler = Compiler::ICR.new(Scanner.new(data))
     compiler.compile
     Generate::Javascript.new(compiler.top)
