@@ -38,7 +38,8 @@ module Liquidscript
           shift :lbrack
 
           objects = collect_compiles :rbrack,
-            :comma => action.shift do
+            :comma => action.shift,
+            :newline => action.shift do
             [compile_object_key, compile_vexpression]
           end
 

@@ -3,7 +3,7 @@ module Liquidscript
   class Error < ::StandardError; end
 
   class SyntaxError < Error; end
-  class CompileError < Error; end
+  class CompileError < Error;  end
   class GeneratorError < Error; end
 
   class UnexpectedEndError < CompileError; end
@@ -13,6 +13,7 @@ module Liquidscript
       super "No variable named #{name}"
     end
   end
+
   class UnexpectedError < CompileError
     def initialize(expected, got)
       @expected = expected

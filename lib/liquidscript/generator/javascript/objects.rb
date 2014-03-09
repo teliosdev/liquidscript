@@ -97,7 +97,7 @@ module Liquidscript
           module_name = code[1].value
 
           in_module(module_name) do |last_module|
-            body << "#{module_name} ||= {};"
+            body << "#{module_name} = #{module_name} || {};"
 
             code[2].each do |part|
               k, v = part

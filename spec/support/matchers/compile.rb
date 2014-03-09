@@ -32,7 +32,7 @@ RSpec::Matchers.define :compile do
   end
 
   def actual
-    @_out || []
+    (@_out || []).to_a!
   end
 
   def compiler(data)

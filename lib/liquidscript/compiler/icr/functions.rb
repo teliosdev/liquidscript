@@ -6,14 +6,8 @@ module Liquidscript
         def compile_property(prop)
           shift :prop
 
-          ref = if [:identifier, :class, :module].include?(prop.type)
-            ref(prop)
-          else
-            prop
-          end
-
           property = action do |ident|
-            code :property, ref, ident
+            code :property, prop, ident
           end
 
           # Just in case there is a property named 'class' or 'module'

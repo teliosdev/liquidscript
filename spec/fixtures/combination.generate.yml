@@ -14,10 +14,10 @@ data: |
   }
 
 compiled: |
-  var Test, Thing, SomeModule;
+  var Test, SomeModule, Thing;
   Test = require("some_module/test");
-  SomeModule = {};
-  Thing = function Thing() {
+  SomeModule = SomeModule || {};
+  Thing = Thing || function Thing() {
     if(this.initialize) {
       this.initialize.apply(this, arguments);
     }

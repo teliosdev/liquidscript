@@ -12,10 +12,10 @@ data: |
   }
 
 compiled: |
-  var Test, Something;
+  var Something, Test;
 
-  Something = {};
-  Test = function Test() {
+  Something = Something || {};
+  Test = Test || function Test() {
     if(this.initialize) {
       this.initialize.apply(this, arguments);
     }

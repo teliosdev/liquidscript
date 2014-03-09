@@ -8,8 +8,8 @@ data: |
 compiled:
   - :exec
   - - :_context
-    - - :SomeClass
-      - :Something
+    - - :Something
+      - :SomeClass
   - - :module
     - - :identifier
       - Something
@@ -24,3 +24,4 @@ compiled:
                   - []
                 - - :_arguments
                   - []
+  - - :newline

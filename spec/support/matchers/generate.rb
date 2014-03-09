@@ -29,7 +29,7 @@ RSpec::Matchers.define :generate do |v|
   diffable
 
   def generator(data)
-    compiler = Compiler::ICR.new(Scanner.new(data))
+    compiler = Compiler::ICR.new(s = Scanner.new(data))
     compiler.compile
     Generator::Javascript.new(compiler.top)
   end
