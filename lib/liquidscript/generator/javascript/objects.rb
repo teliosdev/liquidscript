@@ -47,7 +47,7 @@ module Liquidscript
 
           in_module(class_name) do |last_module|
             body.block <<-JS
-              #{class_name} ||= function #{class_name}() {
+              #{class_name} = #{class_name} || function #{class_name}() {
                 if(this.initialize) {
                   this.initialize.apply(this, arguments);
                 }
