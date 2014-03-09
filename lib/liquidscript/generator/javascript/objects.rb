@@ -66,8 +66,8 @@ module Liquidscript
                   #{class_name}.prototype[#{k.value}] = #{replace(v)};
                 JS
               when :property
-                if k[1].name != :this
-                  raise InvalidCodeError.new(v[1].name)
+                if k[1].value != "this"
+                  raise InvalidCodeError.new(k[1].value)
                 end
 
                 body.block <<-JS

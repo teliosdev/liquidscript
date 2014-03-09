@@ -8,6 +8,10 @@ data: |
       initialize: -> {
         "this should be init"
       }
+
+      this.test: -> {
+        "class method!"
+      }
     }
   }
 
@@ -27,5 +31,9 @@ compiled: |
 
   Test.prototype.initialize = function() {
     "this should be init"
+  };
+
+  Test.test = function() {
+    "class method!"
   };
   Something.Test = Test;
