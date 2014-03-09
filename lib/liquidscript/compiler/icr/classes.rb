@@ -6,7 +6,7 @@ module Liquidscript
         def compile_class
           shift :class
           name = shift :identifier
-          body = _compile_class_body
+          body = _compile_class_body(false)
 
           set name
           code :class, name, body
@@ -48,7 +48,7 @@ module Liquidscript
           item = shift :identifier, :dstring
 
           item = compile_property(item) if item.type == :identifier &&
-            peek?(:prop) && mod
+            peek?(:prop) && !mod
 
           shift :colon
           item

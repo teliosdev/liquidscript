@@ -62,7 +62,7 @@ module Liquidscript
                 body                                      <<
                   "#{class_name}.prototype[#{k.value}] =" <<
                   replace(v) << ";"
-              when :prop
+              when :property
                 if k[1].name != :this
                   raise InvalidCodeError.new(v[1].name)
                 end
