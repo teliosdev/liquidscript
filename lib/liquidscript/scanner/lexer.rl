@@ -103,6 +103,7 @@ module Liquidscript
         line = proc do
           @line[:start] = @ts
           @line[:num] += 1
+          emit :newline
         end
 
         %% write init;

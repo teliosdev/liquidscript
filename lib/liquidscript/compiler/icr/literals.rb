@@ -65,6 +65,13 @@ module Liquidscript
           compile_function_with_parameters([])
         end
 
+        def compile_newline
+          if peek?(:newline)
+            pop
+            code :newline
+          end
+        end
+
         def compile_function_with_parameters(parameters)
           shift :arrow
           shift :lbrack
@@ -86,7 +93,7 @@ module Liquidscript
 
           loop do
             expect :rbrack => action.end_loop,
-              :_           => expression
+                   :_      => expression
           end
 
           code :function, @set.pop

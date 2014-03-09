@@ -405,10 +405,11 @@ self.lexer_en_main = 5;
         line = proc do
           @line[:start] = @ts
           @line[:num] += 1
+          emit :newline
         end
 
         
-# line 412 "lib/liquidscript/scanner/lexer.rb"
+# line 413 "lib/liquidscript/scanner/lexer.rb"
 begin
 	    @p ||= 0
 	   @pe ||=  @data.length
@@ -418,9 +419,9 @@ begin
 	 @act = 0
 end
 
-# line 109 "lib/liquidscript/scanner/lexer.rl"
+# line 110 "lib/liquidscript/scanner/lexer.rl"
         
-# line 424 "lib/liquidscript/scanner/lexer.rb"
+# line 425 "lib/liquidscript/scanner/lexer.rb"
 begin
 	_klen, _trans, _keys, _acts, _nacts = nil
 	_goto_level = 0
@@ -450,7 +451,7 @@ begin
 		begin
  @ts =     @p
 		end
-# line 454 "lib/liquidscript/scanner/lexer.rb"
+# line 455 "lib/liquidscript/scanner/lexer.rb"
 		end # from state action switch
 	end
 	if _trigger_goto
@@ -746,7 +747,7 @@ when 37 then
  error             end
 end 
 			end
-# line 750 "lib/liquidscript/scanner/lexer.rb"
+# line 751 "lib/liquidscript/scanner/lexer.rb"
 			end # action switch
 		end
 	end
@@ -766,7 +767,7 @@ when 0 then
 # line 1 "NONE"
 		begin
  @ts = nil;		end
-# line 770 "lib/liquidscript/scanner/lexer.rb"
+# line 771 "lib/liquidscript/scanner/lexer.rb"
 		end # to state action switch
 	end
 	if _trigger_goto
@@ -793,7 +794,7 @@ end
 	end
 	end
 
-# line 110 "lib/liquidscript/scanner/lexer.rl"
+# line 111 "lib/liquidscript/scanner/lexer.rl"
 
         clean!
 

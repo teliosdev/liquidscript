@@ -19,12 +19,13 @@ module Liquidscript
                        :dstring,    :lparen,
                        :sstring,    :operator,
                        :keyword,    :unop,
+                       :newline,
                        :lbrack   => :object,
                        :lbrace   => :array,
                        :arrow    => :function
 
           if peek? :binop
-            compile_binop out
+            compile_binop(out)
           elsif peek? :prop
             compile_property(out)
           else

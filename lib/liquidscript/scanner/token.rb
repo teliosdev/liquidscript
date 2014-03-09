@@ -31,6 +31,10 @@ module Liquidscript
         @type == type
       end
 
+      def empty?
+        false
+      end
+
     end
 
   end

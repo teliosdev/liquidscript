@@ -1,3 +1,5 @@
+require 'liquidscript/icr/sexp'
+
 module Liquidscript
   class Template
 
@@ -7,8 +9,10 @@ module Liquidscript
 
     def render
       @_render ||= begin
+        p Scanner.new(@data).each
         compiler = Compiler::ICR.new(Scanner.new(@data))
         compiler.compile
+        puts ICR::Sexp.new(compiler.top).output
         Generator::Javascript.new(compiler.top).generate
       end
     end

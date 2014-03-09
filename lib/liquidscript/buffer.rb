@@ -13,6 +13,10 @@ module Liquidscript
       self
     end
 
+    def block(str)
+      append str.gsub(/^[ \t]+/, '')
+    end
+
     def set_join!(to)
       @_join = to
     end

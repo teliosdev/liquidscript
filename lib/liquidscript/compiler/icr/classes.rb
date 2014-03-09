@@ -6,18 +6,18 @@ module Liquidscript
         def compile_class
           shift :class
           name = shift :identifier
+          set name
           body = _compile_class_body(false)
 
-          set name
           code :class, name, body
         end
 
         def compile_module
           shift :module
           name = shift :identifier
+          set name
           body = _compile_class_body(true)
 
-          set name
           code :module, name, body
         end
 
@@ -34,7 +34,7 @@ module Liquidscript
           end
 
           loop do
-            expect :rbrack => action.end_loop,
+            expect :newline, :rbrack => action.end_loop,
             :comma         => action.shift,
             :module        => action { components << compile_module },
             :class         => action { components << compile_class  },

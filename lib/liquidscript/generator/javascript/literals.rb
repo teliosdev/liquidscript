@@ -67,6 +67,10 @@ module Liquidscript
           "[#{array}]"
         end
 
+        def generate_newline(_)
+          "\n"
+        end
+
         def generate_function(code)
 
           function = buffer

@@ -3,25 +3,6 @@ module Liquidscript
     class Base
       module Helpers
 
-        module ClassMethods
-          def allowable
-            @_allowable ||= {}
-          end
-
-          def always(type)
-            case type
-            when Hash
-              allowable.merge!(type)
-            when Symbol
-              allowable[type] = type
-            end
-          end
-        end
-
-        def self.included(base)
-          base.extend ClassMethods
-        end
-
         # Normalizes an action for the hash passed to {#expect}.  If
         # a block is given, it returns that block.  If the argument is
         # a proc, it returns that proc.  If none of those conditions are
@@ -202,13 +183,9 @@ module Liquidscript
         # @return [Object] the result of the block/method call.
         def expect(*args)
           hash = normalize_arguments(args)
-          allowable = false
 
           block = hash.fetch(peek.type) do
-            hash.fetch(:_) do
-              allowable = true
-              self.allowable.fetch(peek.type)
-            end
+            hash.fetch(:_)
           end
 
           out = if block.arity == 1
@@ -217,11 +194,7 @@ module Liquidscript
             block.call
           end
 
-          if allowable
-            expect(*args)
-          else
-            out
-          end
+          out
 
         rescue KeyError
           raise UnexpectedError.new(hash.keys, peek)

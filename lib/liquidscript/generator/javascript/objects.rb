@@ -46,37 +46,45 @@ module Liquidscript
           class_name = code[1].value
 
           in_module(class_name) do |last_module|
-            body                                          <<
-              "#{class_name} = function #{class_name}(){" <<
-              "if(this.initialize) {"                     <<
-              "this.initialize.apply(this, arguments);"   <<
-              "}};"
+            body.block <<-JS
+              #{class_name} ||= function #{class_name}() {
+                if(this.initialize) {
+                  this.initialize.apply(this, arguments);
+                }
+              };
+            JS
 
-            code[2].each do |(k, v)|
+            code[2].each do |part|
+              k, v = part
               case k.type
               when :identifier
-                body                                      <<
-                  "#{class_name}.prototype.#{k.value} ="  <<
-                  replace(v) << ";"
+                body.block <<-JS
+                  #{class_name}.prototype.#{k.value} = #{replace(v)};
+                JS
               when :dstring
-                body                                      <<
-                  "#{class_name}.prototype[#{k.value}] =" <<
-                  replace(v) << ";"
+                body.block <<-JS
+                  #{class_name}.prototype[#{k.value}] = #{replace(v)};
+                JS
               when :property
                 if k[1].name != :this
                   raise InvalidCodeError.new(v[1].name)
                 end
 
-                body                                      <<
-                  "#{class_name}.#{k[2].value} = "        <<
-                  replace(v) << ";"
+                body.block <<-JS
+                  #{class_name}.#{k[2].value} =
+                    #{replace(v)};
+                JS
+              when :class
+                body << generate_class(part)
+              when :module
+                body << generate_module(part)
               end
             end
 
             if last_module
-              body                                        <<
-                "#{last_module}.#{class_name} = "         <<
-                "#{class_name};"
+              body.block <<-JS
+                #{last_module}.#{class_name} = #{class_name};
+              JS
             end
 
           end
@@ -89,29 +97,30 @@ module Liquidscript
           module_name = code[1].value
 
           in_module(module_name) do |last_module|
-            body << "#{module_name} = {};"
+            body << "#{module_name} ||= {};"
 
             code[2].each do |part|
-              k = part[0]
-              v = part[1]
+              k, v = part
               case k
               when :identifier
-                body                                      <<
-                  "#{module_name}.#{k.value} = "          <<
-                  replace(v) << ";"
+                body.block <<-JS
+                  #{module_name}.#{k.value} = #{replace(v)};
+                JS
               when :dstring
-                body                                      <<
-                  "#{module_name}[#{k.value}] = "         <<
-                  replace(v)  << ";"
+                body.block <<-JS
+                  #{module_name}[#{k.value}] = #{replace(v)};
+                JS
               when :class
                 body << generate_class(part)
+              when :module
+                body << generate_module(part)
               end
             end
 
             if last_module
-              body                                        <<
-                "#{last_module}.#{module_name} = "        <<
-                "#{module_name};"
+              body.block <<-JS
+                #{last_module}.#{module_name} = #{module_name};
+              JS
             end
           end
 

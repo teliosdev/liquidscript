@@ -13,5 +13,5 @@ outfile = ARGV.shift || infile.gsub(/\.ls\Z/, ".js")
 File.open(infile, "r") do |f|
   out = Liquidscript::Template.new(f.read).render
 
-  File.open(outfile, "w") { |f| f.write out }
+  File.open(outfile, "w") { |o| o.write out }
 end
