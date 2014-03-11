@@ -38,11 +38,11 @@
     
   main := |*
     number        => { emit :number      };
-    string_double => { emit :dstring     };
     string_single => { emit :sstring     };
     istring_start => { emit :istart      };
     istring_mid   => { emit :imid        };
     istring_end   => { emit :iend        };
+    string_double => { emit :dstring     };
     'class'       => { emit :class       };
     'module'      => { emit :module      };
     'if'          => { emit :if          };
