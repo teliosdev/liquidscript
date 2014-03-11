@@ -7,16 +7,16 @@
   variable pe   @pe;
   variable eof  @eof;
   access @;
-  
+
   number_integer = '-'? [0-9][1-9]*;
   number_frac = '.' [0-9]+;
   number_e = ('e' | 'E') ('+' | '-' | '');
   number_exp = number_e [0-9]+;
   number = number_integer number_frac? number_exp?;
 
-  string_double = '"' ( 
-      any -- '"' | 
-      '\\"' 
+  string_double = '"' (
+      any -- '"' |
+      '\\"'
     )* '"';
   identifier = [A-Za-z_$][A-Za-z0-9_$]*;
   string_single = "'" [A-Za-z0-9_$\-]+;
@@ -26,19 +26,19 @@
   binops = '+' | '-' | '*' | '/' | '&' | '|' | '^' | '<<' | '>>' |
     '>>>' | '==' | '!=' | '===' | '!==' | '>' | '>=' | '<' | '<=' |
     '&&' | '||' | 'instanceof' | 'or' | 'and';
-    
+
   istring_part  = ( any -- '"' | '\\"' );
   istring_start = '"' ( istring_part* ) '#{';
   istring_mid   = '}' ( istring_part* ) '#{';
   istring_end   = '}' ( istring_part* ) '"';
-    
+
+  istring = '"' ( any -- '"' | '\\"' | '#{' ( any -- '}' )* '}' )* '"';
+
   main := |*
     number        => { emit :number      };
     string_single => { emit :sstring     };
-    istring_start => { emit :istart      };
-    istring_mid   => { emit :imid        };
-    istring_end   => { emit :iend        };
     string_double => { emit :dstring     };
+    istring       => { emit :istring     };
     'class'       => { emit :class       };
     'module'      => { emit :module      };
     'if'          => { emit :if          };
@@ -102,7 +102,8 @@ module Liquidscript
       end
 
       def error
-        raise SyntaxError, "Unexpected #{@data[@ts..(@te-1)].pack('c*')}"
+        raise SyntaxError, "Unexpected #{@data[@ts..(@te-1)].pack('c*')} " \
+          "(line: #{@line[:num]}, col: #{@ts - @line[:start]}) (#{@tokens.inspect})"
       end
 
       def perform(data)
