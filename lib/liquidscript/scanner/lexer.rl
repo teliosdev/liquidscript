@@ -18,7 +18,10 @@
   number_exp = number_e [0-9]+;
   number = number_integer number_frac? number_exp?;
 
-  string_double = '"' ( any -- '"' | '\\"' )* '"';
+  string_double = '"' ( 
+      any -- '"' | 
+      '\\"' 
+    )* '"';
   identifier = [A-Za-z_$][A-Za-z0-9_$]*;
   string_single = "'" [A-Za-z0-9_$\-]+;
   keywords = 'undefined' | 'null' | 'true' | 'false';
@@ -28,34 +31,46 @@
     '>>>' | '==' | '!=' | '===' | '!==' | '>' | '>=' | '<' | '<=' |
     '&&' | '||' | 'instanceof' | 'or' | 'and';
     
-  body = ( >mark number        %{ emit :number     } ) |
-         ( >mark string_double %{ emit :dstring    } ) |
-         ( >mark string_single %{ emit :sstring    } ) |
-         (       'class'       %{ emit :class      } ) |
-         (       'module'      %{ emit :module     } ) |
-         (       'if'          %{ emit :if         } ) |
-         (       'unless'      %{ emit :unless     } ) |
-         (       'elsif'       %{ emit :elsif      } ) |
-         (       'else'        %{ emit :else       } ) |
-         ( >mark unops         %{ emit :unop       } ) |
-         ( >mark binops        %{ emit :binop      } ) |
-         ( >mark keywords      %{ emit :keyword    } ) |
-         ( >mark identifier    %{ emit :identifier } ) |
-         (       '->'          %{ emit :arrow      } ) |
-         (       '='           %{ emit :equal      } ) |
-         (       '{'           %{ emit :lbrack     } ) |
-         (       '('           %{ emit :lparen     } ) |
-         (       '['           %{ emit :lbrace     } ) |
-         (       '}'           %{ emit :rbrack     } ) |
-         (       ')'           %{ emit :rparen     } ) |
-         (       ']'           %{ emit :rbrace     } ) |
-         (       ':'           %{ emit :colon      } ) |
-         (       '.'           %{ emit :prop       } ) |
-         (       ','           %{ emit :comma      } ) |
-         (       '\n'          %{ line.call        } )
-  ;
+  istring_part   = ( any -- '"' | '\\"' );
+  istring_start  = '"' ( istring_part* ) '#{';
+  istring_middle = '}' ( istring_part* ) '#{';
+  istring_end    = '}' ( istring_part* ) '"';
+    
+  body = (
+           ( >mark number         %{ emit :number     } ) |
+           ( >mark string_double  %{ emit :dstring    } ) |
+           ( >mark string_single  %{ emit :sstring    } ) |
+           ( >mark istring_start  %{ emit :istart     } ) |
+           ( >mark istring_middle %{ emit :imiddle    } ) |
+           ( >mark istring_end    %{ emit :iend       } ) |
+           (       'class'        %{ emit :class      } ) |
+           (       'module'       %{ emit :module     } ) |
+           (       'if'           %{ emit :if         } ) |
+           (       'unless'       %{ emit :unless     } ) |
+           (       'elsif'        %{ emit :elsif      } ) |
+           (       'else'         %{ emit :else       } ) |
+           ( >mark unops          %{ emit :unop       } ) |
+           ( >mark binops         %{ emit :binop      } ) |
+           ( >mark keywords       %{ emit :keyword    } ) |
+           ( >mark identifier     %{ emit :identifier } ) |
+           (       '->'           %{ emit :arrow      } ) |
+           (       '='            %{ emit :equal      } ) |
+           (       '{'            %{ emit :lbrack     } ) |
+           (       '('            %{ emit :lparen     } ) |
+           (       '['            %{ emit :lbrace     } ) |
+           (       '}'            %{ emit :rbrack     } ) |
+           (       ')'            %{ emit :rparen     } ) |
+           (       ']'            %{ emit :rbrace     } ) |
+           (       ':'            %{ emit :colon      } ) |
+           (       '.'            %{ emit :prop       } ) |
+           (       ','            %{ emit :comma      } ) |
+           (       '\n'           %{ line.call        } )
+    );
+    
+  loop = ( body** );
+    
 
-  main := body**;
+  main := loop;
 }%%
 
 module Liquidscript
@@ -89,17 +104,19 @@ module Liquidscript
         @start = nil
       end
 
-      def emit(type, cur = nil)
-        @tokens << if cur
-          Token.new(type, @data[@start..(@cur - 1)],
+      def emit(type)
+        @tokens << if @start
+          Token.new(type, @data[@start..(@p - 1)],
             @line[:num], @p - @line[:start])
         else
           Token.new(type, nil, @line[:num], @p - @line[:start])
         end
+        
+        @start = nil
       end
 
       def error
-        raise SyntaxError, "Unexpected #{@data[@ts..(@te-1)].pack('c*')}"
+        raise SyntaxError, "Unexpected #{@data[@start..(@p-1)].pack('c*')}"
       end
 
       def perform(data)
