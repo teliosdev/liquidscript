@@ -9,7 +9,7 @@
   access @;
   
   action mark {
-    @start = p
+    @start = @p
   }
 
   number_integer = '-'? [0-9][1-9]*;
