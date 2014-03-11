@@ -8,10 +8,6 @@
   variable eof  @eof;
   access @;
   
-  action mark {
-    @start = @p
-  }
-
   number_integer = '-'? [0-9][1-9]*;
   number_frac = '.' [0-9]+;
   number_e = ('e' | 'E') ('+' | '-' | '');
@@ -98,22 +94,15 @@ module Liquidscript
         @line = { :start => 0, :num => 0 }
         @data = nil
         @stack = nil
-        @start = nil
       end
 
       def emit(type)
-        @tokens << if @start
-          Token.new(type, @data[@start..(@p - 1)],
-            @line[:num], @p - @line[:start])
-        else
-          Token.new(type, nil, @line[:num], @p - @line[:start])
-        end
-        
-        @start = nil
+        @tokens << Token.new(type, @data[@ts..(@te - 1)],
+            @line[:num], @ts - @line[:start])
       end
 
       def error
-        raise SyntaxError, "Unexpected #{@data[@start..(@p-1)].pack('c*')}"
+        raise SyntaxError, "Unexpected #{@data[@ts..(@te-1)].pack('c*')}"
       end
 
       def perform(data)
