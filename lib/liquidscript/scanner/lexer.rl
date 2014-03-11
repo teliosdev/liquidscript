@@ -31,46 +31,43 @@
     '>>>' | '==' | '!=' | '===' | '!==' | '>' | '>=' | '<' | '<=' |
     '&&' | '||' | 'instanceof' | 'or' | 'and';
     
-  istring_part   = ( any -- '"' | '\\"' );
-  istring_start  = '"' ( istring_part* ) '#{';
-  istring_middle = '}' ( istring_part* ) '#{';
-  istring_end    = '}' ( istring_part* ) '"';
+  istring_part  = ( any -- '"' | '\\"' );
+  istring_start = '"' ( istring_part* ) '#{';
+  istring_mid   = '}' ( istring_part* ) '#{';
+  istring_end   = '}' ( istring_part* ) '"';
     
-  body = (
-           ( number         >mark %{ emit :number     } ) |
-           ( string_double  >mark %{ emit :dstring    } ) |
-           ( string_single  >mark %{ emit :sstring    } ) |
-           ( istring_start  >mark %{ emit :istart     } ) |
-           ( istring_middle >mark %{ emit :imiddle    } ) |
-           ( istring_end    >mark %{ emit :iend       } ) |
-           (       'class'        %{ emit :class      } ) |
-           (       'module'       %{ emit :module     } ) |
-           (       'if'           %{ emit :if         } ) |
-           (       'unless'       %{ emit :unless     } ) |
-           (       'elsif'        %{ emit :elsif      } ) |
-           (       'else'         %{ emit :else       } ) |
-           ( unops          >mark %{ emit :unop       } ) |
-           ( binops         >mark %{ emit :binop      } ) |
-           ( keywords       >mark %{ emit :keyword    } ) |
-           ( identifier     >mark %{ emit :identifier } ) |
-           (       '->'           %{ emit :arrow      } ) |
-           (       '='            %{ emit :equal      } ) |
-           (       '{'            %{ emit :lbrack     } ) |
-           (       '('            %{ emit :lparen     } ) |
-           (       '['            %{ emit :lbrace     } ) |
-           (       '}'            %{ emit :rbrack     } ) |
-           (       ')'            %{ emit :rparen     } ) |
-           (       ']'            %{ emit :rbrace     } ) |
-           (       ':'            %{ emit :colon      } ) |
-           (       '.'            %{ emit :prop       } ) |
-           (       ','            %{ emit :comma      } ) |
-           (       '\n'           %{ line.call        } )
-    );
-    
-  loop = ( body** );
-    
-
-  main := loop;
+  main := |*
+    number        => { emit :number      };
+    string_double => { emit :dstring     };
+    string_single => { emit :sstring     };
+    istring_start => { emit :istart      };
+    istring_mid   => { emit :imid        };
+    istring_end   => { emit :iend        };
+    'class'       => { emit :class       };
+    'module'      => { emit :module      };
+    'if'          => { emit :if          };
+    'unless'      => { emit :unless      };
+    'elsif'       => { emit :elsif       };
+    'else'        => { emit :else        };
+    unops         => { emit :unop        };
+    binops        => { emit :binop       };
+    keywords      => { emit :keyword     };
+    identifier    => { emit :identifier  };
+    '->'          => { emit :arrow       };
+    '='           => { emit :equal       };
+    '{'           => { emit :lbrack      };
+    '('           => { emit :lparen      };
+    '['           => { emit :lbrace      };
+    '}'           => { emit :rbrack      };
+    ')'           => { emit :rparen      };
+    ']'           => { emit :rbrace      };
+    ':'           => { emit :colon       };
+    '.'           => { emit :prop        };
+    ','           => { emit :comma       };
+    '\n'          => { line.call         };
+    space         => {                   };
+    any           => { error             };
+  *|;
 }%%
 
 module Liquidscript
