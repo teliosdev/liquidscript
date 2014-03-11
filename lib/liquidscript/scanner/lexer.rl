@@ -37,22 +37,22 @@
   istring_end    = '}' ( istring_part* ) '"';
     
   body = (
-           ( >mark number         %{ emit :number     } ) |
-           ( >mark string_double  %{ emit :dstring    } ) |
-           ( >mark string_single  %{ emit :sstring    } ) |
-           ( >mark istring_start  %{ emit :istart     } ) |
-           ( >mark istring_middle %{ emit :imiddle    } ) |
-           ( >mark istring_end    %{ emit :iend       } ) |
+           ( number         >mark %{ emit :number     } ) |
+           ( string_double  >mark %{ emit :dstring    } ) |
+           ( string_single  >mark %{ emit :sstring    } ) |
+           ( istring_start  >mark %{ emit :istart     } ) |
+           ( istring_middle >mark %{ emit :imiddle    } ) |
+           ( istring_end    >mark %{ emit :iend       } ) |
            (       'class'        %{ emit :class      } ) |
            (       'module'       %{ emit :module     } ) |
            (       'if'           %{ emit :if         } ) |
            (       'unless'       %{ emit :unless     } ) |
            (       'elsif'        %{ emit :elsif      } ) |
            (       'else'         %{ emit :else       } ) |
-           ( >mark unops          %{ emit :unop       } ) |
-           ( >mark binops         %{ emit :binop      } ) |
-           ( >mark keywords       %{ emit :keyword    } ) |
-           ( >mark identifier     %{ emit :identifier } ) |
+           ( unops          >mark %{ emit :unop       } ) |
+           ( binops         >mark %{ emit :binop      } ) |
+           ( keywords       >mark %{ emit :keyword    } ) |
+           ( identifier     >mark %{ emit :identifier } ) |
            (       '->'           %{ emit :arrow      } ) |
            (       '='            %{ emit :equal      } ) |
            (       '{'            %{ emit :lbrack     } ) |
