@@ -7,6 +7,10 @@
   variable pe   @pe;
   variable eof  @eof;
   access @;
+  
+  action mark {
+    @start = p
+  }
 
   number_integer = '-'? [0-9][1-9]*;
   number_frac = '.' [0-9]+;
@@ -23,36 +27,35 @@
   binops = '+' | '-' | '*' | '/' | '&' | '|' | '^' | '<<' | '>>' |
     '>>>' | '==' | '!=' | '===' | '!==' | '>' | '>=' | '<' | '<=' |
     '&&' | '||' | 'instanceof' | 'or' | 'and';
+    
+  body = ( >mark number        %{ emit :number     } ) |
+         ( >mark string_double %{ emit :dstring    } ) |
+         ( >mark string_single %{ emit :sstring    } ) |
+         (       'class'       %{ emit :class      } ) |
+         (       'module'      %{ emit :module     } ) |
+         (       'if'          %{ emit :if         } ) |
+         (       'unless'      %{ emit :unless     } ) |
+         (       'elsif'       %{ emit :elsif      } ) |
+         (       'else'        %{ emit :else       } ) |
+         ( >mark unops         %{ emit :unop       } ) |
+         ( >mark binops        %{ emit :binop      } ) |
+         ( >mark keywords      %{ emit :keyword    } ) |
+         ( >mark identifier    %{ emit :identifier } ) |
+         (       '->'          %{ emit :arrow      } ) |
+         (       '='           %{ emit :equal      } ) |
+         (       '{'           %{ emit :lbrack     } ) |
+         (       '('           %{ emit :lparen     } ) |
+         (       '['           %{ emit :lbrace     } ) |
+         (       '}'           %{ emit :rbrack     } ) |
+         (       ')'           %{ emit :rparen     } ) |
+         (       ']'           %{ emit :rbrace     } ) |
+         (       ':'           %{ emit :colon      } ) |
+         (       '.'           %{ emit :prop       } ) |
+         (       ','           %{ emit :comma      } ) |
+         (       '\n'          %{ line.call        } )
+  ;
 
-  main := |*
-    number        => { emit :number      };
-    string_double => { emit :dstring     };
-    string_single => { emit :sstring     };
-    'class'       => { emit :class       };
-    'module'      => { emit :module      };
-    'if'          => { emit :if          };
-    'unless'      => { emit :unless      };
-    'elsif'       => { emit :elsif       };
-    'else'        => { emit :else        };
-    unops         => { emit :unop        };
-    binops        => { emit :binop       };
-    keywords      => { emit :keyword     };
-    identifier    => { emit :identifier  };
-    '->'          => { emit :arrow       };
-    '='           => { emit :equal       };
-    '{'           => { emit :lbrack      };
-    '('           => { emit :lparen      };
-    '['           => { emit :lbrace      };
-    '}'           => { emit :rbrack      };
-    ')'           => { emit :rparen      };
-    ']'           => { emit :rbrace      };
-    ':'           => { emit :colon       };
-    '.'           => { emit :prop        };
-    ','           => { emit :comma       };
-    '\n'          => { line.call         };
-    space         => {                   };
-    any           => { error             };
-  *|;
+  main := body**;
 }%%
 
 module Liquidscript
@@ -83,11 +86,16 @@ module Liquidscript
         @line = { :start => 0, :num => 0 }
         @data = nil
         @stack = nil
+        @start = nil
       end
 
-      def emit(type)
-        @tokens << Token.new(type, @data[@ts..(@te - 1)],
-          @line[:num], @ts - @line[:start])
+      def emit(type, cur = nil)
+        @tokens << if cur
+          Token.new(type, @data[@start..(@cur - 1)],
+            @line[:num], @p - @line[:start])
+        else
+          Token.new(type, nil, @line[:num], @p - @line[:start])
+        end
       end
 
       def error
