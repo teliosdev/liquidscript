@@ -79,7 +79,8 @@ module Liquidscript
           on(:identifier) { |m| emit :identifier, m }
 
           on(/\"/ => :istring)
-          on(/[\s]/) { }
+          on(/#.*?\n/) { }
+          on(/[\s]/)   { }
           on(:_) { error }
         end
 

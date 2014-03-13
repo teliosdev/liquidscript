@@ -1,4 +1,5 @@
 data: |
+  # comment
   thing = {
     test: -> {
       if(undefined) {
