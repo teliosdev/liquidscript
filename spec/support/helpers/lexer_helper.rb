@@ -1,5 +1,5 @@
 module LexerHelper
   def scan(source)
-    subject.perform(source)
+    described_class.new(source).scan.tokens
   end
 end

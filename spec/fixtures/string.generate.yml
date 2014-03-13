@@ -3,9 +3,11 @@ data: |
   foo  = 'world
   thing = "hello \" test
   world"
+  interop = "hello #{foo}"
 
 compiled: |
-  var test, foo, thing;
+  var test, foo, thing, interop;
   test = "hello";
   foo = 'world';
   thing = "hello \" test \n world";
+  interop = ["hello ", foo, ""].join('');

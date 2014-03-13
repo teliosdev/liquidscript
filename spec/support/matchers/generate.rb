@@ -29,13 +29,13 @@ RSpec::Matchers.define :generate do |v|
   diffable
 
   def generator(data)
-    compiler = Compiler::ICR.new(s = Scanner.new(data))
+    compiler = Compiler::ICR.new(s = Scanner::Liquidscript.new(data))
     compiler.compile
     Generator::Javascript.new(compiler.top)
   end
 
   def tree(data)
-    compiler = Compiler::ICR.new(Scanner.new(data))
+    compiler = Compiler::ICR.new(Scanner::Liquidscript.new(data))
     compiler.compile
     compiler.top.to_sexp
   end

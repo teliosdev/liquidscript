@@ -1,0 +1,15 @@
+data: |
+  "hello #{console}"
+compiled:
+  - :exec
+  - - :_context
+    - []
+  - - :interop
+    - - :istring_begin
+      - "hello "
+    - - :get
+      - - :_variable
+        - :console
+    - - :istring
+      - ""
+  - - :newline

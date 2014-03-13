@@ -16,10 +16,11 @@ module Liquidscript
         # @return [ICR::Code]
         def compile_vexpression
           out = expect :number,     :identifier,
-                       :dstring,    :lparen,
+                       :istring,    :lparen,
                        :sstring,    :operator,
                        :keyword,    :unop,
                        :newline,
+                       :istring_begin,
                        :lbrack   => :object,
                        :lbrace   => :array,
                        :arrow    => :function

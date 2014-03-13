@@ -1,7 +1,7 @@
 require "liquidscript/icr/representable"
 
 module Liquidscript
-  class Scanner
+  module Scanner
     class Token
 
       attr_accessor :type
@@ -16,11 +16,7 @@ module Liquidscript
         @type   = type
         @line   = line
         @column = column
-        @value  = begin
-          value.pack("c*")
-        rescue NoMethodError, TypeError
-          value
-        end
+        @value  = value
       end
 
       def to_a

@@ -36,6 +36,6 @@ RSpec::Matchers.define :compile do
   end
 
   def compiler(data)
-    Compiler::ICR.new(Scanner.new(data))
+    Compiler::ICR.new(Scanner::Liquidscript.new(data))
   end
 end

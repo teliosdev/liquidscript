@@ -17,9 +17,25 @@ module Liquidscript
           "#{code.first}"
         end
 
-        def generate_dstring(code)
-
+        def generate_istring(code)
           "\"#{code.first.gsub("\n", "\\n")}\""
+        end
+
+        def generate_interop(code)
+          content = code[1..-1]
+          buf = buffer
+          buf.set_join! ','
+
+          content.each do |part|
+            case part.type
+            when :istring_begin, :istring
+              buf << "\"#{part.value}\""
+            else
+              buf << "#{replace(part)}"
+            end
+          end
+
+          "[#{buf}].join('')"
         end
 
         def generate_sstring(code)

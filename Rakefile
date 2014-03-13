@@ -9,8 +9,8 @@ namespace :ls do
     sh "ragel -R #{t.source}"
   end
 
-  desc "Builds the ragel parser."
-  task :ragel => ["lib/liquidscript/scanner/lexer.rb"]
+  #desc "Builds the ragel parser."
+  #task :ragel => ["lib/liquidscript/scanner/lexer.rb"]
 
   desc "Opens up a pry session."
   task :pry => [:ragel] do

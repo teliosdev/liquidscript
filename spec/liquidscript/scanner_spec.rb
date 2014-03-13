@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Liquidscript::Scanner do
-  subject { described_class.new("42") }
+  subject { described_class::Liquidscript.new("42") }
   it { should be_a Enumerable }
 
   describe "#each" do
@@ -10,7 +10,7 @@ describe Liquidscript::Scanner do
   end
 
   context "with invalid input" do
-    subject { described_class.new("'test'") }
+    subject { described_class::Liquidscript.new("';") }
 
     it "raises an error" do
       expect {

@@ -30,7 +30,7 @@ compiled:
               - console
             - - :identifier
               - log
-          - - :dstring
+          - - :istring
             - hello world
         - - :newline
   - - :newline

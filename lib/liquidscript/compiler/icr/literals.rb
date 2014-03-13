@@ -18,12 +18,26 @@ module Liquidscript
                  :_      => default
         end
 
-        def compile_dstring
-          code :dstring, pop.value[1..-2]
+        def compile_istring_begin
+          start = shift :istring_begin
+          contents = [start]
+
+          loop do
+            contents << compile_vexpression
+            contents << shift(:istring)
+            peek?(:istring_begin)
+          end
+
+
+          code :interop, *contents
+        end
+
+        def compile_istring
+          code :istring, shift(:istring).value
         end
 
         def compile_sstring
-          code :sstring, pop.value[1..-1]
+          code :sstring, shift(:sstring).value[1..-1]
         end
 
         def compile_operator

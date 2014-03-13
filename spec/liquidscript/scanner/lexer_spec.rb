@@ -1,14 +1,6 @@
 require "spec_helper"
 
-describe Liquidscript::Scanner::Lexer, :lexer_helper do
-  subject { described_class.new }
-  describe "#emit" do
-    it "pushes a token" do
-      subject.instance_exec { @data = "hello"; @ts = 0; @te = 6 }
-      subject.emit(:test)
-      expect(subject.tokens.first).to be_token(:test, "hello")
-    end
-  end
+describe Liquidscript::Scanner::Liquidscript, :lexer_helper do
 
   describe "#perform" do
     it "scans a number" do
@@ -19,29 +11,35 @@ describe Liquidscript::Scanner::Lexer, :lexer_helper do
 
     it "scans a string" do
       scan('"hello world" ').should eq [
-        [:dstring, '"hello world"']
+        [:istring, 'hello world']
       ]
 
       scan(" 'foobar").should eq [
         [:sstring, "'foobar"]
+      ]
+
+      scan('"hello #{world}"').should eq [
+        [:istring_begin, "hello "],
+        [:identifier, "world"],
+        [:istring, ""]
       ]
     end
 
     it "scans an identifier" do
       scan('test = 4').should eq [
         [:identifier, "test"],
-        [:equal, "="],
+        [:equal, nil],
         [:number, "4"]
       ]
     end
 
     it "scans brackets" do
       scan("{ test = 3 }").should eq [
-        [:lbrack, "{"],
+        [:lbrack, nil],
         [:identifier, "test"],
-        [:equal, "="],
+        [:equal, nil],
         [:number, "3"],
-        [:rbrack, "}"]
+        [:rbrack, nil]
       ]
     end
 
@@ -49,7 +47,7 @@ describe Liquidscript::Scanner::Lexer, :lexer_helper do
       scan("return test = new foo").should eq [
         [:unop, "return"],
         [:identifier, "test"],
-        [:equal, "="],
+        [:equal, nil],
         [:unop, "new"],
         [:identifier, "foo"]
       ]
