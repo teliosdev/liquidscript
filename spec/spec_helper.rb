@@ -2,8 +2,8 @@ require "rubygems"
 require "bundler/setup"
 Bundler.setup
 
-#require "coveralls"
-#Coveralls.wear!
+require "coveralls"
+Coveralls.wear!
 
 require "liquidscript"
 
