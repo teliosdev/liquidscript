@@ -8,7 +8,8 @@ module Liquidscript
         #
         # @return [ICR::Code]
         def compile_expression
-          expect :if, :unless, :class, :module, :_ => :vexpression
+          expect :if, :unless, :class, :module, :loop, :for,
+                 :while, :_ => :vexpression
         end
 
         # Compiles an expression that returns a value.
@@ -23,8 +24,8 @@ module Liquidscript
                        :newline,
                        :istring_begin,
                        :iheredoc_begin,
-                       :lbrack   => :object,
-                       :lbrace   => :array,
+                       :lbrace   => :object,
+                       :lbrack   => :array,
                        :arrow    => :function,
                        [
                         :heredoc_ref, :iheredoc_ref
@@ -128,9 +129,9 @@ module Liquidscript
             shift :lparen
             conditional = compile_vexpression
             shift :rparen
-            shift :lbrack
+            shift :lbrace
 
-            body = collect_compiles(:expression, :rbrack)
+            body = collect_compiles(:expression, :rbrace)
 
             if peek?(:elsif, :else)
               code key, conditional, body, expect(:elsif, :else)
@@ -145,17 +146,17 @@ module Liquidscript
           shift :lparen
           conditional = compile_vexpression
           shift :rparen
-          shift :lbrack
+          shift :lbrace
 
-          body = collect_compiles(:expression, :rbrack)
+          body = collect_compiles(:expression, :rbrace)
           code :unless, conditional, body
         end
 
         def compile_else
           shift :else
-          shift :lbrack
+          shift :lbrace
 
-          body = collect_compiles(:expression, :rbrack)
+          body = collect_compiles(:expression, :rbrace)
 
           code :else, body
         end

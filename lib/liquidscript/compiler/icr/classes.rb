@@ -30,7 +30,7 @@ module Liquidscript
         end
 
         def _compile_class_body(mod = false)
-          shift :lbrack
+          shift :lbrace
 
           components = []
 
@@ -42,7 +42,7 @@ module Liquidscript
           end
 
           loop do
-            expect :newline, :rbrack => action.end_loop,
+            expect :newline, :rbrace => action.end_loop,
             :comma         => action.shift,
             :module        => action { components << compile_module },
             :class         => action { components << compile_class  },

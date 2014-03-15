@@ -7,6 +7,57 @@ module Liquidscript
           code :number, pop.value
         end
 
+        def compile_while
+          shift :while
+          shift :lparen
+          conditional = compile_vexpression
+          shift :rparen
+          shift :lbrace
+          body = collect_compiles(:expression, :rbrace)
+          code :while, conditional, body
+        end
+
+        def compile_for
+          shift :for
+          shift :lparen
+          if peek?(:identifier)
+            ident = shift :identifier
+            if peek?(:identifier)
+              _compile_for_in(ident)
+            else
+              _compile_for_seg(compile_identifier(ident))
+            end
+          else
+            compile_for_seg compile_vexpression
+          end
+        end
+
+        def _compile_for_in(ident)
+          content = shift :identifier
+          unless content.value == "in"
+            raise CompileError, "Expected `in', got #{content.value}"
+          end
+
+          obj = shift :identifier
+          shift :rparen
+          shift :lbrace
+
+          set ident
+          body = collect_compiles(:expression, :rbrace)
+          code :for_in, ident, ref(obj), body
+        end
+
+        def _compile_for_seg(first)
+          shift :comma
+          second = compile_vexpression
+          shift :comma
+          third = compile_vexpression
+          shift :lbrace
+
+          body = collect_compiles(:expression, :rbrace)
+          code :for_seg, first, second, third, body
+        end
+
         def compile_identifier(identifier)
           default = action do
             code :get, ref(identifier)
@@ -85,9 +136,9 @@ module Liquidscript
         end
 
         def compile_object
-          shift :lbrack
+          shift :lbrace
 
-          objects = collect_compiles :rbrack,
+          objects = collect_compiles :rbrace,
             :comma => action.shift,
             :newline => action.shift do
             [compile_object_key, compile_vexpression]
@@ -97,9 +148,9 @@ module Liquidscript
         end
 
         def compile_array
-          shift :lbrace
+          shift :lbrack
 
-          parts = collect_compiles(:vexpression, :rbrace,
+          parts = collect_compiles(:vexpression, :rbrack,
             :comma => action.shift)
 
           code :array, parts
@@ -125,7 +176,7 @@ module Liquidscript
 
         def compile_function_with_parameters(parameters)
           shift :arrow
-          shift :lbrack
+          shift :lbrace
 
           expressions = Liquidscript::ICR::Set.new
           expressions.context = Liquidscript::ICR::Context.new
@@ -143,7 +194,7 @@ module Liquidscript
           end
 
           loop do
-            expect :rbrack => action.end_loop,
+            expect :rbrace => action.end_loop,
                    :_      => expression
           end
 

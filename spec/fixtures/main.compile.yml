@@ -1,27 +1,36 @@
 data: |
-  console = 2
   func = ()-> {
+    for(v in console) {
+      console.log(v)
+    }
     console.log("hello world")
   }
 compiled:
   - :exec
   - - :_context
-    - - :console
-      - :func
-  - - :set
-    - - :_variable
-      - :console
-    - - :number
-      - "2"
+    - - :func
   - - :set
     - - :_variable
       - :func
     - - :function
       - - :exec
         - - :_context
-          - []
+          - - :v
         - - :_arguments
           - []
+        - - :for_in
+          - - :identifier
+            - v
+          - - :_variable
+            - :console
+          - - - :call
+              - - :property
+                - - :identifier
+                  - console
+                - log
+              - - :get
+                - - :_variable
+                  - :v
         - - :call
           - - :property
             - - :identifier

@@ -35,11 +35,11 @@ describe Liquidscript::Scanner::Liquidscript, :lexer_helper do
 
     it "scans brackets" do
       scan("{ test = 3 }").should eq [
-        [:lbrack, nil],
+        [:lbrace, nil],
         [:identifier, "test"],
         [:equal, nil],
         [:number, "3"],
-        [:rbrack, nil]
+        [:rbrace, nil]
       ]
     end
 

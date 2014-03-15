@@ -16,6 +16,32 @@ module Liquidscript
           "#{code.first}"
         end
 
+        def generate_while(code)
+          loop_body = buffer
+          loop_body << "while(#{replace(code[1])}) {\n"
+          insert_into(code[2], loop_body)
+          loop_body << indent_level << "}"
+        end
+
+        def generate_for_in(code)
+          loop_body = buffer
+          loop_body << "for(#{code[1].value} in #{code[2].name}) {\n"
+          insert_into(code[3], loop_body)
+          loop_body << indent_level << "}"
+        end
+
+        def generate_for_seg(code)
+          loop_body = buffer
+          loop_body << "for("            <<
+                       replace(code[1])  << ";" <<
+                       replace(code[2])  << ";" <<
+                       replace(code[3])  << ") {\n"
+
+          insert_into(code[4], loop_body)
+
+          loop_body << indent_level << "}"
+        end
+
         def generate_regex(code)
           "/#{code[1].value[0]}/#{code[1].value[1]}"
         end

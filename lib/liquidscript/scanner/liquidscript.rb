@@ -60,17 +60,19 @@ module Liquidscript
           on("unless")    {     emit :unless        }
           on("elsif")     {     emit :elsif         }
           on("else")      {     emit :else          }
+          on("for")       {     emit :for           }
+          on("while")     {     emit :while         }
           on(:number)     { |m| emit :number,  m    }
           on(:string)     { |m| emit :sstring, m    }
           on(:keywords)   { |m| emit :keyword, m    }
           on("->")        {     emit :arrow         }
           on("=")         {     emit :equal         }
-          on("{")         {     emit :lbrack        }
+          on("{")         {     emit :lbrace        }
           on("(")         {     emit :lparen        }
-          on("[")         {     emit :lbrace        }
-          on("}")         {     emit :rbrack        }
+          on("[")         {     emit :lbrack        }
+          on("}")         {     emit :rbrace        }
           on(")")         {     emit :rparen        }
-          on("]")         {     emit :rbrace        }
+          on("]")         {     emit :rbrack        }
           on(":")         {     emit :colon         }
           on(".")         {     emit :prop          }
           on(",")         {     emit :comma         }
