@@ -1,7 +1,10 @@
 require "spec_helper"
 require "command/runner"
 
-if Command::Runner.new("which", "node").run.successful?
+which_node = Command::Runner.new("which", "node")
+
+if which_node.backend.class != Command::Runner::Backends::Backticks &&
+   which_node.run.successful?
 describe "Node support" do
   describe "with fixtures" do
 
