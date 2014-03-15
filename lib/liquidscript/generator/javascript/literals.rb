@@ -13,7 +13,6 @@ module Liquidscript
         }.freeze
 
         def generate_number(code)
-
           "#{code.first}"
         end
 
@@ -24,18 +23,17 @@ module Liquidscript
         def generate_interop(code)
           content = code[1..-1]
           buf = buffer
-          buf.set_join! ','
 
           content.each do |part|
             case part.type
             when :istring_begin, :istring
               buf << "\"#{part.value}\""
             else
-              buf << "#{replace(part)}"
+              buf << " + (#{replace(part)}) + "
             end
           end
 
-          "[#{buf}].join('')"
+          buf
         end
 
         def generate_sstring(code)

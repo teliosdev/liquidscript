@@ -11,12 +11,14 @@ RSpec::Matchers.define :generate do |v|
   end
 
   failure_message_for_should do |data|
-    sprintf "expected %{source} to generate %{dest} (got: %{actual}) - %{tree}",
+    sprintf "expected: %{dest}\n     got: %{actual}",
       :source => data.inspect,
       :dest   => for_match(v).inspect,
       :actual => actual.inspect,
       :tree   => tree(data)
   end
+
+  diffable
 
   def actual
     @_out
@@ -25,8 +27,6 @@ RSpec::Matchers.define :generate do |v|
   def expected
     @_expected
   end
-
-  diffable
 
   def generator(data)
     compiler = Compiler::ICR.new(s = Scanner::Liquidscript.new(data))

@@ -8,7 +8,6 @@ module Liquidscript
           exec << _exec_context(code)
           code.codes.inject(exec) do |m, c|
             m << replace(c)
-            m
           end
         end
 

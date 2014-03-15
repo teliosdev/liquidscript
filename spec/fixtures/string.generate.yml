@@ -10,4 +10,4 @@ compiled: |
   test = "hello";
   foo = 'world';
   thing = "hello \" test \n world";
-  interop = ["hello ", foo, ""].join('');
+  interop = "hello" + (foo) + "";
