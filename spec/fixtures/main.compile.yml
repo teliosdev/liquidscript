@@ -13,7 +13,6 @@ compiled:
       - :console
     - - :number
       - "2"
-  - - :newline
   - - :set
     - - :_variable
       - :func
@@ -23,14 +22,10 @@ compiled:
           - []
         - - :_arguments
           - []
-        - - :newline
         - - :call
           - - :property
             - - :identifier
               - console
-            - - :identifier
-              - log
+            - log
           - - :istring
             - hello world
-        - - :newline
-  - - :newline

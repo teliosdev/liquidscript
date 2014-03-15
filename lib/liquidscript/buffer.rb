@@ -13,8 +13,8 @@ module Liquidscript
       self
     end
 
-    def block(str)
-      append str.gsub(/^[ \t]+/, '')
+    def block(indent, str)
+      append str.gsub(/^[ \t]{#{indent*2}}/, '')
     end
 
     def set_join!(to)

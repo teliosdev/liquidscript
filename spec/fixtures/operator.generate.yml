@@ -17,7 +17,7 @@ compiled: |
     out = false;
     if(typeof global !== 'undefined') {
       out = true;
-    }
+    };
 
-    return out
+    return out;
   };

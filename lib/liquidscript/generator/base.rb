@@ -13,7 +13,7 @@ module Liquidscript
       end
 
       def generate
-        replace(@top, {}).to_s
+        replace(@top).to_s
       end
 
       def buffer

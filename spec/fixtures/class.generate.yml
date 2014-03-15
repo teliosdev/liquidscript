@@ -23,17 +23,17 @@ compiled: |
     if(this.initialize) {
       this.initialize.apply(this, arguments);
     }
-  };
+  }
 
   Test.prototype.wee = function() {
-    console.log(2)
+    console.log(2);
   };
 
   Test.prototype.initialize = function() {
-    "this should be init"
+    "this should be init";
   };
 
   Test.test = function() {
-    "class method!"
+    "class method!";
   };
   Something.Test = Test;

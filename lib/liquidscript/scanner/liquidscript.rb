@@ -33,13 +33,14 @@ module Liquidscript
           )
 
           set :binops, %w(
-            + - * / & | ^
+            + - * / ^
             << >> >>>
             == ===
             != !==
             > >=
             < <=
             && ||
+            & |
             instanceof
             or and
           )
@@ -62,7 +63,6 @@ module Liquidscript
           on(:number)     { |m| emit :number,  m    }
           on(:string)     { |m| emit :sstring, m    }
           on(:keywords)   { |m| emit :keyword, m    }
-          on(:unops)      { |m| emit :unop,    m    }
           on("->")        {     emit :arrow         }
           on("=")         {     emit :equal         }
           on("{")         {     emit :lbrack        }
@@ -74,8 +74,9 @@ module Liquidscript
           on(":")         {     emit :colon         }
           on(".")         {     emit :prop          }
           on(",")         {     emit :comma         }
-          on("\n")        {     line!; emit :newline}
+          on("\n")        {     line!               }
           on(:binops)     { |m| emit :binop,   m    }
+          on(:unops)      { |m| emit :unop,    m    }
           on(:identifier) { |m| emit :identifier, m }
 
           on(/\"/ => :istring)

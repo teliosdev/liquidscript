@@ -30,7 +30,26 @@ module Liquidscript
 
       def initialize(top)
         @modules = []
+        @indent = 0
         super
+      end
+
+      def indent_level
+        "  " * @indent
+      end
+
+      def indent!
+        @indent += 1
+      end
+
+      def unindent!
+        @indent -= 1
+      end
+
+      def insert_into(area, buffer)
+        area.inject(buffer) do |m, c|
+          m << indent_level << replace(c) << ";\n"
+        end
       end
     end
   end

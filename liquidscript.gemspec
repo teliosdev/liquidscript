@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "yard"
+  spec.add_development_dependency "command-runner"
 
   spec.add_dependency "hashie", "~> 2.0"
 end

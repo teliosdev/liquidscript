@@ -4,11 +4,11 @@ module Liquidscript
       module Literals
 
         BINOP_SWITCH = {
-          "==" => "===",
+          "=="  => "===",
           "===" => "==",
-          "!=" => "!==",
+          "!="  => "!==",
           "!==" => "!=",
-          "or" => "||",
+          "or"  => "||",
           "and" => "&&"
         }.freeze
 
@@ -61,11 +61,13 @@ module Liquidscript
 
           object = buffer
           object.set_join! ', '
+          indent!
 
           code[1].inject(object) do |buf, part|
-            buf << "\"#{part[0].value}\": #{replace(part[1])}"
+            buf << "#{indent_level}\"#{part[0].value}\": #{replace(part[1])}"
           end
 
+          unindent!
           "{#{object}}"
         end
 
@@ -82,12 +84,13 @@ module Liquidscript
         end
 
         def generate_newline(_)
-          "\n"
+          ""
         end
 
         def generate_function(code)
 
           function = buffer
+          indent!
 
           function                       <<
             "function("                  <<
@@ -95,6 +98,9 @@ module Liquidscript
             ') {'                        <<
             replace(code[1])             <<
             '}'
+
+          unindent!
+          function
         end
       end
     end

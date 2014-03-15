@@ -7,7 +7,7 @@ module Liquidscript
           shift :prop
 
           property = action do |ident|
-            code :property, prop, ident
+            code :property, prop, (ident.value || ident.type)
           end
 
           # Just in case there is a property named 'class' or 'module'

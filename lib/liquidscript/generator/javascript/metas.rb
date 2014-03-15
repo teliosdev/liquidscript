@@ -6,17 +6,15 @@ module Liquidscript
         def generate_exec(code)
           exec = buffer
           exec << _exec_context(code)
-          code.codes.inject(exec) do |m, c|
-            m << replace(c)
-          end
+          insert_into(code.codes, exec)
         end
 
         def generate_set(code)
           case code[1].type
           when :variable
-            "#{code[1].name} = #{replace code[2]};"
+            "#{code[1].name} = #{replace code[2]}"
           when :property
-            "#{replace code[1]} = #{replace code[2]};"
+            "#{replace code[1]} = #{replace code[2]}"
           end
         end
 
@@ -30,9 +28,11 @@ module Liquidscript
 
           define_method(:"generate_#{k}") do |code|
             part = buffer
-            part << "\n#{v % replace(code[1])} {\n"
-            code[2].inject(part) { |m, p| m << replace(p) }
-            part << "\n}\n"
+            part << "#{v % replace(code[1])} {\n"
+            indent!
+            insert_into(code[2], part)
+            unindent!
+            part << indent_level << "}"
 
             if code[3]
               part << replace(code[3])
@@ -44,9 +44,11 @@ module Liquidscript
 
         def generate_else(code)
           part = buffer
-          part << "\nelse {\n"
-          code[1].inject(part) { |m, p| m << replace(p) }
-          part << "\n}\n"
+          part << " else {\n"
+          indent!
+          insert_into(code[1], part)
+          unindent!
+          part << indent_level << "}"
         end
 
         protected
@@ -54,7 +56,7 @@ module Liquidscript
         def _exec_context(code)
 
           unless code.locals.empty?
-            "var #{code.locals.join(',')}; "
+            "\n#{indent_level}var #{code.locals.join(',')};\n"
           end
         end
       end

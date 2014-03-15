@@ -38,7 +38,7 @@ module Liquidscript
             prop << replace(code[1])
           end
 
-          prop << "." << code[2].value
+          prop << "." << code[2]
         end
 
         def generate_class(code)
@@ -46,23 +46,23 @@ module Liquidscript
           class_name = code[1].value
 
           in_module(class_name) do |last_module|
-            body.block <<-JS
+            body.block 7 - @indent, <<-JS
               #{class_name} = #{class_name} || function #{class_name}() {
                 if(this.initialize) {
                   this.initialize.apply(this, arguments);
                 }
-              };
+              }
             JS
 
             code[2].each do |part|
               k, v = part
               case k.type
               when :identifier
-                body.block <<-JS
+                body.block 8 - @indent, <<-JS
                   #{class_name}.prototype.#{k.value} = #{replace(v)};
                 JS
-              when :dstring
-                body.block <<-JS
+              when :istring
+                body.block 8 - @indent, <<-JS
                   #{class_name}.prototype[#{k.value}] = #{replace(v)};
                 JS
               when :property
@@ -70,9 +70,8 @@ module Liquidscript
                   raise InvalidCodeError.new(k[1].value)
                 end
 
-                body.block <<-JS
-                  #{class_name}.#{k[2].value} =
-                    #{replace(v)};
+                body.block 8 - @indent, <<-JS
+                  #{class_name}.#{k[2]} = #{replace(v)};
                 JS
               when :class
                 body << generate_class(part)
@@ -82,8 +81,8 @@ module Liquidscript
             end
 
             if last_module
-              body.block <<-JS
-                #{last_module}.#{class_name} = #{class_name};
+              body.block 7, <<-JS
+                #{last_module}.#{class_name} = #{class_name}
               JS
             end
 
@@ -103,11 +102,11 @@ module Liquidscript
               k, v = part
               case k
               when :identifier
-                body.block <<-JS
+                body.block 8, <<-JS
                   #{module_name}.#{k.value} = #{replace(v)};
                 JS
               when :dstring
-                body.block <<-JS
+                body.block 8, <<-JS
                   #{module_name}[#{k.value}] = #{replace(v)};
                 JS
               when :class
@@ -118,8 +117,8 @@ module Liquidscript
             end
 
             if last_module
-              body.block <<-JS
-                #{last_module}.#{module_name} = #{module_name};
+              body.block 7, <<-JS
+                #{last_module}.#{module_name} = #{module_name}
               JS
             end
           end

@@ -17,7 +17,7 @@
   }
 
   if(typeof exports != 'undefined) {
-    if(typeof root.module !== 'undefined && root.module.exports) {
+    if(typeof root.module != 'undefined && root.module.exports) {
       exports = root.module.exports = _
     }
 
@@ -25,5 +25,6 @@
   } else {
     root._ = _
   }
+
   _.VERSION = "1.6.0"
 }).call()

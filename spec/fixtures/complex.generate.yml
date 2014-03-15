@@ -20,14 +20,14 @@ compiled: |
   thing = {
     "test": function() {
       if(undefined) {
-        "test"
+        "test";
       } else if(null) {
-        "um"
+        "um";
       } else {
-        "hello"
-      }
+        "hello";
+      };
     }
   };
 
-  thing.test()
+  thing.test();
 
