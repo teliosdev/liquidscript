@@ -54,7 +54,13 @@ module Liquidscript
               }
             JS
 
-            code[2].each do |part|
+            if code[2]
+              body.block 8 - @indent, <<-JS
+                #{class_name}.prototype.__proto__ = #{code[2].value};
+              JS
+            end
+
+            code[3].each do |part|
               k, v = part
               case k.type
               when :identifier

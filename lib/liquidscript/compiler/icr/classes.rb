@@ -6,10 +6,18 @@ module Liquidscript
         def compile_class
           shift :class
           name = shift :identifier
+          inherit = nil
           set name
+          # Inheritance ftw!
+          if peek?(:colon)
+            shift :colon
+            inherit = shift :identifier
+            ref inherit
+          end
+
           body = _compile_class_body(false)
 
-          code :class, name, body
+          code :class, name, inherit, body
         end
 
         def compile_module

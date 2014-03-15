@@ -119,11 +119,13 @@ describe Compiler::ICR do
       ]])
     }
 
+
     specify { expect("(2)").to compile         }
     specify { expect("(2)->").to_not compile   }
     specify { expect("()-> {}").to compile     }
     specify { expect("(test)-> {}").to compile }
     specify { expect("(test, foo)-> {}").to compile }
+    specify { expect("class Test : Variant {}").to_not compile }
   end
 
   describe "with fixtures" do

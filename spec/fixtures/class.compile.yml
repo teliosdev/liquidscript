@@ -3,6 +3,10 @@ data: |
     class SomeClass {
       test: -> {}
     }
+
+    class AnotherClass : SomeClass {
+
+    }
   }
 
 compiled:
@@ -10,12 +14,14 @@ compiled:
   - - :_context
     - - :Something
       - :SomeClass
+      - :AnotherClass
   - - :module
     - - :identifier
       - Something
     - - - :class
         - - :identifier
           - SomeClass
+        - ~
         - - - - :identifier
               - test
             - - :function
@@ -24,3 +30,9 @@ compiled:
                   - []
                 - - :_arguments
                   - []
+      - - :class
+        - - :identifier
+          - AnotherClass
+        - - :identifier
+          - SomeClass
+        - []
