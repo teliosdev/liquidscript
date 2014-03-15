@@ -1,9 +1,29 @@
 data: |
+  console.log(<<TEST)
+  hello world
+  TEST
+
   "hello #{console}"
+
 compiled:
   - :exec
   - - :_context
     - []
+  - - :_heredocs
+    - - &heredoc
+        - :heredoc
+        - TEST
+        - - - :heredoc
+            - hello world
+  - - :_herenum
+    - 1
+  - - :call
+    - - :property
+      - - :identifier
+        - console
+      - log
+    - - :href
+      - *heredoc
   - - :interop
     - - :istring_begin
       - "hello "

@@ -3,6 +3,7 @@ require "liquidscript/compiler/icr/functions"
 require "liquidscript/compiler/icr/literals"
 require "liquidscript/compiler/icr/classes"
 require "liquidscript/compiler/icr/helpers"
+require "liquidscript/compiler/icr/heredoc"
 
 module Liquidscript
   module Compiler

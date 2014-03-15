@@ -14,7 +14,7 @@ RSpec::Matchers.define :compile do
   end
 
   failure_message_for_should do |data|
-    "expected #{data} to compile correctly"
+    "expected #{data} to compile correctly\nexpected: #{expected}\n     got: #{actual}"
   end
 
   failure_message_for_should_not do |data|

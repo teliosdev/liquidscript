@@ -7,18 +7,20 @@ module Liquidscript
           key, value = context.find_matcher(scanner)
 
           if value.nil? && scanner.rest?
-            error scanner
+            error scanner, context
           end
 
           normalize_action key, value, scanner if scanner.rest?
         end
 
-        def lex(argument)
-          context, body =
-          if argument.is_a?(Hash)
-            argument.to_a.first
+        def lex(*args)
+          args.flatten!
+          to_lex = args.pop
+
+          context, body = if to_lex.is_a? Hash
+            to_lex.to_a.first
           else
-            argument
+            [to_lex, nil]
           end
 
           scanner = if body
@@ -29,7 +31,7 @@ module Liquidscript
           out = []
 
           context = find_context(context)
-          instance_exec &context.init
+          instance_exec(*args, &context.init)
 
           while scanner.rest? && out.last != EXIT
             out << perform_with_context(context, scanner)
@@ -38,8 +40,9 @@ module Liquidscript
           out
         end
 
-        def error(scanner = @scanner)
-          raise SyntaxError, "Unexpected #{scanner.peek(2).inspect}" \
+        def error(scanner = @scanner, context = @context)
+          raise SyntaxError, "Unexpected " +
+            "#{scanner.matched}#{scanner.peek(2)}".inspect +
             " (line: #{line}, column: #{column})"
         end
 
@@ -68,7 +71,7 @@ module Liquidscript
           when Proc
             instance_exec(*body.match(key), &value)
           when Symbol
-            lex value
+            lex(*body.match(key), value)
           when EXIT
             EXIT
           end

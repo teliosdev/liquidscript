@@ -45,6 +45,22 @@ module Liquidscript
           " #{code[1].value} #{replace(code[2])}"
         end
 
+        def generate_href(code)
+          heredoc = code[1]
+          hbuf = buffer
+
+          heredoc.body.each do |part|
+            case part.type
+            when :heredoc, :iheredoc, :iheredoc_start
+              hbuf << '"' << part.value.gsub('"', '\\"') << '"'
+            else
+              hbuf << ' + ' << replace(part) << ' + '
+            end
+          end
+
+          hbuf
+        end
+
         def generate_binop(code)
           op = BINOP_SWITCH.fetch(code[1].value) do
             code[1].value

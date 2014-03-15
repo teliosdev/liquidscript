@@ -49,4 +49,10 @@ module Liquidscript
     end
   end
 
+  class NoContextError < SyntaxError
+    def initialize(context)
+      super "Could not find context named #{context.inspect}"
+    end
+  end
+
 end

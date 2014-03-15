@@ -21,9 +21,16 @@ module Liquidscript
                        :keyword,    :unop,
                        :newline,
                        :istring_begin,
+                       :iheredoc_begin,
                        :lbrack   => :object,
                        :lbrace   => :array,
-                       :arrow    => :function
+                       :arrow    => :function,
+                       [
+                        :heredoc_ref, :iheredoc_ref
+                       ]         => :href,
+                       [
+                        :heredoc, :iheredoc
+                       ]         => :heredoc
 
           if peek? :binop
             compile_binop(out)

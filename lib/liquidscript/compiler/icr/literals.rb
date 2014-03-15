@@ -18,6 +18,38 @@ module Liquidscript
                  :_      => default
         end
 
+        def compile_href
+          ref = shift :heredoc_ref, :iheredoc_ref
+          heredoc = Heredoc.new(ref.value, ref.type == :iheredoc_ref)
+          top[:heredocs] ||= []
+          top[:herenum]  ||= 0
+          top[:heredocs] << heredoc
+          code :href, heredoc
+        end
+
+        def compile_heredoc
+          h = shift(:heredoc, :iheredoc)
+
+          top[:heredocs][top[:herenum]].body = [h]
+          top[:herenum] += 1
+          nil
+        end
+
+        def compile_iheredoc_begin
+          start = shift :iheredoc_begin
+          contents = [start]
+
+          loop do
+            contents << compile_vexpression
+            contents << shift(:iheredoc)
+            peek?(:istring_begin)
+          end
+
+          top[:heredocs][top[:herenum]].body = h
+          top[:herenum] += 1
+          nil
+        end
+
         def compile_istring_begin
           start = shift :istring_begin
           contents = [start]

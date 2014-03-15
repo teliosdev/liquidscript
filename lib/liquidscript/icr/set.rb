@@ -43,6 +43,14 @@ module Liquidscript
         @code << Code.new(action, arguments)
       end
 
+      def <<(*v)
+        v.select { |p| p }.each do |part|
+          @code << part
+        end
+      end
+
+      alias_method :push, :<<
+
       # A list of all the local variables in the
       # current scope.  Local variables are defined
       # as variables that were a) not passed in by

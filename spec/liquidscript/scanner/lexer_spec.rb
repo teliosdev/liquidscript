@@ -52,5 +52,26 @@ describe Liquidscript::Scanner::Liquidscript, :lexer_helper do
         [:identifier, "foo"]
       ]
     end
+
+    it "scans heredocs" do
+      scan("<<TEST\nhello\nTEST\n").should eq [
+        [:heredoc_ref, "TEST"],
+        [:heredoc, "hello"]
+      ]
+
+      scan("<<-TEST\nhello \#{world}\nTEST\n").should eq [
+        [:iheredoc_ref, "TEST"],
+        [:iheredoc_begin, "hello "],
+        [:identifier, "world"],
+        [:iheredoc, ""]
+      ]
+
+      scan("hello <<TEST world\nin heredoc\nTEST\n").should eq [
+        [:identifier, "hello"],
+        [:heredoc_ref, "TEST"],
+        [:identifier, "world"],
+        [:heredoc, "in heredoc"]
+      ]
+    end
   end
 end

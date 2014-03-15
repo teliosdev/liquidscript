@@ -79,30 +79,96 @@ module Liquidscript
           on(:unops)      { |m| emit :unop,    m    }
           on(:identifier) { |m| emit :identifier, m }
 
-          on(/\"/ => :istring)
-          on(/#.*?\n/) { }
-          on(/[\s]/)   { }
-          on(:_) { error }
+          on(%r{"} => :istring)
+          on(%r{<<([A-Z]+)([^\n]*)\n}) do |_, s, e|
+            @start = s
+            emit :heredoc_ref, s
+            lex :main => e unless e.empty?
+            lex :heredoc
+          end
+          on(%r{<<-([A-Z]+)([^\n]*)\n}) do |_, s, e|
+            @start = s
+            emit :iheredoc_ref, s
+            lex :main => e
+            lex :iheredoc
+          end
+
+          on(%r{#.*?\n}) { }
+          on(%r{\s})     { }
+          on(:_)         { |m| error }
         end
 
         context :istring do
-          init do
-            @buffer = []
-          end
+          init { @buffer = [] }
 
-          on(/\\"/) { |m| @buffer << m }
-          on(/"/) do
+          on('\\"') { |m| @buffer << m }
+          on('"') do
             emit :istring, @buffer.join
             exit
           end
 
-          on(/\#\{(.*?)\}/) do |_, b|
+          on(%r{\#\{(.*?)\}}) do |_, b|
             emit :istring_begin, @buffer.join
             lex :main => b
             @buffer = []
           end
 
           on(:_) { |m| @buffer << m }
+        end
+
+        context :heredoc do
+          init { @buffer = [] }
+
+          on(%r{\s*([A-Z]+)\s*\n}) do |_, s|
+            if @start == s
+              emit :heredoc, @buffer.join
+              @start = nil
+              exit
+            else
+              @buffer << _
+            end
+          end
+
+          on(:_) { |m| @buffer << m }
+        end
+
+        context :iheredoc do
+          init { @buffer = [] }
+
+          on(%r{\s*([A-Z]+)\s*\n}) do |_, s|
+            if @start == s
+              emit :iheredoc, @buffer.join
+              @start = nil
+              exit
+            else
+              @buffer << _
+            end
+          end
+
+          on(%r{\#\{(.*?)\}}) do |_, b|
+            emit :iheredoc_begin, @buffer.join
+            lex :main => b
+            @buffer = []
+          end
+
+          on(:_) { |m| @buffer << m }
+        end
+
+        context :regex do
+          init { @buffer = [] }
+
+          on(%r{\\/}) { |m| @buffer << m }
+          on(%r{/})   { emit :regex, @buffer.join; exit }
+          on(:_)      { |m| @buffer << m }
+        end
+
+        context :block_regex do
+          init { @buffer = [] }
+
+          on(%r{///})    { emit :bregex, @buffer.join; exit }
+          on(%r{#.*?\n}) { }
+          on("\n")       { }
+          on(:_)         { |m| @buffer << m }
         end
       end
 
