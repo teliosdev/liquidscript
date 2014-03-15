@@ -84,6 +84,10 @@ module Liquidscript
             emit :iheredoc_ref, s
             @lexes << [:iheredoc, s]
           end
+          on(%r{/(.*?)/([a-z]*)}) { |_, m, b|
+            emit :regex, [m, b]
+          }
+          on("///" => :block_regex)
           on(:binops)     { |m| emit :binop,   m    }
           on(:unops)      { |m| emit :unop,    m    }
           on(:identifier) { |m| emit :identifier, m }
@@ -148,18 +152,13 @@ module Liquidscript
           on(:_) { |m| @buffer << m }
         end
 
-        context :regex do
-          init { @buffer = [] }
-
-          on(%r{\\/}) { |m| @buffer << m }
-          on(%r{/})   { emit :regex, @buffer.join; exit }
-          on(:_)      { |m| @buffer << m }
-        end
-
         context :block_regex do
           init { @buffer = [] }
 
-          on(%r{///})    { emit :bregex, @buffer.join; exit }
+          on(%r{///([a-z]*)}) do |_, m|
+            emit :regex, [@buffer.join, m]
+            exit
+          end
           on(%r{#.*?\n}) { }
           on("\n")       { }
           on(:_)         { |m| @buffer << m }

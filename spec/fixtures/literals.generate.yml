@@ -1,8 +1,16 @@
 data: |
   object = { hello: "world" }
   test = [1, 2]
+  regex = /^test/
+  block = ///
+    ^test # comment
+  ///
+  regex == block
 
 compiled: |
-  var object, test;
+  var object, test, regex, block;
   object = { "hello": "world" };
   test = [1, 2];
+  regex = /^test/;
+  block = /^test/;
+  regex === block;

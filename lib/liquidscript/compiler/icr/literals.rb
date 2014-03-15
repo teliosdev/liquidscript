@@ -18,6 +18,10 @@ module Liquidscript
                  :_      => default
         end
 
+        def compile_regex
+          code :regex, shift(:regex)
+        end
+
         def compile_href
           ref = shift :heredoc_ref, :iheredoc_ref
           heredoc = Heredoc.new(ref.value, ref.type == :iheredoc_ref)

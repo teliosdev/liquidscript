@@ -16,6 +16,10 @@ module Liquidscript
           "#{code.first}"
         end
 
+        def generate_regex(code)
+          "/#{code[1].value[0]}/#{code[1].value[1]}"
+        end
+
         def generate_istring(code)
           "\"#{code.first.gsub("\n", "\\n")}\""
         end

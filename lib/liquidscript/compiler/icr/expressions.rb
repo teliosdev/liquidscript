@@ -19,6 +19,7 @@ module Liquidscript
                        :istring,    :lparen,
                        :sstring,    :operator,
                        :keyword,    :unop,
+                       :regex,
                        :newline,
                        :istring_begin,
                        :iheredoc_begin,
