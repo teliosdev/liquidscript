@@ -51,7 +51,7 @@ module Liquidscript
 
           heredoc.body.each do |part|
             case part.type
-            when :heredoc, :iheredoc, :iheredoc_start
+            when :heredoc, :iheredoc, :iheredoc_begin
               hbuf << '"' << part.value.gsub('"', '\\"') << '"'
             else
               hbuf << ' + ' << replace(part) << ' + '

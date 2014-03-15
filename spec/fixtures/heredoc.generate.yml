@@ -1,0 +1,9 @@
+data: |
+  console.log(<<TEST, <<-MAYBE)
+  hello world
+  TEST
+  hello #{console}
+  MAYBE
+
+compiled: |
+  console.log("hello world", "hello " + console + "");

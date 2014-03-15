@@ -75,23 +75,18 @@ module Liquidscript
           on(".")         {     emit :prop          }
           on(",")         {     emit :comma         }
           on("\n")        {     line!               }
+          on(%r{"} => :istring)
+          on(%r{<<([A-Z]+)}) do |_, s|
+            emit :heredoc_ref, s
+            @lexes << [:heredoc, s]
+          end
+          on(%r{<<-([A-Z]+)}) do |_, s|
+            emit :iheredoc_ref, s
+            @lexes << [:iheredoc, s]
+          end
           on(:binops)     { |m| emit :binop,   m    }
           on(:unops)      { |m| emit :unop,    m    }
           on(:identifier) { |m| emit :identifier, m }
-
-          on(%r{"} => :istring)
-          on(%r{<<([A-Z]+)([^\n]*)\n}) do |_, s, e|
-            @start = s
-            emit :heredoc_ref, s
-            lex :main => e unless e.empty?
-            lex :heredoc
-          end
-          on(%r{<<-([A-Z]+)([^\n]*)\n}) do |_, s, e|
-            @start = s
-            emit :iheredoc_ref, s
-            lex :main => e
-            lex :iheredoc
-          end
 
           on(%r{#.*?\n}) { }
           on(%r{\s})     { }
@@ -119,10 +114,9 @@ module Liquidscript
         context :heredoc do
           init { @buffer = [] }
 
-          on(%r{\s*([A-Z]+)\s*\n}) do |_, s|
+          on(%r{\n\s*([A-Z]+)\s*\n}) do |_, s|
             if @start == s
               emit :heredoc, @buffer.join
-              @start = nil
               exit
             else
               @buffer << _
@@ -135,7 +129,7 @@ module Liquidscript
         context :iheredoc do
           init { @buffer = [] }
 
-          on(%r{\s*([A-Z]+)\s*\n}) do |_, s|
+          on(%r{\n\s*([A-Z]+)\s*\n}) do |_, s|
             if @start == s
               emit :iheredoc, @buffer.join
               @start = nil
@@ -175,12 +169,18 @@ module Liquidscript
       def initialize(*)
         @line = 1
         @cstart = 0
+        @lexes = []
         super
       end
 
       def line!
         @line += 1
         @cstart = @scanner.pos
+        while @lexes.any?
+          type, @start = @lexes.shift
+
+          lex type
+        end
       end
 
       def line

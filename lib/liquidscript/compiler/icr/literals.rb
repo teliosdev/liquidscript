@@ -45,7 +45,7 @@ module Liquidscript
             peek?(:istring_begin)
           end
 
-          top[:heredocs][top[:herenum]].body = h
+          top[:heredocs][top[:herenum]].body = contents
           top[:herenum] += 1
           nil
         end

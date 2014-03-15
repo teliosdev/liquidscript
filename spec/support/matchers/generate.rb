@@ -32,6 +32,9 @@ RSpec::Matchers.define :generate do |v|
     compiler = Compiler::ICR.new(s = Scanner::Liquidscript.new(data))
     compiler.compile
     Generator::Javascript.new(compiler.top)
+  rescue Liquidscript::UnexpectedError
+    puts ICR::Sexp.new(s.each.to_a).output
+    raise
   end
 
   def tree(data)
