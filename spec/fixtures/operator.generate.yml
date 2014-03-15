@@ -6,6 +6,10 @@ data: |
       out = true
     }
 
+    try {
+      console.ummm()
+    } catch(e) {}
+
     return out
   }
 
@@ -18,6 +22,10 @@ compiled: |
     if(typeof global !== 'undefined') {
       out = true;
     };
+
+    try {
+      console.ummm();
+    } catch(e) {};
 
     return out;
   };

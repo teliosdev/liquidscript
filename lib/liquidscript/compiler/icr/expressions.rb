@@ -9,7 +9,7 @@ module Liquidscript
         # @return [ICR::Code]
         def compile_expression
           expect :if, :unless, :class, :module, :loop, :for,
-                 :while, :action, :_ => :vexpression
+                 :while, :action, :try, :_ => :vexpression
         end
 
         # Compiles an expression that returns a value.
@@ -159,6 +159,43 @@ module Liquidscript
           body = collect_compiles(:expression, :rbrace)
 
           code :else, body
+        end
+
+        def compile_try
+          shift :try
+          shift :lbrace
+          try_body = collect_compiles(:expression, :rbrace)
+
+          next_part = if peek?(:catch)
+            _compile_catch
+          elsif peek?(:finally)
+            _compile_finally
+          end
+
+          code :try, try_body, next_part
+        end
+
+        def _compile_catch
+          shift :catch
+          shift :lparen
+          var = shift :identifier
+          shift :rparen
+          shift :lbrace
+          catch_body = collect_compiles(:expression, :rbrace)
+
+          next_part = if peek?(:finally)
+            _compile_finally
+          end
+
+          code :catch, var, catch_body, next_part
+        end
+
+        def _compile_finally
+          shift :finally
+          shift :lbrace
+          finally_body = collect_compiles(:expression, :rbrace)
+
+          code :finally, finally_body
         end
 
       end

@@ -68,6 +68,9 @@ module Liquidscript
           on("else")      {     emit :else          }
           on("for")       {     emit :for           }
           on("while")     {     emit :while         }
+          on("try")       {     emit :try           }
+          on("catch")     {     emit :catch         }
+          on("finally")   {     emit :finally       }
           on(:number)     { |m| emit :number,  m    }
           on(:string)     { |m| emit :sstring, m    }
           on(:keywords)   { |m| emit :keyword, m    }

@@ -1,6 +1,7 @@
 require "liquidscript/generator/javascript/literals"
 require "liquidscript/generator/javascript/metas"
 require "liquidscript/generator/javascript/objects"
+require "liquidscript/generator/javascript/exceptions"
 
 module Liquidscript
   module Generator
@@ -27,6 +28,7 @@ module Liquidscript
       include Literals
       include Metas
       include Objects
+      include Exceptions
 
       def initialize(top)
         @modules = []
