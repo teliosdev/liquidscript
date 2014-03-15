@@ -11,12 +11,13 @@ module Liquidscript
           end
 
           # Just in case there is a property named 'class' or 'module'
-          code = expect [:identifier, :class, :module] => property
+          v = expect [:identifier, :class, :module] => property
 
-          expect :lparen => action { compile_call(code)       },
-                 :equal  => action { compile_assignment(code) },
-                 :prop   => action { compile_property(code)   },
-                 :_      => action { code                     }
+          expect :lparen => action { compile_call(v)       },
+                 :equal  => action { compile_assignment(v) },
+                 :prop   => action { compile_property(v)   },
+                 :unop   => action { |o| code :op, v, o    },
+                 :_      => action { v                     }
         end
 
         def compile_call(subject)

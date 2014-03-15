@@ -9,7 +9,7 @@ module Liquidscript
         # @return [ICR::Code]
         def compile_expression
           expect :if, :unless, :class, :module, :loop, :for,
-                 :while, :_ => :vexpression
+                 :while, :action, :_ => :vexpression
         end
 
         # Compiles an expression that returns a value.

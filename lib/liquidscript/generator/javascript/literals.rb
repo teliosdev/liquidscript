@@ -16,6 +16,18 @@ module Liquidscript
           "#{code.first}"
         end
 
+        def generate_action(code)
+          code[1].value
+        end
+
+        def generate_op(code)
+          if code[1].type == :variable
+            "#{code[1].name}#{code[2].value}"
+          else
+            "#{replace(code[1])}#{code[2].value}"
+          end
+        end
+
         def generate_while(code)
           loop_body = buffer
           loop_body << "while(#{replace(code[1])}) {\n"

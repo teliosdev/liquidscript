@@ -7,6 +7,10 @@ module Liquidscript
           code :number, pop.value
         end
 
+        def compile_action
+          code :action, shift(:action)
+        end
+
         def compile_while
           shift :while
           shift :lparen
@@ -52,6 +56,7 @@ module Liquidscript
           second = compile_vexpression
           shift :comma
           third = compile_vexpression
+          shift :rparen
           shift :lbrace
 
           body = collect_compiles(:expression, :rbrace)
@@ -63,9 +68,10 @@ module Liquidscript
             code :get, ref(identifier)
           end
 
-          expect :equal  => action { compile_assignment(identifier) },
-                 :prop   => action { compile_property(identifier)   },
-                 :lparen => action { compile_call(identifier)       },
+          expect :equal  => action { compile_assignment(identifier)   },
+                 :prop   => action { compile_property(identifier)     },
+                 :lparen => action { compile_call(identifier)         },
+                 :unop   => action { |o| code :op, ref(identifier), o },
                  :_      => default
         end
 

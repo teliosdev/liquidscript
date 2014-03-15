@@ -30,6 +30,12 @@ module Liquidscript
             new
             return
             typeof
+            throw
+          )
+
+          set :actions, %w(
+            break
+            continue
           )
 
           set :binops, %w(
@@ -65,6 +71,7 @@ module Liquidscript
           on(:number)     { |m| emit :number,  m    }
           on(:string)     { |m| emit :sstring, m    }
           on(:keywords)   { |m| emit :keyword, m    }
+          on(:actions)    { |m| emit :action, m     }
           on("->")        {     emit :arrow         }
           on("=")         {     emit :equal         }
           on("{")         {     emit :lbrace        }

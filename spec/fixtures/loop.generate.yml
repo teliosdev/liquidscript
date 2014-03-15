@@ -1,0 +1,16 @@
+data: |
+  t = 5
+
+  while(t > 0) {
+    t--
+  }
+
+  for(t = 0, t < 5, t++) {
+    console.log(t)
+  }
+
+compiled: |
+  var t;
+  t = 5;
+  while(t > 0) { t--; };
+  for(t = 0; t < 5; t++) { console.log(t); };
