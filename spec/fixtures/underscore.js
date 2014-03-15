@@ -11,11 +11,12 @@
   concat = ArrayProto.concat;
   toString = ObjProto.toString;
   hasOwnProperty = ObjProto.hasOwnProperty;
-  _ = _ || function _() {
+    _ = _ || function _() {
     if(this.initialize) {
       this.initialize.apply(this, arguments);
     }
-  };
+  }
+;
   if( typeof  exports !== 'undefined') {
     if( typeof  root.module !==  'undefined' && root.module.exports) {
       exports = root.module.exports = _;

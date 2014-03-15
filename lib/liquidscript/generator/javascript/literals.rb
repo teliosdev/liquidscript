@@ -153,7 +153,7 @@ module Liquidscript
           function                       <<
             "function("                  <<
             code[1].parameters.join(',') <<
-            ') {'                        <<
+            ") {\n"                      <<
             replace(code[1])             <<
             '}'
 
