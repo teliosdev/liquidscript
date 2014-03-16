@@ -68,11 +68,7 @@ module Liquidscript
             code :get, ref(identifier)
           end
 
-          expect :equal  => action { compile_assignment(identifier)   },
-                 :prop   => action { compile_property(identifier)     },
-                 :lparen => action { compile_call(identifier)         },
-                 :unop   => action { |o| code :op, ref(identifier), o },
-                 :_      => default
+          value_expect(identifier, &default)
         end
 
         def compile_regex
@@ -163,7 +159,7 @@ module Liquidscript
         end
 
         def compile_object_key
-          key = shift :identifier, :dstring
+          key = shift :identifier, :istring
           shift :colon
 
           key

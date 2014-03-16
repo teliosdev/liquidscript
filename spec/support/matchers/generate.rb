@@ -11,7 +11,7 @@ RSpec::Matchers.define :generate do |v|
   end
 
   failure_message_for_should do |data|
-    sprintf "expected: %{dest}\n     got: %{actual}",
+    sprintf "expected: %{dest}\n     got: %{actual}\n    tree: %{tree}",
       :source => data.inspect,
       :dest   => for_match(v).inspect,
       :actual => actual.inspect,

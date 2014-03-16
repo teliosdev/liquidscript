@@ -1,0 +1,20 @@
+data: |
+
+  module Test {
+    thing: {
+      "Content-Type": 'test
+    }
+    "test": 1
+  }
+
+  Test["test"] = 2
+
+compiled: |
+  var Test;
+  Test = Test || {};
+  Test.thing = {
+    "Content-Type": 'test'
+  };
+  Test["test"] = 1;;
+
+  Test["test"] = 2;

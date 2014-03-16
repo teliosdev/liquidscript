@@ -106,14 +106,20 @@ module Liquidscript
 
             code[2].each do |part|
               k, v = part
-              case k
+              to_match = if k.is_a? Symbol
+                k
+              else
+                k.type
+              end
+
+              case to_match
               when :identifier
-                body.block 8, <<-JS
+                body.block 7, <<-JS
                   #{module_name}.#{k.value} = #{replace(v)};
                 JS
-              when :dstring
-                body.block 8, <<-JS
-                  #{module_name}[#{k.value}] = #{replace(v)};
+              when :istring
+                body.block 7, <<-JS
+                  #{module_name}["#{k.value}"] = #{replace(v)};
                 JS
               when :class
                 body << generate_class(part)

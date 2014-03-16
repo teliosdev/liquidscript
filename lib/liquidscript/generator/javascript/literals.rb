@@ -21,8 +21,8 @@ module Liquidscript
         end
 
         def generate_op(code)
-          if code[1].type == :variable
-            "#{code[1].name}#{code[2].value}"
+          if code[1].type == :identifier
+            "#{code[1].value}#{code[2].value}"
           else
             "#{replace(code[1])}#{code[2].value}"
           end
@@ -79,7 +79,6 @@ module Liquidscript
         end
 
         def generate_sstring(code)
-
           "'#{code.first.gsub(/'/, "\\'")}'"
         end
 

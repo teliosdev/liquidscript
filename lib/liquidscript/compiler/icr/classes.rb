@@ -46,14 +46,14 @@ module Liquidscript
             :comma         => action.shift,
             :module        => action { components << compile_module },
             :class         => action { components << compile_class  },
-            [:identifier, :dstring] => compile_object
+            [:identifier, :istring] => compile_object
           end
 
           components
         end
 
         def _compile_class_body_key(mod)
-          item = shift :identifier, :dstring
+          item = shift :identifier, :istring
 
           item = compile_property(item) if item.type == :identifier &&
             peek?(:prop) && !mod
