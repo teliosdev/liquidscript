@@ -7,6 +7,7 @@ describe Compiler::ICR do
     iterator = double("iterator")
     scanner = double("scanner")
 
+    allow(scanner).to receive(:metadata).and_return({})
     expect(scanner).to receive(:each).once.and_return(iterator)
     allow(iterator).to receive(:next).and_return([
       Scanner::Token.new(:number, "32", 0, 0),
@@ -136,6 +137,42 @@ describe Compiler::ICR do
       it "compiles #{$1}" do
         expect(content["data"]).to compile.and_produce content["compiled"]
       end
+    end
+  end
+
+  describe "invalid directives" do
+    let(:scanner) do
+      scanner = double("scanner")
+      iterator = double("iterator")
+      allow(iterator).to receive(:rewind)
+
+      expect(scanner).to receive(:each).once.and_return(iterator)
+      expect(scanner).to receive(:metadata).twice.and_return(
+        {:directives =>
+          [{:command => "test", :args => ""},
+           {:command => "allow", :args => "test"}]})
+      scanner
+    end
+
+    it "raises an error" do
+      expect { subject }.to raise_error(Liquidscript::UnknownDirectiveError)
+    end
+  end
+
+  describe "directives" do
+    let(:scanner) do
+      scanner = double("scanner")
+      iterator = double("iterator")
+      allow(iterator).to receive(:rewind)
+
+      expect(scanner).to receive(:each).once.and_return(iterator)
+      expect(scanner).to receive(:metadata).twice.and_return(
+        {:directives => [{:command => "allow", :args => "test"}]})
+      scanner
+    end
+
+    it "raises an error" do
+      subject.top.context.get(:test)
     end
   end
 end

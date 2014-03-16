@@ -25,11 +25,14 @@ module Liquidscript
 
       end
 
+      attr_accessor :metadata
+
       def initialize(source)
-        @source  = source
-        @scanner = StringScanner.new(@source)
-        @tokens  = []
-        @_scan   = nil
+        @source   = source
+        @scanner  = StringScanner.new(@source)
+        @tokens   = []
+        @_scan    = nil
+        @metadata = {}
       end
 
       def contexts

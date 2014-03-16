@@ -104,6 +104,12 @@ module Liquidscript
           on(:unops)      { |m| emit :unop,    m    }
           on(:identifier) { |m| emit :identifier, m }
 
+          on(%r{#! ([A-Za-z]+) ?(.*?)\n}) do |_, c, a|
+            metadata[:directives] ||= []
+            metadata[:directives].push :command => c,
+                                       :args    => a
+          end
+
           on(%r{#.*?\n}) { }
           on(%r{\s})     { }
           on(:_)         { |m| error }

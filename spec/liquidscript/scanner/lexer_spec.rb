@@ -73,5 +73,10 @@ describe Liquidscript::Scanner::Liquidscript, :lexer_helper do
         [:heredoc, "in heredoc"]
       ]
     end
+
+    describe "scanning directives" do
+      subject { c = described_class.new("#! test thing\n"); c.scan; c }
+      its(:metadata) { should eq :directives => [{:command => "test", :args => "thing"}] }
+    end
   end
 end

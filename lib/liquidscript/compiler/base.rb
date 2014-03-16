@@ -17,8 +17,9 @@ module Liquidscript
       #   the #each function returns an Enumerator, which yields
       #   {Scanner::Token}s.
       def initialize(scanner)
-        @scanner = scanner.each
-        @action  = Action.new
+        @scanner  = scanner
+        @iterator = scanner.each
+        @action   = Action.new
         reset!
       end
 
@@ -71,7 +72,7 @@ module Liquidscript
       #
       # @return [#type?, Blank]
       def pop
-        @scanner.next
+        @iterator.next
       rescue StopIteration
         scanner_nil
       end
@@ -82,7 +83,7 @@ module Liquidscript
       #
       # @return [#type, Blank]
       def peek
-        @scanner.peek
+        @iterator.peek
       rescue StopIteration
         scanner_nil
       end
@@ -91,7 +92,7 @@ module Liquidscript
       #
       # @return [void]
       def reset!
-        @scanner.rewind
+        @iterator.rewind
       end
 
       alias_method :rewind, :reset!

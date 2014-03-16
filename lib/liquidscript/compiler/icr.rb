@@ -15,6 +15,13 @@ module Liquidscript
       include Classes
       include Helpers
 
+      # (see Base#initialize)
+      def initialize(*)
+        super
+
+        handle_directives
+      end
+
       # (see Base#reset!)
       def reset!
         @top         = Liquidscript::ICR::Set.new
@@ -33,6 +40,22 @@ module Liquidscript
       # @return [ICR::Code]
       def compile_start
         compile_expression
+      end
+
+      private
+
+      def handle_directives
+        return unless @scanner.metadata[:directives]
+
+        @scanner.metadata[:directives].each do |meta|
+          case meta[:command]
+          when "allow"
+            variables = meta[:args].split(' ')
+            variables.each { |v| top.context.set(v.intern) }
+          else
+            raise UnknownDirectiveError.new(meta[:command])
+          end
+        end
       end
     end
   end

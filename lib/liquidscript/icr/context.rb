@@ -1,3 +1,5 @@
+require "hashie"
+
 module Liquidscript
   module ICR
 

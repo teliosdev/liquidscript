@@ -14,6 +14,12 @@ module Liquidscript
     end
   end
 
+  class UnknownDirectiveError < CompileError
+    def initialize(directive)
+      super "Unkown directive: #{directive}"
+    end
+  end
+
   class UnexpectedError < CompileError
     def initialize(expected, got)
       @expected = expected
