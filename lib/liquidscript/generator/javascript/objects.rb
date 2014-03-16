@@ -1,4 +1,4 @@
-module Liquidscript
+  module Liquidscript
   module Generator
     class Javascript
       module Objects

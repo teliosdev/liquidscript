@@ -11,7 +11,7 @@ module Liquidscript
 
         context :main do
           set :number, %r{
-            -? [0-9][1-9]*     # the base of the number
+            -? [1-9][0-9]*     # the base of the number
             (\.[0-9]+)?        # decmial portion, if needed
             ([eE][+-]?[0-9]+)? # scientific notation
           }x
