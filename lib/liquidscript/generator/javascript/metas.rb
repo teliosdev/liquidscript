@@ -20,12 +20,7 @@ module Liquidscript
         end
 
         def generate_access(code)
-          case code[1].type
-          when :identifier
-            "#{code[1].value}[#{replace code[2]}]"
-          else
-            "#{replace code[1]}[#{replace code[2]}]"
-          end
+          "#{replace code[1]}[#{replace code[2]}]"
         end
 
         def generate_get(code)

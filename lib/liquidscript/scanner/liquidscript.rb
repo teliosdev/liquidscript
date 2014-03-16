@@ -39,12 +39,12 @@ module Liquidscript
           )
 
           set :binops, %w(
-            + - * / ^
+            * / ^
             << >> >>>
-            == ===
-            != !==
-            > >=
-            < <=
+            === ==
+            !== !=
+            >= >
+            <= <
             && ||
             & |
             instanceof
@@ -86,6 +86,8 @@ module Liquidscript
           on(":")         {     emit :colon         }
           on(".")         {     emit :prop          }
           on(",")         {     emit :comma         }
+          on("-")         {     emit :minus         }
+          on("+")         {     emit :plus          }
           on("\n")        {     line!               }
           on(%r{"} => :istring)
           on(%r{<<([A-Z]+)}) do |_, s|

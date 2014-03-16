@@ -21,11 +21,15 @@ module Liquidscript
         end
 
         def generate_op(code)
-          if code[1].type == :identifier
-            "#{code[1].value}#{code[2].value}"
-          else
-            "#{replace(code[1])}#{code[2].value}"
-          end
+          "#{replace(code[1])}#{code[2].value}"
+        end
+
+        def generate_neg(code)
+          "-#{replace(code[1])}"
+        end
+
+        def generate_pos(code)
+          "+#{replace(code[1])}"
         end
 
         def generate_while(code)
@@ -110,6 +114,10 @@ module Liquidscript
           " #{replace(code[2])} #{op} #{replace(code[3])}"
         end
 
+        def generate_identifier(code)
+          code.value
+        end
+
         def generate_keyword(code)
           " #{code[1].value} "
         end
@@ -153,11 +161,10 @@ module Liquidscript
             "function("                  <<
             code[1].parameters.join(',') <<
             ") {\n"                      <<
-            replace(code[1])             <<
-            '}'
-
+            replace(code[1])
           unindent!
-          function
+
+          function << indent_level << "}"
         end
       end
     end

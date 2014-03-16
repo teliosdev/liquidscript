@@ -66,6 +66,15 @@ module Liquidscript
         end
       end
 
+      # Allows a specific variable to be used - but doesn't define it
+      # in the current context.
+      #
+      # @param name [Symbol]
+      # @return [void]
+      def allow(name)
+        allowed_variables << name
+      end
+
       # All of the parameter variables.
       #
       # @return [Array<Variable>]

@@ -12,12 +12,7 @@
           args = buffer
           args.set_join! ','
 
-          case code[1].type
-          when :identifier
-            call << "#{code[1].value}"
-          else
-            call << "#{replace(code[1])}"
-          end
+          call << "#{replace(code[1])}"
 
           code[2..-1].inject(args) do |b, arg|
             b << replace(arg)
@@ -30,8 +25,6 @@
           prop = buffer
 
           case code[1].type
-          when :identifier
-            prop << code[1].value
           when :variable
             prop << code[1].name
           else

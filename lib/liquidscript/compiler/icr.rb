@@ -51,7 +51,7 @@ module Liquidscript
           case meta[:command]
           when "allow"
             variables = meta[:args].split(' ')
-            variables.each { |v| top.context.set(v.intern) }
+            variables.each { |v| top.context.allow(v.intern) }
           else
             raise UnknownDirectiveError.new(meta[:command])
           end

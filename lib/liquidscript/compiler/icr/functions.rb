@@ -42,6 +42,9 @@ module Liquidscript
                  :equal  => action { compile_assignment(v) },
                  :prop   => action { compile_property(v)   },
                  :lbrack => action { compile_access(v)     },
+                 [:binop,
+                  :minus,
+                  :plus] => action { compile_binop(v)      },
                  :unop   => action { |o| code :op, v, o    },
                  :_      => default || action { v          }
         end

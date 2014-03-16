@@ -24,6 +24,7 @@ module Liquidscript
                        :newline,
                        :istring_begin,
                        :iheredoc_begin,
+                       :plus, :minus,
                        :lbrace   => :object,
                        :lbrack   => :array,
                        :arrow    => :function,
@@ -34,7 +35,7 @@ module Liquidscript
                         :heredoc, :iheredoc
                        ]         => :heredoc
 
-          if peek? :binop
+          if peek? :binop, :minus, :plus
             compile_binop(out)
           elsif peek? :prop
             compile_property(out)
@@ -43,8 +44,21 @@ module Liquidscript
           end
         end
 
+        def compile_minus
+          shift :minus
+
+          code :neg, compile_vexpression
+        end
+
+        def compile_plus
+          shift :plus
+
+          code :pos, compile_vexpression
+        end
+
         def compile_binop(left)
-          code :binop, shift(:binop), left, compile_vexpression
+          code :binop, shift(:binop, :minus, :plus), left,
+            compile_vexpression
         end
 
         def compile_unop
@@ -58,12 +72,13 @@ module Liquidscript
         # @return [ICR::Code]
         def compile_assignment(identifier)
           shift :equal
-          value    = compile_vexpression
 
           if identifier.type == :identifier
             variable = set(identifier)
+            value    = compile_vexpression
             variable.value = value
           else
+            value    = compile_vexpression
             variable = identifier
           end
 
@@ -90,6 +105,17 @@ module Liquidscript
             components << compile_vexpression
           end
 
+          ident = action do |i|
+            if peek?(:comma)
+              maybe_func = 2
+              components << i
+            elsif peek?(:rparen)
+              components << i
+            else
+              components << compile_identifier(i)
+            end
+          end
+
           loop do
           case maybe_func
           when 0
@@ -98,7 +124,7 @@ module Liquidscript
           when 1
             expect :rparen => action.end_loop,
               :comma       => action { maybe_func = 2 },
-              :identifier  => action { |i| components << i },
+              :identifier  => ident,
               :_           => expression
           when 2
             expect :rparen => action.end_loop,
