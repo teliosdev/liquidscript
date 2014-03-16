@@ -14,7 +14,8 @@ module Liquidscript
       # The variables that are allowed to be used as a global scope,
       # i.e. used in a `get` context without a previous `set`.
       DEFAULT_ALLOWED_VARIABLES = [
-        :window, :global, :exports, :console, :this, :arguments
+        :window, :global, :exports, :console, :this, :arguments,
+        :require
       ]
 
       # The parent of the current context.

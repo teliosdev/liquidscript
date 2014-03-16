@@ -126,6 +126,7 @@ describe Compiler::ICR do
     specify { expect("()-> {}").to compile     }
     specify { expect("(test)-> {}").to compile }
     specify { expect("(test, foo)-> {}").to compile }
+    specify { expect("blasg()").to_not compile }
     specify { expect("class Test : Variant {}").to_not compile }
   end
 

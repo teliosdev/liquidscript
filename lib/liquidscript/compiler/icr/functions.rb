@@ -29,6 +29,10 @@ module Liquidscript
         def compile_call(subject)
           shift :lparen
 
+          if subject.type == :identifier
+            ref(subject)
+          end
+
           arguments = collect_compiles :expression, :rparen,
             :comma => action.shift
 
