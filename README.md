@@ -1,6 +1,6 @@
 # ![Liquidscript](http://i.imgur.com/xbdhTsr.png)
 
-[![Build Status](https://travis-ci.org/redjazz96/liquidscript.png?branch=master)](https://travis-ci.org/redjazz96/liquidscript) [![Coverage Status](https://coveralls.io/repos/redjazz96/liquidscript/badge.png?branch=master)](https://coveralls.io/r/redjazz96/liquidscript?branch=master) [![Code Climate](https://codeclimate.com/github/redjazz96/liquidscript.png)](https://codeclimate.com/github/redjazz96/liquidscript) [![Gem Version](https://badge.fury.io/rb/liquidscript.png)](http://badge.fury.io/rb/liquidscript)
+[![Build Status](http://img.shields.io/travis/redjazz96/liquidscript.svg)](https://travis-ci.org/redjazz96/liquidscript) [![Coverage Status](http://img.shields.io/coveralls/redjazz96/liquidscript.svg)](https://coveralls.io/r/redjazz96/liquidscript?branch=master) [![Code Climate](http://img.shields.io/codeclimate/github/redjazz96/liquidscript.svg)](https://codeclimate.com/github/redjazz96/liquidscript) [![Gem Version](http://img.shields.io/gem/v/liquidscript.svg)](http://badge.fury.io/rb/liquidscript) [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://choosealicense.com/licenses/mit/)
 
 A javascript-based language that compiles to javascript.
 
