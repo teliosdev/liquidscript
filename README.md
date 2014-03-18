@@ -17,6 +17,11 @@ And then execute:
 Or install it yourself as:
 
     $ gem install liquidscript
+    
+If you're using Sprockets in your application, place this in
+your Gemfile:
+
+    gem 'liquidscript', require: 'sprockets/liquidscript'
 
 ## Usage
 
