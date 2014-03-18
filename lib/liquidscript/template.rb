@@ -21,5 +21,5 @@ module Liquidscript
     end
   end
 
-  Sprockets.register_engine '.liq', LiquidscriptTemplate
+  Sprockets.register_engine '.liq', Liquidscript::Template
 end
