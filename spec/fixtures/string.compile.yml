@@ -27,8 +27,7 @@ compiled:
   - - :interop
     - - :istring_begin
       - "hello "
-    - - :get
-      - - :_variable
-        - :console
+    - - :identifier
+      - console
     - - :istring
       - ""

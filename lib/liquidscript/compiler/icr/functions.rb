@@ -13,7 +13,7 @@ module Liquidscript
           # Just in case there is a property named 'class' or 'module'
           v = expect [:identifier, :class, :module] => property
 
-          value_expect(v)
+          v
         end
 
         def compile_access(body)
@@ -23,7 +23,7 @@ module Liquidscript
 
           v = code :access, body, key
 
-          value_expect(v)
+          v
         end
 
         def compile_call(subject)
@@ -36,13 +36,15 @@ module Liquidscript
           arguments = collect_compiles :expression, :rparen,
             :comma => action.shift
 
-          code :call, subject, *arguments
+          call = code :call, subject, *arguments
+          call
         end
 
         protected
 
         def value_expect(v, &default)
-          expect :lparen => action { compile_call(v)       },
+          out = expect \
+                 :lparen => action { compile_call(v)       },
                  :equal  => action { compile_assignment(v) },
                  :prop   => action { compile_property(v)   },
                  :lbrack => action { compile_access(v)     },
@@ -51,6 +53,12 @@ module Liquidscript
                   :plus] => action { compile_binop(v)      },
                  :unop   => action { |o| code :op, v, o    },
                  :_      => default || action { v          }
+
+          if out != v
+            value_expect(out)
+          else
+            out
+          end
         end
       end
     end

@@ -35,13 +35,7 @@ module Liquidscript
                         :heredoc, :iheredoc
                        ]         => :heredoc
 
-          if peek? :binop, :minus, :plus
-            compile_binop(out)
-          elsif peek? :prop
-            compile_property(out)
-          else
-            out
-          end
+          value_expect(out)
         end
 
         def compile_minus

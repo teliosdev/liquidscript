@@ -28,9 +28,8 @@ compiled:
                 - - :identifier
                   - console
                 - log
-              - - :get
-                - - :_variable
-                  - :v
+              - - :identifier
+                - v
         - - :call
           - - :property
             - - :identifier

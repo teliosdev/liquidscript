@@ -52,6 +52,7 @@ module Liquidscript
         end
 
         def _compile_for_seg(first)
+          first = value_expect(first)
           shift :comma
           second = compile_vexpression
           shift :comma
@@ -64,11 +65,9 @@ module Liquidscript
         end
 
         def compile_identifier(identifier)
-          default = action do
-            code :get, ref(identifier)
-          end
+          ref(identifier) unless peek?(:equal)
 
-          value_expect(identifier, &default)
+          identifier
         end
 
         def compile_regex
