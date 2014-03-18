@@ -1,18 +1,25 @@
-require 'liquidscript/icr/sexp'
+require "liquidscript"
+require "sprockets"
+require "tilt"
 
 module Liquidscript
-  class Template
+  class Template < ::Tilt::Template
+    self.default_mime_type = 'application/javascript'
 
-    def initialize(data)
-      @data = data
+    def self.engine_initialized?
+      defined? ::Liquidscript
     end
 
-    def render
-      @_render ||= begin
-        compiler = Compiler::ICR.new(Scanner::Liquidscript.new(@data))
-        compiler.compile
-        Generator::Javascript.new(compiler.top).generate
-      end
+    def initialize_engine
+      require_template_library "liquidscript"
+    end
+
+    def prepare; end
+
+    def evaluate(scope, locals, &block)
+      @output ||= Liquidscript.compile(data)
     end
   end
+
+  Sprockets.register_engine '.liq', LiquidscriptTemplate
 end

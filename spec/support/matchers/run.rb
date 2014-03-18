@@ -1,7 +1,7 @@
 RSpec::Matchers.define :run do
   command = Command::Runner.new("node", "")
   match do |data|
-    @output = Liquidscript::Template.new(data).render
+    @output = Liquidscript.compile(data)
     @message = command.run({}, :input => @output)
     @message.successful?
   end

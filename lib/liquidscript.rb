@@ -5,7 +5,6 @@ require "liquidscript/version"
 require "liquidscript/scanner"
 require "liquidscript/compiler"
 require "liquidscript/generator"
-require "liquidscript/template"
 
 module Liquidscript
   def self.compile(data)
