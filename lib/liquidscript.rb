@@ -6,6 +6,10 @@ require "liquidscript/scanner"
 require "liquidscript/compiler"
 require "liquidscript/generator"
 
+if defined? ::Sprockets
+  require "liquidscript/template"
+end
+
 module Liquidscript
   def self.compile(data)
     compiler = Compiler::ICR.new(Scanner::Liquidscript.new(data))
