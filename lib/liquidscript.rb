@@ -11,9 +11,18 @@ if defined? ::Sprockets
 end
 
 module Liquidscript
-  def self.compile(data)
-    compiler = Compiler::ICR.new(s = Scanner::Liquidscript.new(data))
+  def self.compile(data, options = {})
+    scanner = Scanner::Liquidscript.new(data)
+    if options[:tokens]
+      scanner.each.to_a.to_sexp
+    end
+
+    compiler = Compiler::ICR.new(scanner)
     compiler.compile
+    if options[:ast]
+      compiler.top.to_sexp
+    end
+
     Generator::Javascript.new(compiler.top).generate
   end
 end
