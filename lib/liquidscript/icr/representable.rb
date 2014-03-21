@@ -20,6 +20,10 @@ module Liquidscript
         to_a!.to_yaml
       end
 
+      def to_sexp
+        Sexp.new(self)
+      end
+
       def to_a!
         do_map = proc do |e|
           if e.is_a?(Representable)

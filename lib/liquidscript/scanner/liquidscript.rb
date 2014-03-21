@@ -58,7 +58,7 @@ module Liquidscript
             false
           )
 
-          set :identifier, %r{[A-Za-z_$][A-Za-z0-9_$]*}
+          set :identifier, %r{[A-Za-z_$]([A-Za-z0-9_$-]+[A-Za-z0-9_$])?}
 
           on("class")     {     emit :class         }
           on("module")    {     emit :module        }
@@ -104,7 +104,7 @@ module Liquidscript
           on("///" => :block_regex)
           on(:binops)     { |m| emit :binop,   m    }
           on(:unops)      { |m| emit :unop,    m    }
-          on(:identifier) { |m| emit :identifier, m }
+          on(:identifier) { |m| emit :identifier, m.gsub(/\-[a-z]/) { |m| m[1].upcase } }
 
           on(%r{#! ([A-Za-z]+) ?(.*?)\n}) do |_, c, a|
             metadata[:directives] ||= []

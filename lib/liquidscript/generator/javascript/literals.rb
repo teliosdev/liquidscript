@@ -108,7 +108,14 @@ module Liquidscript
 
         def generate_binop(code)
           op = BINOP_SWITCH.fetch(code[1].value) do
-            code[1].value
+            case code[1].type
+            when :minus
+              '-'
+            when :plus
+              '+'
+            else
+              code[1].value
+            end
           end
 
           " #{replace(code[2])} #{op} #{replace(code[3])}"

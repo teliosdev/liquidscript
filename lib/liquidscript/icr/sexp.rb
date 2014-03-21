@@ -1,7 +1,7 @@
 module Liquidscript
   module ICR
 
-    class ::Array; def to_sexp; Sexp.new(self).output; end; end
+    class ::Array; def to_sexp; Sexp.new(self); end; end
 
     # @private
     class Sexp
@@ -13,6 +13,10 @@ module Liquidscript
 
       def output
         out(@compiler).strip
+      end
+
+      def to_s
+        output
       end
 
       private

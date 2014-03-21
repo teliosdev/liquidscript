@@ -12,7 +12,7 @@ end
 
 module Liquidscript
   def self.compile(data)
-    compiler = Compiler::ICR.new(Scanner::Liquidscript.new(data))
+    compiler = Compiler::ICR.new(s = Scanner::Liquidscript.new(data))
     compiler.compile
     Generator::Javascript.new(compiler.top).generate
   end
