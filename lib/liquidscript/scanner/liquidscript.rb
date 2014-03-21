@@ -58,7 +58,7 @@ module Liquidscript
             false
           )
 
-          set :identifier, %r{[A-Za-z_$]([A-Za-z0-9_$-]+[A-Za-z0-9_$])?}
+          set :identifier, %r{[A-Za-z_$]([A-Za-z0-9_$-]*[A-Za-z0-9_$])?}
 
           on("class")     {     emit :class         }
           on("module")    {     emit :module        }
