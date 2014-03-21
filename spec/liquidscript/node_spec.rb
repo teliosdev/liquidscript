@@ -12,7 +12,7 @@ describe "Node support" do
       content = YAML.load_file file
       file =~ /spec\/fixtures\/(.*)\.yml/
 
-      it "generates #{$1}" do
+      it "runs #{$1}" do
         expect(content["data"]).to run
       end
     end

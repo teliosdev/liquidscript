@@ -177,7 +177,6 @@ module Liquidscript
 
         def compile_function_with_parameters(parameters)
           shift :arrow
-          shift :lbrace
 
           expressions = Liquidscript::ICR::Set.new
           expressions.context = Liquidscript::ICR::Context.new
@@ -194,9 +193,14 @@ module Liquidscript
             expressions << compile_expression
           end
 
-          loop do
-            expect :rbrace => action.end_loop,
-                   :_      => expression
+          unless peek?(:lbrace)
+            expression.call
+          else
+            shift :lbrace
+            loop do
+              expect :rbrace => action.end_loop,
+                     :_      => expression
+            end
           end
 
           code :function, @set.pop

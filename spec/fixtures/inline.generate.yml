@@ -1,0 +1,10 @@
+data: |
+  some-function = -> console.log("test")
+  some-function()
+
+compiled: |
+  var someFunction;
+  someFunction = function() {
+    console.log("test");
+  };
+  someFunction();
