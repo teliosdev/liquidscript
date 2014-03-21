@@ -14,13 +14,13 @@ module Liquidscript
   def self.compile(data, options = {})
     scanner = Scanner::Liquidscript.new(data)
     if options[:tokens]
-      scanner.each.to_a.to_sexp
+      return scanner.each.to_a.to_sexp
     end
 
     compiler = Compiler::ICR.new(scanner)
     compiler.compile
     if options[:ast]
-      compiler.top.to_sexp
+      return compiler.top.to_sexp
     end
 
     Generator::Javascript.new(compiler.top).generate
