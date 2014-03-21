@@ -23,9 +23,12 @@ module Liquidscript
           }x
 
           set :unops, %w(
-            !
             ++
             --
+          )
+
+          set :preunops, %w(
+            !
             ~
             new
             return
@@ -74,7 +77,7 @@ module Liquidscript
           on(:number)     { |m| emit :number,  m    }
           on(:string)     { |m| emit :sstring, m    }
           on(:keywords)   { |m| emit :keyword, m    }
-          on(:actions)    { |m| emit :action, m     }
+          on(:actions)    { |m| emit :action,  m    }
           on("->")        {     emit :arrow         }
           on("=")         {     emit :equal         }
           on("{")         {     emit :lbrace        }
@@ -102,9 +105,11 @@ module Liquidscript
             emit :regex, [m, b]
           }
           on("///" => :block_regex)
-          on(:binops)     { |m| emit :binop,   m    }
-          on(:unops)      { |m| emit :unop,    m    }
-          on(:identifier) { |m| emit :identifier, m.gsub(/\-[a-z]/) { |m| m[1].upcase } }
+          on(:binops)     { |m| emit :binop,    m   }
+          on(:preunops)   { |m| emit :preunop,  m   }
+          on(:unops)      { |m| emit :unop,     m   }
+
+          on(:identifier) { |m| emit :identifier, m.gsub(/\-[a-z]/) { |p| p[1].upcase } }
 
           on(%r{#! ([A-Za-z]+) ?(.*?)\n}) do |_, c, a|
             metadata[:directives] ||= []

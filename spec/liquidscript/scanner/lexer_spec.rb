@@ -45,10 +45,10 @@ describe Liquidscript::Scanner::Liquidscript, :lexer_helper do
 
     it "scans keywords" do
       scan("return test = new foo").should eq [
-        [:unop, "return"],
+        [:preunop, "return"],
         [:identifier, "test"],
         [:equal, nil],
-        [:unop, "new"],
+        [:preunop, "new"],
         [:identifier, "foo"]
       ]
     end

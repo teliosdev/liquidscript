@@ -19,7 +19,7 @@ module Liquidscript
           out = expect :number,     :identifier,
                        :istring,    :lparen,
                        :sstring,    :operator,
-                       :keyword,    :unop,
+                       :keyword,
                        :regex,
                        :newline,
                        :istring_begin,
@@ -28,6 +28,9 @@ module Liquidscript
                        :lbrace   => :object,
                        :lbrack   => :array,
                        :arrow    => :function,
+                       [
+                        :preunop, :unop
+                       ]         => :unop,
                        [
                         :heredoc_ref, :iheredoc_ref
                        ]         => :href,
@@ -56,7 +59,7 @@ module Liquidscript
         end
 
         def compile_unop
-          code :unop, shift(:unop), compile_vexpression
+          code :unop, shift(:unop, :preunop), compile_vexpression
         end
 
         # Handles an assignment of the form `identifier = expression`,
