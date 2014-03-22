@@ -25,7 +25,7 @@ module Liquidscript
         if v.is_a?(Representable) || v.is_a?(Array)
           @depth += 1
           body = ["\n", " " * @depth, "(",
-            v.to_a.map {|d| out d }.join(' '),
+            v.to_a.map {|d| out(d) }.compact.join(' '),
             ")"].join
           @depth -= 1
           body
@@ -34,6 +34,8 @@ module Liquidscript
 
           if body.include? " "
             "\"#{body}\""
+          elsif body.length == 0
+            nil
           else
             body
           end
