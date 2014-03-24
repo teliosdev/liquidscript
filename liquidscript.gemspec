@@ -25,4 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "command-runner"
 
   spec.add_dependency "hashie", "~> 2.0"
+  spec.add_dependency "thor"
 end

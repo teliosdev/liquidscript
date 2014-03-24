@@ -1,5 +1,5 @@
 module Liquidscript
 
   # The current version of liquidscript.
-  VERSION = "0.7.6".freeze
+  VERSION = "0.7.7".freeze
 end

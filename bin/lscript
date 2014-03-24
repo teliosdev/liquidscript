@@ -1,34 +1,6 @@
 #!/usr/bin/env ruby
 
 require "liquidscript"
+require "liquidscript/cli"
 
-if ARGV.length < 1
-  puts "Usage: #{File.basename($0)} infile [outfile]"
-  exit 1
-end
-
-infile = ARGV.shift
-outfile = ARGV.shift || infile.gsub(/\.liq\Z/, ".js")
-
-if infile == '-'
-  infile = $stdin
-else
-  infile = File.open(infile, "r")
-end
-
-if outfile == '-'
-  outfile = $stdout
-else
-  outfile = File.open(outfile, "w")
-end
-
-begin
-  out = Liquidscript.compile(infile.read)
-  outfile.write(out)
-rescue StandardError => e
-    $stderr.puts "ERROR: #{e.class}: #{e.message}"
-    $stderr.puts e.backtrace[0..5].map { |s| "\t#{s.gsub(/^.*?\/lib\/liquidscript\//, "")}" }.join("\n")
-ensure
-  [infile, outfile].each(&:close)
-end
-
+Liquidscript::CLI.start(ARGV)

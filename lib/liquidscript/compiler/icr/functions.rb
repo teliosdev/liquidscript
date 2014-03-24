@@ -39,27 +39,6 @@ module Liquidscript
           call = code :call, subject, *arguments
           call
         end
-
-        protected
-
-        def value_expect(v, &default)
-          out = expect \
-                 :lparen => action { compile_call(v)       },
-                 :equal  => action { compile_assignment(v) },
-                 :prop   => action { compile_property(v)   },
-                 :lbrack => action { compile_access(v)     },
-                 [:binop,
-                  :minus,
-                  :plus] => action { compile_binop(v)      },
-                 :unop   => action { |o| code :op, v, o    },
-                 :_      => default || action { v          }
-
-          if out != v
-            value_expect(out)
-          else
-            out
-          end
-        end
       end
     end
   end

@@ -31,18 +31,20 @@ module Liquidscript
     private
 
     def build_error_message
-      str = "Expected one of %{expected}, got %{type}"
+      str = "Expected one of %{expected}, got %{type}(%{value})"
       hash = {
         :expected => @expected.map { |e| e.to_s.upcase }.join(', ')
       }
 
       if @got.is_a? Symbol
-        hash[:type] = @got.to_s.upcase
+        hash[:type]  = @got.to_s.upcase
+        hash[:value] = ""
       else
         str << " (line %{line}, column %{column})"
         hash.merge! :type   => @got.type.to_s.upcase,
                     :line   => @got.line,
-                    :column => @got.column
+                    :column => @got.column,
+                    :value  => @got.value
       end
 
       sprintf(str, hash)

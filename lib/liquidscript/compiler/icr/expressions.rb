@@ -109,7 +109,7 @@ module Liquidscript
             elsif peek?(:rparen)
               components << i
             else
-              components << compile_identifier(i)
+              components << value_expect(compile_identifier(i))
             end
           end
 

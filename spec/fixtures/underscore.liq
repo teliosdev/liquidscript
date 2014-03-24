@@ -25,7 +25,7 @@
   nativeEvery       = ArrayProto.every
   nativeSome        = ArrayProto.some
   nativeIndexOf     = ArrayProto.indexOf
-  nativeLastIndexOf = arrayProto.lastIndexOf
+  nativeLastIndexOf = ArrayProto.lastIndexOf
   nativeIsArray     = Array.isArray
   nativeKeys        = Object.keys
   nativeBind        = FuncProto.bind
