@@ -21,12 +21,21 @@ module Liquidscript
         end
 
         def compile_module
-          shift :module
-          name = shift :identifier
-          set name
-          body = _compile_class_body(true)
+          m = shift :module
+          if peek? :identifier
+            name = shift :identifier
+            set name
+            body = _compile_class_body(true)
 
-          code :module, name, body
+            code :module, name, body
+          else
+            value_expect _new_token(m, :identifier)
+          end
+        end
+
+        def _new_token(old, type)
+          Scanner::Token.new(type, old.type.to_s, old.line,
+                             old.column)
         end
 
         def _compile_class_body(mod = false)
