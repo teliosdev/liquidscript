@@ -20,7 +20,7 @@ module Liquidscript
       end
 
       def to_a
-        [@type, @value, @line, @column]
+        [@type, @value]
       end
 
       def type?(type)
