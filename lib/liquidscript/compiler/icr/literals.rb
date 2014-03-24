@@ -112,8 +112,12 @@ module Liquidscript
 
           loop do
             contents << compile_vexpression
-            contents << shift(:istring)
-            peek?(:istring_begin)
+            if peek?(:istring_begin)
+              contents << shift(:istring_begin)
+            else
+              contents << shift(:istring)
+              false
+            end
           end
 
 
