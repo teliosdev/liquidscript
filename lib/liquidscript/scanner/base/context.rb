@@ -6,9 +6,14 @@ module Liquidscript
         attr_reader :name
 
         def initialize(name)
-          @name = name
+          @name    = name
           @matches = {}
-          @temps = {}
+          @temps   = {}
+          @actions = {}
+        end
+
+        def action(name, &block)
+          @actions[name] = block
         end
 
         def find_matcher(with)
@@ -42,13 +47,16 @@ module Liquidscript
           normalize_matcher @temps[key]
         end
 
-        def on(matcher)
+        def on(matcher, action = nil)
           key = nil
           value = nil
 
           if block_given?
             key = normalize_matcher matcher
             value = Proc.new
+          elsif action
+            key = normalize_matcher matcher
+            value = @actions.fetch(action)
           else
             key = normalize_matcher matcher.keys.first
             value = matcher.values.first

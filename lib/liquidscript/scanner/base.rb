@@ -15,16 +15,6 @@ module Liquidscript
       include Lexer
       include Enumerable
 
-      class << self
-
-        def contexts
-          @_contexts ||= Set.new
-        end
-
-        attr_accessor :default
-
-      end
-
       attr_accessor :metadata
 
       def initialize(source)

@@ -1,6 +1,6 @@
 # ![Liquidscript](http://i.imgur.com/xbdhTsr.png)
 
-[![Build Status](http://img.shields.io/travis/redjazz96/liquidscript.svg)](https://travis-ci.org/redjazz96/liquidscript) [![Coverage Status](http://img.shields.io/coveralls/redjazz96/liquidscript.svg)](https://coveralls.io/r/redjazz96/liquidscript?branch=master) [![Code Climate](http://img.shields.io/codeclimate/github/redjazz96/liquidscript.svg)](https://codeclimate.com/github/redjazz96/liquidscript) [![Gem Version](http://img.shields.io/gem/v/liquidscript.svg)](http://badge.fury.io/rb/liquidscript) [![Dependency Status](https://gemnasium.com/redjazz96/liquidscript.svg)](https://gemnasium.com/redjazz96/liquidscript) [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://choosealicense.com/licenses/mit/)
+[![Build Status](http://img.shields.io/travis/medcat/liquidscript.svg)](https://travis-ci.org/medcat/liquidscript) [![Coverage Status](http://img.shields.io/coveralls/medcat/liquidscript.svg)](https://coveralls.io/r/medcat/liquidscript?branch=master) [![Code Climate](http://img.shields.io/codeclimate/github/medcat/liquidscript.svg)](https://codeclimate.com/github/medcat/liquidscript) [![Gem Version](http://img.shields.io/gem/v/liquidscript.svg)](http://badge.fury.io/rb/liquidscript) [![Dependency Status](https://gemnasium.com/medcat/liquidscript.svg)](https://gemnasium.com/medcat/liquidscript) [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://choosealicense.com/licenses/mit/)
 
 A javascript-based language that compiles to javascript.
 
@@ -17,7 +17,7 @@ And then execute:
 Or install it yourself as:
 
     $ gem install liquidscript
-    
+
 If you're using Sprockets in your application, place this in
 your Gemfile:
 

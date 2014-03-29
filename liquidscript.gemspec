@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["redjazz96@gmail.com"]
   spec.summary       = %q{A javascript-based language that compiles to javascript.}
   spec.description   = %q{A javascript-based language that compiles to javascript.}
-  spec.homepage      = "https://github.com/redjazz96/liquidscript"
+  spec.homepage      = "https://github.com/medcat/liquidscript"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")

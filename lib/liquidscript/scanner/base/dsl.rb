@@ -16,6 +16,12 @@ module Liquidscript
             @_builder ||= Builder.new
           end
 
+          def contexts
+            @_contexts ||= Set.new
+          end
+
+          attr_accessor :default
+
         end
 
         def self.included(base)

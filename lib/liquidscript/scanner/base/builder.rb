@@ -22,9 +22,16 @@ module Liquidscript
         end
 
         def context(name)
-          context = Context.new(name)
-          context.instance_exec(&Proc.new)
-          contexts << context
+          case name
+          when Symbol
+            context = Context.new(name)
+            context.instance_exec(&Proc.new)
+            contexts << context
+          when Module
+            name.contexts.each do |context|
+              contexts << context
+            end
+          end
         end
 
         def reset!
