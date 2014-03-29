@@ -9,7 +9,7 @@ module Liquidscript
             set :number, %r{
               -? (
                 (                     # hex notation
-                  0x([0-9a-f]+)
+                  0x([0-9a-fA-F]+)
                 )
                   |
                 (                     # decimal or octal notation
