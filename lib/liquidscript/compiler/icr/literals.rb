@@ -97,8 +97,12 @@ module Liquidscript
 
           loop do
             contents << compile_vexpression
-            contents << shift(:iheredoc)
-            peek?(:istring_begin)
+            if peek?(:iheredoc_begin)
+              contents << shift(:iheredoc_begin)
+            else
+              contents << shift(:iheredoc)
+              false
+            end
           end
 
           top[:heredocs][top[:herenum]].body = contents
