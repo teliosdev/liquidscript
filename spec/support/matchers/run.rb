@@ -7,6 +7,6 @@ RSpec::Matchers.define :run do
   end
 
   failure_message_for_should do
-    "Expected to run, got:\n#{@message.stderr}"
+    "Expected to run, got:\n#{@message.stderr}\n\n#{@output}"
   end
 end

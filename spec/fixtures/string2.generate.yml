@@ -1,0 +1,17 @@
+data: |
+  string = "hello
+
+  world" # this'll translate to "hello\n\nworld"
+
+  single = 'test # there doesn't need to be an endquote here.
+
+  another-string = <<-TEST
+    #{string}, foo bar #{single} fffffuuu
+  TEST
+
+compiled: |
+  var string,single,anotherString;
+
+  string = "hello\n\nworld";
+  single = 'test';
+  anotherString = "  " +  string + ", foo bar " + single + " fffffuuu";

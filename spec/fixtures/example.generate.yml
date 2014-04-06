@@ -22,7 +22,7 @@ compiled: |
     if(this.initialize) {
       this.initialize.apply(this, arguments);
     }
-  }
+  };
 
   Greeter.prototype.initialize = function(name) {
     this.name = name;

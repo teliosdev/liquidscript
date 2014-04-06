@@ -25,7 +25,7 @@ compiled: |
     if(this.initialize) {
       this.initialize.apply(this, arguments);
     }
-  }
+  };
 
   Test.prototype.wee = function() {
     console.log(2);
@@ -38,6 +38,6 @@ compiled: |
   Test.test = function() {
     "class method!";
   };
-  Something.Test = Test;
+  Something.Test = Test;;
 
   module.exports = Something;

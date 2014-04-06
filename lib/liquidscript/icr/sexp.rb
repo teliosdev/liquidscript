@@ -32,7 +32,7 @@ module Liquidscript
         else
           body = v.to_s.gsub(/\"/, "\\\"")
 
-          if body.include? " "
+          if body.match(/[\s]/)
             "\"#{body}\""
           elsif body.length == 0
             nil

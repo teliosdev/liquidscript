@@ -39,6 +39,40 @@ module Liquidscript
           call = code :call, subject, *arguments
           call
         end
+
+
+        def compile_function_with_parameters(parameters)
+          shift :arrow
+
+          expressions = _build_set(parameters)
+
+          if peek?(:lbrace)
+            shift :lbrace
+            collect_compiles(:rbrace) do
+              expressions << compile_expression
+            end
+          else
+            expressions << compile_expression
+          end
+
+          code :function, @set.pop
+        end
+
+        private
+
+        def _build_set(parameters)
+          expressions = Liquidscript::ICR::Set.new
+          expressions.context = Liquidscript::ICR::Context.new
+          expressions.context.parent = top.context
+          expressions[:arguments] = parameters
+          @set << expressions
+
+          parameters.each do |parameter|
+            set(parameter).parameter!
+          end
+
+          expressions
+        end
       end
     end
   end

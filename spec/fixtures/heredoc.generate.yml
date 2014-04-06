@@ -2,8 +2,8 @@ data: |
   console.log(<<TEST, <<-MAYBE)
   hello world
   TEST
-  hello #{console} durr #{console.log}
+  hello #{console} durr #{console.log} brrr
   MAYBE
 
 compiled: |
-  console.log("hello world", "hello " + console + " durr " + console.log + "");
+  console.log("hello world", "hello " + console + " durr " + console.log + " brrr");

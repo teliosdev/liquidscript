@@ -32,6 +32,23 @@ module Liquidscript
           end
         end
 
+        # This applies only as many arguments as the block or function
+        # needs.  This is just so that calling a method is easier,
+        # so the developer doesn't have to worry about arity and
+        # such.
+        #
+        # @param args [Object] passed to the call.
+        # @return [Object] the result of the call.
+        def apply(*args)
+          return call if arity == 0
+
+          if block_given?
+            call(*yield[0..arity])
+          else
+            call(*args[0..arity])
+          end
+        end
+
         # How many arguments the call can take.  If this represents a
         # block that has tricks enabled, then this isn't an issue; if
         # it's a method call, however, it becomes important.

@@ -94,16 +94,7 @@ module Liquidscript
         def compile_iheredoc_begin
           start = shift :iheredoc_begin
           contents = [start]
-
-          loop do
-            contents << compile_vexpression
-            if peek?(:iheredoc_begin)
-              contents << shift(:iheredoc_begin)
-            else
-              contents << shift(:iheredoc)
-              false
-            end
-          end
+          _compile_interop(:iheredoc, contents)
 
           top[:heredocs][top[:herenum]].body = contents
           top[:herenum] += 1
@@ -113,17 +104,7 @@ module Liquidscript
         def compile_istring_begin
           start = shift :istring_begin
           contents = [start]
-
-          loop do
-            contents << compile_vexpression
-            if peek?(:istring_begin)
-              contents << shift(:istring_begin)
-            else
-              contents << shift(:istring)
-              false
-            end
-          end
-
+          _compile_interop(:istring, contents)
 
           code :interop, *contents
         end
@@ -183,35 +164,18 @@ module Liquidscript
           end
         end
 
-        def compile_function_with_parameters(parameters)
-          shift :arrow
+        private
 
-          expressions = Liquidscript::ICR::Set.new
-          expressions.context = Liquidscript::ICR::Context.new
-          expressions.context.parent = top.context
-          expressions[:arguments] = parameters
-          @set << expressions
-
-          parameters.each do |parameter|
-            set(parameter).parameter!
-          end
-
-
-          expression = action do
-            expressions << compile_expression
-          end
-
-          unless peek?(:lbrace)
-            expression.call
-          else
-            shift :lbrace
-            loop do
-              expect :rbrace => action.end_loop,
-                     :_      => expression
+        def _compile_interop(type, contents)
+          loop do
+            contents << compile_vexpression
+            if peek?(:"#{type}_begin")
+              contents << shift(:"#{type}_begin")
+            else
+              contents << shift(type)
+              false
             end
           end
-
-          code :function, @set.pop
         end
 
       end

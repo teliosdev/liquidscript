@@ -4,6 +4,7 @@ require "liquidscript/compiler/icr/literals"
 require "liquidscript/compiler/icr/classes"
 require "liquidscript/compiler/icr/helpers"
 require "liquidscript/compiler/icr/heredoc"
+require "liquidscript/compiler/icr/groups"
 
 module Liquidscript
   module Compiler
@@ -14,6 +15,7 @@ module Liquidscript
       include Literals
       include Classes
       include Helpers
+      include Groups
 
       # (see Base#initialize)
       def initialize(*)

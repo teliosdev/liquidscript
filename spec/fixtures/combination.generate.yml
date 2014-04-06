@@ -21,7 +21,7 @@ compiled: |
     if(this.initialize) {
       this.initialize.apply(this, arguments);
     }
-  }
+  };
 
   Thing.prototype.initialize = function() {
     this.test = new Test();
@@ -30,4 +30,4 @@ compiled: |
   Thing.prototype.do = function(thing) {
     return this.test.do(thing);
   };
-  SomeModule.Thing = Thing;
+  SomeModule.Thing = Thing;;

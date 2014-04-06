@@ -1,4 +1,4 @@
-  module Liquidscript
+module Liquidscript
   module Generator
     class Javascript
       module Objects
@@ -35,100 +35,25 @@
         end
 
         def generate_class(code)
-          body       = buffer
-          class_name = code[1].value
-
-          in_module(class_name) do |last_module|
-            body.block 7 - @indent, <<-JS
-              #{class_name} = #{class_name} || function #{class_name}() {
-                if(this.initialize) {
-                  this.initialize.apply(this, arguments);
-                }
-              }
-            JS
-
-            if code[2]
-              body.block 8 - @indent, <<-JS
-                #{class_name}.prototype.__proto__ = #{code[2].value};
-              JS
-            end
-
-            code[3].each do |part|
-              k, v = part
-              case k.type
-              when :identifier
-                body.block 8 - @indent, <<-JS
-                  #{class_name}.prototype.#{k.value} = #{replace(v)};
-                JS
-              when :istring
-                body.block 8 - @indent, <<-JS
-                  #{class_name}.prototype[#{k.value}] = #{replace(v)};
-                JS
-              when :property
-                if k[1].value != "this"
-                  raise InvalidCodeError.new(k[1].value)
-                end
-
-                body.block 8 - @indent, <<-JS
-                  #{class_name}.#{k[2]} = #{replace(v)};
-                JS
-              when :class
-                body << generate_class(part)
-              when :module
-                body << generate_module(part)
-              end
-            end
-
-            if last_module
-              body.block 7, <<-JS
-                #{last_module}.#{class_name} = #{class_name}
-              JS
-            end
-
-          end
-
-          body
+          _context :name        => code[1].value,
+                   :inherit     => code[2],
+                   :parts       => code[3],
+                   :inheritance => "%{name}.prototype.__proto__     = %{inherit};\n",
+                   :identifier  => "%{name}.prototype.%{value}      = %{replace};\n",
+                   :istring     => "%{name}.prototype[\"%{value}\"] = %{replace};\n",
+                   :property    => "%{name}.%{value}                = %{replace};\n",
+                   :head        => "%{name} = %{name} || function %{name}() { " +
+                                   "if(this.initialize) { this.initialize.apply(this, " +
+                                   "arguments); } };\n"
         end
 
         def generate_module(code)
-          body = buffer
-          module_name = code[1].value
-
-          in_module(module_name) do |last_module|
-            body << "#{module_name} = #{module_name} || {};"
-
-            code[2].each do |part|
-              k, v = part
-              to_match = if k.is_a? Symbol
-                k
-              else
-                k.type
-              end
-
-              case to_match
-              when :identifier
-                body.block 7, <<-JS
-                  #{module_name}.#{k.value} = #{replace(v)};
-                JS
-              when :istring
-                body.block 7, <<-JS
-                  #{module_name}["#{k.value}"] = #{replace(v)};
-                JS
-              when :class
-                body << generate_class(part)
-              when :module
-                body << generate_module(part)
-              end
-            end
-
-            if last_module
-              body.block 7, <<-JS
-                #{last_module}.#{module_name} = #{module_name}
-              JS
-            end
-          end
-
-          body
+          _context :name       => code[1].value,
+                   :parts      => code[2],
+                   :head       => "%{name} = %{name} || {};\n",
+                   :identifier => "%{name}.%{value} = %{replace};\n",
+                   :istring    => "%{name}[\"%{value}\"] = %{replace};\n",
+                   :property   => false
         end
 
         protected
@@ -142,6 +67,63 @@
           out = yield @modules[-2]
           @modules.pop
           out
+        end
+
+        def _context(options)
+          body = buffer
+          name = options[:name]
+          opts = { :name => name }
+
+          in_module(name) do |last_module|
+            opts[:last] = last_module
+            _build_header(body, options, opts)
+
+            options[:parts].each do |part|
+              _build_element(body, options, opts, part)
+            end
+
+            if last_module
+              body << "#{last_module}.#{name} = #{name};\n"
+            end
+          end
+
+          body
+        end
+
+        def _build_element(body, options, opts, part)
+          k, v = part
+
+          type = if k.is_a? Symbol then k else k.type end
+
+          case type
+          when :identifier, :istring
+            opts[:value] = k.value
+            opts[:replace] = replace(v)
+
+            body << sprintf(options[k.type], opts)
+          when :property
+            opts[:value]   = k[2]
+            opts[:replace] = replace(v)
+
+            if k[1].value == "this" && options[k.type]
+              body << sprintf(options[k.type], opts)
+            else
+              raise InvalidCodeError.new(k[1].value)
+            end
+          when :class
+            body << generate_class(part)
+          when :module
+            body << generate_module(part)
+          end
+        end
+
+        def _build_header(body, options, opts)
+          body << sprintf(options[:head], opts)
+
+          if options[:inherit]
+            opts[:inherit] = options[:inherit].value
+            body << sprintf(options[:inheritance], opts)
+          end
         end
 
       end
