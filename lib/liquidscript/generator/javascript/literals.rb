@@ -42,7 +42,9 @@ module Liquidscript
         def generate_for_in(code)
           loop_body = buffer
           loop_body << "for(#{code[1].value} in #{code[2].name}) {\n"
+          indent!
           insert_into(code[3], loop_body)
+          unindent!
           loop_body << indent_level << "}"
         end
 
@@ -53,7 +55,9 @@ module Liquidscript
                        replace(code[2])  << ";" <<
                        replace(code[3])  << ") {\n"
 
+          indent!
           insert_into(code[4], loop_body)
+          unindent!
 
           loop_body << indent_level << "}"
         end
