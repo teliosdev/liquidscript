@@ -38,13 +38,13 @@ module Liquidscript
           _context :name        => code[1].value,
                    :inherit     => code[2],
                    :parts       => code[3],
-                   :inheritance => "%{name}.prototype.__proto__     = %{inherit};\n",
-                   :identifier  => "%{name}.prototype.%{value}      = %{replace};\n",
+                   :inheritance => "%{name}.prototype.__proto__  = %{inherit};\n",
+                   :identifier  => "%{name}.prototype.%{value} = %{replace};\n",
                    :istring     => "%{name}.prototype[\"%{value}\"] = %{replace};\n",
-                   :property    => "%{name}.%{value}                = %{replace};\n",
-                   :head        => "%{name} = %{name} || function %{name}() { " +
-                                   "if(this.initialize) { this.initialize.apply(this, " +
-                                   "arguments); } };\n"
+                   :property    => "%{name}.%{value} = %{replace};\n",
+                   :head        => "%{name} = %{name} || function %{name}() {\n#{indent!}" <<
+                                   "if(this.initialize) {\n#{indent!}this.initialize.apply(this, " +
+                                   "arguments);\n#{unindent!}}\n#{unindent!}};\n"
         end
 
         def generate_module(code)

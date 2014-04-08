@@ -40,12 +40,16 @@ module Liquidscript
         "  " * @indent
       end
 
+      alias_method :indent, :indent_level
+
       def indent!
         @indent += 1
+        indent
       end
 
       def unindent!
         @indent -= 1
+        indent
       end
 
       def insert_into(area, buffer)
