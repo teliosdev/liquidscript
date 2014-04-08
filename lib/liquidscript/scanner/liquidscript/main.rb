@@ -46,7 +46,7 @@ module Liquidscript
             )
 
             set :binops, %w(
-              * / ^
+              * / ^ %
               << >> >>>
               === ==
               !== !=
