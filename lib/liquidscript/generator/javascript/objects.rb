@@ -10,7 +10,7 @@ module Liquidscript
         def generate_call(code)
           call = buffer
           args = buffer
-          args.set_join! ','
+          args.set_join! ', '
 
           call << "#{replace(code[1])}"
 

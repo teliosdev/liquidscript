@@ -61,7 +61,7 @@ module Liquidscript
         def _exec_context(code)
 
           unless code.locals.empty?
-            "\n#{indent_level}var #{code.locals.join(',')};\n"
+            "#{indent_level}var #{code.locals.join(', ')};\n"
           end
         end
       end

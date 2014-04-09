@@ -51,8 +51,8 @@ module Liquidscript
         def generate_for_seg(code)
           loop_body = buffer
           loop_body << "for("            <<
-                       replace(code[1])  << ";" <<
-                       replace(code[2])  << ";" <<
+                       replace(code[1])  << "; " <<
+                       replace(code[2])  << "; " <<
                        replace(code[3])  << ") {\n"
 
           indent!
@@ -91,7 +91,7 @@ module Liquidscript
         end
 
         def generate_unop(code)
-          " #{code[1].value} #{replace(code[2])}"
+          "#{code[1].value} #{replace(code[2])}"
         end
 
         def generate_href(code)
@@ -122,7 +122,7 @@ module Liquidscript
             end
           end
 
-          " #{replace(code[2])} #{op} #{replace(code[3])}"
+          "#{replace(code[2])} #{op} #{replace(code[3])}"
         end
 
         def generate_identifier(code)
@@ -130,7 +130,7 @@ module Liquidscript
         end
 
         def generate_keyword(code)
-          " #{code[1].value} "
+          "#{code[1].value}"
         end
 
         def generate_object(code)
@@ -168,10 +168,10 @@ module Liquidscript
           function = buffer
           indent!
 
-          function                       <<
-            "function("                  <<
-            code[1].parameters.join(',') <<
-            ") {\n"                      <<
+          function                        <<
+            "function("                   <<
+            code[1].parameters.join(', ') <<
+            ") {\n"                       <<
             replace(code[1])
           unindent!
 
