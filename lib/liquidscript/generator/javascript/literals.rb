@@ -136,11 +136,10 @@ module Liquidscript
         def generate_object(code)
 
           object = buffer
-          object.set_join! ', '
-          indent!
+          object.set_join! ",\n#{indent!}"
 
           code[1].inject(object) do |buf, part|
-            buf << "#{indent_level}\"#{part[0].value}\": #{replace(part[1])}"
+            buf << "\"#{part[0].value}\": #{replace(part[1])}"
           end
 
           unindent!
