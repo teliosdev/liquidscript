@@ -112,7 +112,7 @@ module Liquidscript
             on(:unops)      { |m| emit :unop,     m   }
             on(%r{<<([A-Z]+)}, :heredoc)
             on(%r{<<-([A-Z]+)}, :iheredoc)
-            on(%r{r/(.*?)/([gimy]*)}, :regex)
+            on(%r{r/((?:.|\/)*)/([gimy]*)}, :regex)
             on(%r{"} => :istring)
             on("///" => :block_regex)
             on("->")        {     emit :arrow         }
