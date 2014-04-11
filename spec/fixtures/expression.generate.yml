@@ -1,4 +1,7 @@
 data: |
   (2)
+  #! allow Math
+  Math.round(5 / (10 / 100) * 100)
 
-compiled: "(2);"
+
+compiled: "(2); Math.round(5 / (10 / 100) * 100);"

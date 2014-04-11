@@ -15,6 +15,15 @@ module Liquidscript
           Liquidscript::ICR::Code.new type, *args
         end
 
+        def _compile_block
+          if peek?(:lbrace)
+            shift :lbrace
+            collect_compiles(:expression, :rbrace)
+          else
+            compile_expression
+          end
+        end
+
         def value_expect(v, &default)
           out = expect \
                  :lparen => action { compile_call(v)       },

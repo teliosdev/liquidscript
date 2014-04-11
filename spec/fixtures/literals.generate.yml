@@ -1,7 +1,7 @@
 data: |
   object = { hello: "world" }
   test = [1, 2]
-  regex = /^test/
+  regex = r/^test/
   block = ///
     ^test # comment
   ///

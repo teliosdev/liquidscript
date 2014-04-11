@@ -107,14 +107,14 @@ module Liquidscript
             on(:string)     { |m| emit :sstring, m    }
             on(:keywords)   { |m| emit :keyword, m    }
             on(:actions)    { |m| emit :action,  m    }
-            on(%r{<<([A-Z]+)}, :heredoc)
-            on(%r{<<-([A-Z]+)}, :iheredoc)
-            on(%r{/(.*?)/([a-z]*)}, :regex)
-            on(%r{"} => :istring)
-            on("///" => :block_regex)
             on(:binops)     { |m| emit :binop,    m   }
             on(:preunops)   { |m| emit :preunop,  m   }
             on(:unops)      { |m| emit :unop,     m   }
+            on(%r{<<([A-Z]+)}, :heredoc)
+            on(%r{<<-([A-Z]+)}, :iheredoc)
+            on(%r{r/(.*?)/([gimy]*)}, :regex)
+            on(%r{"} => :istring)
+            on("///" => :block_regex)
             on("->")        {     emit :arrow         }
             on("=")         {     emit :equal         }
             on("{")         {     emit :lbrace        }

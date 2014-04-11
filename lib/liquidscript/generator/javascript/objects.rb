@@ -4,7 +4,7 @@ module Liquidscript
       module Objects
 
         def generate_expression(code)
-          "(#{replace(code[1].first)})"
+          "(#{replace(code[1])})"
         end
 
         def generate_call(code)

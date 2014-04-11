@@ -20,8 +20,7 @@ module Liquidscript
             continue = [:elsif, :else]
           end
 
-          shift :lbrace
-          body = collect_compiles(:expression, :rbrace)
+          body = _compile_block
 
           args = [type]
           args << conditional if cond

@@ -16,8 +16,7 @@ module Liquidscript
           shift :lparen
           conditional = compile_vexpression
           shift :rparen
-          shift :lbrace
-          body = collect_compiles(:expression, :rbrace)
+          body = _compile_block
           code :while, conditional, body
         end
 
@@ -44,10 +43,9 @@ module Liquidscript
 
           obj = shift :identifier
           shift :rparen
-          shift :lbrace
 
           set ident
-          body = collect_compiles(:expression, :rbrace)
+          body = _compile_block
           code :for_in, ident, ref(obj), body
         end
 
@@ -58,9 +56,8 @@ module Liquidscript
           shift :comma
           third = compile_vexpression
           shift :rparen
-          shift :lbrace
 
-          body = collect_compiles(:expression, :rbrace)
+          body = _compile_block
           code :for_seg, first, second, third, body
         end
 
