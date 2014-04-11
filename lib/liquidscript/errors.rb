@@ -21,10 +21,9 @@ module Liquidscript
   end
 
   class UnexpectedError < CompileError
-    def initialize(expected, got, body)
+    def initialize(expected, got)
       @expected = expected
       @got = got
-      @body = body
 
       super build_error_message
     end
@@ -47,9 +46,6 @@ module Liquidscript
                     :column => @got.column,
                     :value  => @got.value
       end
-
-      str << ": %{body}"
-      hash[:body] = @body.inspect
 
       sprintf(str, hash)
     end

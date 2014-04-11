@@ -197,7 +197,7 @@ module Liquidscript
           out
 
         rescue KeyError
-          raise UnexpectedError.new(hash.keys, peek, self)
+          raise UnexpectedError.new(hash.keys, peek)
         end
 
         protected
