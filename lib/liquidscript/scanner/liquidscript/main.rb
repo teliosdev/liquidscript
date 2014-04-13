@@ -57,6 +57,7 @@ module Liquidscript
               & |
               instanceof
               or and
+              is isnt
             )
 
             set :keywords, %w(

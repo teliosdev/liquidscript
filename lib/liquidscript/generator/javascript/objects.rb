@@ -83,7 +83,7 @@ module Liquidscript
             end
 
             if last_module
-              body << "#{last_module}.#{name} = #{name};\n"
+              body << indent << "#{last_module}.#{name} = #{name};\n"
             end
           end
 
@@ -100,13 +100,13 @@ module Liquidscript
             opts[:value] = k.value
             opts[:replace] = replace(v)
 
-            body << sprintf(options[k.type], opts)
+            body << indent << sprintf(options[k.type], opts)
           when :property
             opts[:value]   = k[2]
             opts[:replace] = replace(v)
 
             if k[1].value == "this" && options[k.type]
-              body << sprintf(options[k.type], opts)
+              body << indent << sprintf(options[k.type], opts)
             else
               raise InvalidCodeError.new(k[1].value)
             end
@@ -118,11 +118,11 @@ module Liquidscript
         end
 
         def _build_header(body, options, opts)
-          body << sprintf(options[:head], opts)
+          body << indent << sprintf(options[:head], opts)
 
           if options[:inherit]
             opts[:inherit] = options[:inherit].value
-            body << sprintf(options[:inheritance], opts)
+            body << indent << sprintf(options[:inheritance], opts)
           end
         end
 

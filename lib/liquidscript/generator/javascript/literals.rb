@@ -9,7 +9,9 @@ module Liquidscript
           "!="  => "!==",
           "!==" => "!=",
           "or"  => "||",
-          "and" => "&&"
+          "and" => "&&",
+          "is"  => "===",
+          "isnt"=> "!=="
         }.freeze
 
         def generate_number(code)
