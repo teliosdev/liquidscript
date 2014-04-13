@@ -1,7 +1,7 @@
 data: |
   object = { hello: "world" }
   test = [1, 2]
-  range = [1..9]
+  range = [0x1..0x9]
   regex = r/^\/test/
   block = ///
     ^test # comment
@@ -12,7 +12,7 @@ compiled: |
   var object, test, range, regex, block;
   object = { "hello": "world" };
   test = [1, 2];
-  range = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  range = [0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9];
   regex = /^\/test/;
   block = /^test/;
   regex === block;
