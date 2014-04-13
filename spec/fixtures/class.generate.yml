@@ -4,12 +4,13 @@ data: |
 
       some-number: 2
 
-      wee: -> {
-        console.log(some-number)
-      }
-
       initialize: -> {
         "this should be init"
+        wee()
+      }
+
+      wee: -> {
+        console.log(some-number)
       }
 
       this.test: -> {
@@ -32,12 +33,13 @@ compiled: |
 
   Test.prototype.someNumber = 2;
 
-  Test.prototype.wee = function() {
-    console.log(this.someNumber);
-  };
-
   Test.prototype.initialize = function() {
     "this should be init";
+    this.wee();
+  };
+
+  Test.prototype.wee = function() {
+    console.log(this.someNumber);
   };
 
   Test.test = function() {

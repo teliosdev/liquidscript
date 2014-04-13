@@ -22,6 +22,10 @@ module Liquidscript
           top.context = new_context
           body = _compile_class_body(false)
 
+          new_context.undefined.each do |f|
+            raise f[1]
+          end
+
           code :class, name, inherit, body, top.contexts.pop
         end
 

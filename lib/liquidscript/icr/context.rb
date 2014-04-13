@@ -13,10 +13,16 @@ module Liquidscript
 
       # The variables that are allowed to be used as a global scope,
       # i.e. used in a `get` context without a previous `set`.
-      DEFAULT_ALLOWED_VARIABLES = [
-        :window, :global, :exports, :console, :this, :arguments,
-        :require
-      ]
+      DEFAULT_ALLOWED_VARIABLES = %w(
+        window global exports console this arguments
+        Infinity NaN undefined eval isFinite isNaN parseFloat
+        parseInt decodeURI decodeURIComponent encodeURI encodeURIComponent
+        Object Function Boolean Error EvalError InternalError RangeError
+        ReferenceError SyntaxError TypeError URIError Number Math
+        Date String  RegExp Array Float32Array Float64Array Int16Array
+        Int32Array Int8Array Uint16Array Uint32Array Uint8Array
+        Uint8ClampedArray ArrayBuffer DataView JSON Intl
+      ).map(&:intern)
 
       # The parent of the current context.
       #
@@ -35,10 +41,13 @@ module Liquidscript
       # @return [Array<Symbol>]
       attr_reader :allowed_variables
 
+      attr_reader :undefined
+
       include Representable
 
       # Initializes the context.
       def initialize
+        @undefined = []
         @variables = {}
         @allowed_variables = [DEFAULT_ALLOWED_VARIABLES].flatten
       end
@@ -55,15 +64,7 @@ module Liquidscript
       # @return [Variable]
       def variable(name, type)
         @variables.fetch(name) do
-          if type == :set
-            @variables[name] = Variable.new(self, name, :class => @class)
-          elsif allowed_variables.include?(name)
-            Variable.new(self, name, :class => @class)
-          elsif type == :get && parent
-            parent.get(name)
-          else
-            raise InvalidReferenceError.new(name)
-          end
+          find_variable(name, type)
         end
       end
 
@@ -105,6 +106,37 @@ module Liquidscript
         @variables.keys
       end
 
+      private
+
+      def find_variable(name, type)
+        case true
+        when type == :set
+          p @undefined
+          @undefined.reject! { |(n, _)| n == name }
+          @variables[name] = Variable.new(self, name, :class => @class)
+        when allowed_variables.include?(name)
+          Variable.new(self, name)
+        when parent && type == :get
+          get_parent(name)
+        when @class
+          add_undefined(name)
+        else
+          raise InvalidReferenceError.new(name)
+        end
+      end
+
+      def get_parent(name)
+        parent.get(name)
+      rescue InvalidReferenceError => e
+        raise unless @class
+        add_undefined(name, e)
+      end
+
+      def add_undefined(name, e = InvalidReferenceError.new(name))
+          @undefined << [name, e]
+          Variable.new(self, name, :class => true)
+      end
     end
+
   end
 end

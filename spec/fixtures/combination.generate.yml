@@ -1,4 +1,5 @@
 data: |
+  #! allow require
   Test = require("assert")
 
   module SomeModule {
