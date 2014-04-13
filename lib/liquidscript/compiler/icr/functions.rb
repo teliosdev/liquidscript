@@ -60,7 +60,7 @@ module Liquidscript
 
         private
 
-        def _build_set(parameters)
+        def _build_set(parameters = [])
           expressions = Liquidscript::ICR::Set.new
           expressions.context = Liquidscript::ICR::Context.new
           expressions.context.parent = top.context

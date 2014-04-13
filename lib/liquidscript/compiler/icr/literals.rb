@@ -55,9 +55,9 @@ module Liquidscript
           obj = shift :identifier
           shift :rparen
 
-          set ident
+          v = set(ident)
           body = _compile_block
-          code :for_in, ident, ref(obj), body
+          code :for_in, v, ref(obj), body
         end
 
         def _compile_for_seg(first)
@@ -73,9 +73,11 @@ module Liquidscript
         end
 
         def compile_identifier(identifier)
-          ref(identifier) unless peek?(:equal)
-
-          identifier
+          if peek?(:equal)
+            identifier
+          else
+            ref(identifier)
+          end
         end
 
         def compile_regex

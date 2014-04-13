@@ -20,7 +20,7 @@ module Liquidscript
             shift :lbrace
             collect_compiles(:expression, :rbrace)
           else
-            compile_expression
+            [compile_expression]
           end
         end
 

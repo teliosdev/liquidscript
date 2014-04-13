@@ -12,12 +12,17 @@ module Liquidscript
           if peek?(:colon)
             shift :colon
             inherit = shift :identifier
-            ref inherit
+            inherit = ref(inherit)
           end
 
+          new_context = Liquidscript::ICR::Context.new
+          new_context.parent = top.context
+          new_context.class!
+
+          top.context = new_context
           body = _compile_class_body(false)
 
-          code :class, name, inherit, body
+          code :class, name, inherit, body, top.contexts.pop
         end
 
         def compile_module
@@ -66,6 +71,10 @@ module Liquidscript
 
           item = compile_property(item) if item.type == :identifier &&
             peek?(:prop) && !mod
+
+          if item.type == :identifier && !mod
+            set(item)
+          end
 
           shift :colon
           item

@@ -26,7 +26,9 @@ module Liquidscript
 
           case code[1].type
           when :variable
-            prop << code[1].name
+            prop << code[1].to_s
+          when :identifier
+            prop << code[1].value
           else
             prop << replace(code[1])
           end
@@ -121,7 +123,7 @@ module Liquidscript
           body << indent << sprintf(options[:head], opts)
 
           if options[:inherit]
-            opts[:inherit] = options[:inherit].value
+            opts[:inherit] = options[:inherit].to_s
             body << indent << sprintf(options[:inheritance], opts)
           end
         end

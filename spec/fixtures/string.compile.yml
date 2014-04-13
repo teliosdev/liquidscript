@@ -19,15 +19,15 @@ compiled:
     - 1
   - - :call
     - - :property
-      - - :identifier
-        - console
+      - - :_variable
+        - :console
       - log
     - - :href
       - *heredoc
   - - :interop
     - - :istring_begin
       - "hello "
-    - - :identifier
-      - console
+    - - :_variable
+      - :console
     - - :istring
       - ""

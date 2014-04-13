@@ -30,9 +30,11 @@ compiled:
                   - []
                 - - :_arguments
                   - []
+        - - :test
       - - :class
         - - :identifier
           - AnotherClass
-        - - :identifier
-          - SomeClass
+        - - :_variable
+          - :SomeClass
+        - []
         - []

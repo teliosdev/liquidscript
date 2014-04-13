@@ -1,8 +1,11 @@
 data: |
   module Something {
     class Test {
+
+      some-number: 2
+
       wee: -> {
-        console.log(2)
+        console.log(some-number)
       }
 
       initialize: -> {
@@ -27,8 +30,10 @@ compiled: |
     }
   };
 
+  Test.prototype.someNumber = 2;
+
   Test.prototype.wee = function() {
-    console.log(2);
+    console.log(this.someNumber);
   };
 
   Test.prototype.initialize = function() {

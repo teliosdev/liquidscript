@@ -50,11 +50,11 @@ module Liquidscript
 
         def generate_for_in(code)
           loop_body = buffer
-          loop_body << "for(#{code[1].value} in #{code[2].name}) {\n"
+          loop_body << "for(#{code[1].to_s} in #{code[2].name}) {\n"
           indent!
           insert_into(code[3], loop_body)
           unindent!
-          loop_body << indent_level << "}"
+          loop_body << indent << "}"
         end
 
         def generate_for_seg(code)
@@ -134,8 +134,12 @@ module Liquidscript
           "#{replace(code[2])} #{op} #{replace(code[3])}"
         end
 
-        def generate_identifier(code)
-          code.value
+        #def generate_identifier(code)
+        #  code.value
+        #end
+
+        def generate_variable(code)
+          code.to_s
         end
 
         def generate_keyword(code)

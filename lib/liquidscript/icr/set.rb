@@ -18,19 +18,22 @@ module Liquidscript
       def initialize
         @metadata = {}
         @code = []
+        @contexts = []
         @action = :exec
       end
 
       #
       def context
-        @metadata.fetch(:context) do
-          @metadata.fetch(:parent).context
-        end
+        contexts.last || @metadata.fetch(:parent).context
+      end
+
+      def contexts
+        @contexts
       end
 
       #
       def context=(new_context)
-        @metadata[:context] = new_context
+        contexts << new_context
       end
 
       # Adds a code to the code list.  This is just a
@@ -89,11 +92,11 @@ module Liquidscript
       #
       # @return [Array]
       def to_a
-        [
-          @action,
-          *@metadata.to_a.map { |(m, i)| [:"_#{m}", i] },
-          *@code
-        ]
+        part = [@action]
+        part << [:_context, context] if contexts.any?
+        part.concat(@metadata.to_a.map { |(m, i)| [:"_#{m}", i] })
+        part.concat(@code)
+        part
       end
 
       # Outputs the codes in this set.

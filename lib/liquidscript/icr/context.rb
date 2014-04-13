@@ -56,9 +56,9 @@ module Liquidscript
       def variable(name, type)
         @variables.fetch(name) do
           if type == :set
-            @variables[name] = Variable.new(self, name)
+            @variables[name] = Variable.new(self, name, :class => @class)
           elsif allowed_variables.include?(name)
-            Variable.new(self, name)
+            Variable.new(self, name, :class => @class)
           elsif type == :get && parent
             parent.get(name)
           else
@@ -95,6 +95,10 @@ module Liquidscript
       # Passes `:set` as type.
       def set(name)
         variable(name, :set)
+      end
+
+      def class!
+        @class = true
       end
 
       def to_a

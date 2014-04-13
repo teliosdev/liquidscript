@@ -19,21 +19,21 @@ compiled:
         - - :_arguments
           - []
         - - :for_in
-          - - :identifier
-            - v
+          - - :_variable
+            - :v
           - - :_variable
             - :console
           - - - :call
               - - :property
-                - - :identifier
-                  - console
+                - - :_variable
+                  - :console
                 - log
-              - - :identifier
-                - v
+              - - :_variable
+                - :v
         - - :call
           - - :property
-            - - :identifier
-              - console
+            - - :_variable
+              - :console
             - log
           - - :istring
             - hello world

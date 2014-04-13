@@ -27,10 +27,11 @@ module Liquidscript
 
       include Representable
 
-      def initialize(context, name)
+      def initialize(context, name, options = {})
         @context = context
-        @name = name
-        @value = nil
+        @name    = name
+        @options = options
+        @value   = nil
       end
 
       # Make this class compatible with the #type based system.
@@ -55,6 +56,14 @@ module Liquidscript
       # @return [Boolean]
       def parameter?
         @parameter
+      end
+
+      def to_s
+        if @options[:class]
+          "this.#{@name}"
+        else
+          @name
+        end
       end
 
       # Turns the variable into an array.
