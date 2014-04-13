@@ -16,6 +16,13 @@ module Liquidscript
           "#{code.first}"
         end
 
+        def generate_range(code)
+          start  = code[1]
+          ending = code[2]
+
+          (start..ending).to_a.join(', ')
+        end
+
         def generate_action(code)
           code[1].value
         end

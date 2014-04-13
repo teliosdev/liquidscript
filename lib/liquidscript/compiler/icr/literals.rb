@@ -4,7 +4,18 @@ module Liquidscript
       module Literals
 
         def compile_number
-          code :number, pop.value
+          #code :number, pop.value
+          n = shift(:number)
+
+          if peek?(:prop)
+            shift(:prop)
+            shift(:prop)
+            n2 = shift(:number)
+
+            code :range, n.value, n2.value
+          else
+            code :number, n.value
+          end
         end
 
         def compile_action
