@@ -14,9 +14,13 @@ compiled: |
     console = 3;
     test = (function(a, b) {
       var out, i;
+      out = [];
+      if(a > b) {
+        t = a; a = b; b = t;
+      }
       for(i = a; i <= b; i++) {
         out.push(i);
       };
-      return out;
+      return t === undefined ? out : out.reversed();
     })(0, console);
   };
