@@ -28,11 +28,16 @@ module Liquidscript
         def generate_range(code)
           out = buffer
           out << "(function(a, b) {\n"                          <<
-                 indent!   << "var out, i;\n"                   <<
+                 indent!   << "var out, i, t;\n"                <<
+                 indent    << "out = [];\n"                     <<
+                 indent    << "if(a > b) {\n"                   <<
+                 indent!   << "t = a; a = b; b = t;\n"          <<
+                 unindent! << "}\n"                             <<
                  indent    << "for(i = a; i <= b; i++) {\n"     <<
                  indent!   << "out.push(i);\n"                  <<
                  unindent! << "};\n"                            <<
-                 indent    << "return out;\n"                   <<
+                 indent    << "return t === undefined ?"        <<
+                              "out : out.reverse();\n"          <<
                  unindent! << "})(" << replace(code[1]) << ", " <<
                  replace(code[2]) << ")"
           out
