@@ -21,6 +21,6 @@ compiled: |
       for(i = a; i <= b; i++) {
         out.push(i);
       };
-      return t === undefined ? out : out.reversed();
+      return t === undefined ? out : out.reverse();
     })(0, console);
   };
