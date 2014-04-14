@@ -24,7 +24,7 @@ describe ICR::Context do
 
     subject do
       context = ICR::Context.new
-      context.parent = parent
+      context.parents << parent
       context
     end
 

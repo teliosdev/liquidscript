@@ -11,9 +11,7 @@ module Liquidscript
           end
 
           # Just in case there is a property named 'class' or 'module'
-          v = expect [:identifier, :class, :module] => property
-
-          v
+          expect [:identifier, :class, :module] => property
         end
 
         def compile_access(body)
@@ -21,9 +19,7 @@ module Liquidscript
           key = compile_vexpression
           shift :rbrack
 
-          v = code :access, body, key
-
-          v
+          code :access, body, key
         end
 
         def compile_call(subject)
@@ -36,8 +32,7 @@ module Liquidscript
           arguments = collect_compiles :expression, :rparen,
             :comma => action.shift
 
-          call = code :call, subject, *arguments
-          call
+          code :call, subject, *arguments
         end
 
 
@@ -63,7 +58,7 @@ module Liquidscript
         def _build_set(parameters = [])
           expressions = Liquidscript::ICR::Set.new
           expressions.context = Liquidscript::ICR::Context.new
-          expressions.context.parent = top.context
+          expressions.context.parents << top.context
           expressions[:arguments] = parameters
           @set << expressions
 

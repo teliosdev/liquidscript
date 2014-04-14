@@ -29,6 +29,7 @@ module Liquidscript
         @top         = Liquidscript::ICR::Set.new
         @top.context = Liquidscript::ICR::Context.new
         @set         = [@top]
+        @classes     = {}
         super
       end
 

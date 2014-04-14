@@ -2,10 +2,21 @@ data: |
   console = 2
   some_function = ()-> {
     console = 3
+    test = 0..console
   }
 
 compiled: |
   var some_function;
   console = 2;
 
-  some_function = function() { console = 3; };
+  some_function = function() {
+    var test;
+    console = 3;
+    test = (function(a, b) {
+      var out, i;
+      for(i = a; i <= b; i++) {
+        out.push(i);
+      };
+      return out;
+    })(0, console);
+  };

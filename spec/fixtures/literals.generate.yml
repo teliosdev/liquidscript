@@ -1,7 +1,7 @@
 data: |
   object = { hello: "world" }
   test = [1, 2]
-  range = [0x1..0x9]
+  range = 0x1..0x9
   regex = r/^\/test/
   block = ///
     ^test # comment

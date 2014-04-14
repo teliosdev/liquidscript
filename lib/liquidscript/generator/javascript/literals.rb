@@ -18,11 +18,24 @@ module Liquidscript
           "#{code.first}"
         end
 
-        def generate_range(code)
+        def generate_nrange(code)
           start  = code[1]
           ending = code[2]
 
-          (start..ending).to_a.join(', ')
+          buffer << "[" << (start..ending).to_a.join(', ') << "]"
+        end
+
+        def generate_range(code)
+          out = buffer
+          out << "(function(a, b) {\n"                          <<
+                 indent!   << "var out, i;\n"                   <<
+                 indent    << "for(i = a; i <= b; i++) {\n"     <<
+                 indent!   << "out.push(i);\n"                  <<
+                 unindent! << "};\n"                            <<
+                 indent    << "return out;\n"                   <<
+                 unindent! << "})(" << replace(code[1]) << ", " <<
+                 replace(code[2]) << ")"
+          out
         end
 
         def generate_action(code)

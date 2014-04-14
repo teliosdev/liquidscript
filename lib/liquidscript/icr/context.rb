@@ -27,7 +27,7 @@ module Liquidscript
       # The parent of the current context.
       #
       # @return [Parent]
-      attr_accessor :parent
+      attr_accessor :parents
 
       # The variables that are a part of this context.
       #
@@ -50,6 +50,7 @@ module Liquidscript
         @undefined = []
         @variables = {}
         @allowed_variables = [DEFAULT_ALLOWED_VARIABLES].flatten
+        @parents = []
       end
 
       # Returns a variable reference.  If checks the local variables
@@ -111,12 +112,11 @@ module Liquidscript
       def find_variable(name, type)
         case true
         when type == :set
-          p @undefined
           @undefined.reject! { |(n, _)| n == name }
           @variables[name] = Variable.new(self, name, :class => @class)
         when allowed_variables.include?(name)
           Variable.new(self, name)
-        when parent && type == :get
+        when parents.any? && type == :get
           get_parent(name)
         when @class
           add_undefined(name)
@@ -126,15 +126,27 @@ module Liquidscript
       end
 
       def get_parent(name)
-        parent.get(name)
-      rescue InvalidReferenceError => e
-        raise unless @class
-        add_undefined(name, e)
+        v = parents.map { |p|
+          begin
+            p.get(name)
+          rescue InvalidReferenceError => e
+            e
+          end
+        }.compact
+
+        if v.any? { |i| i.is_a?(InvalidReferenceError) }
+          e = v.first
+          p e.class
+          raise e unless @class
+          add_undefined(name, e)
+        else
+          v.reject { |i| i.is_a?(InvalidReferenceError) }.first
+        end
       end
 
       def add_undefined(name, e = InvalidReferenceError.new(name))
-          @undefined << [name, e]
-          Variable.new(self, name, :class => true)
+        @undefined << [name, e]
+        Variable.new(self, name, :class => true)
       end
     end
 

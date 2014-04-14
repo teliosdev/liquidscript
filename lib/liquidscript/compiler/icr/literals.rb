@@ -4,15 +4,16 @@ module Liquidscript
       module Literals
 
         def compile_number
-          #code :number, pop.value
           n = shift(:number)
 
-          if peek?(:prop)
-            shift(:prop)
-            shift(:prop)
-            n2 = shift(:number)
+          if peek?(:range)
+            shift(:range)
 
-            code :range, n.value, n2.value
+            if peek?(:number)
+              code :nrange, n.value, shift(:number).value
+            else
+              compile_range(code(:number, n.value))
+            end
           else
             code :number, n.value
           end
@@ -20,6 +21,10 @@ module Liquidscript
 
         def compile_action
           code :action, shift(:action)
+        end
+
+        def compile_range(subject)
+          code :range, subject, compile_vexpression
         end
 
         def compile_while
@@ -45,6 +50,7 @@ module Liquidscript
             compile_for_seg compile_vexpression
           end
         end
+
 
         def _compile_for_in(ident)
           content = shift :identifier

@@ -125,6 +125,7 @@ module Liquidscript
             on(")")         {     emit :rparen        }
             on("]")         {     emit :rbrack        }
             on(":")         {     emit :colon         }
+            on("..")        {     emit :range         }
             on(".")         {     emit :prop          }
             on(",")         {     emit :comma         }
             on("-")         {     emit :minus         }
