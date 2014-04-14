@@ -58,12 +58,12 @@ module Liquidscript
             raise CompileError, "Expected `in', got #{content.value}"
           end
 
-          obj = shift :identifier
+          obj = compile_vexpression
           shift :rparen
 
           v = set(ident)
           body = _compile_block
-          code :for_in, v, ref(obj), body
+          code :for_in, v, obj, body
         end
 
         def _compile_for_seg(first)

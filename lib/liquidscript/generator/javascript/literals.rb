@@ -74,12 +74,14 @@ module Liquidscript
         end
 
         def generate_for_in(code)
-          loop_body = buffer
-          loop_body << "for(#{code[1].to_s} in #{code[2].name}) {\n"
-          indent!
-          insert_into(code[3], loop_body)
-          unindent!
-          loop_body << indent << "}"
+          temporary_variable(2) do |v,d|
+            loop_body = buffer
+            loop_body << "var #{v}, #{d} = #{replace(code[2])};\n" <<
+              indent  << "for(#{v} in #{d}) {\n"                   <<
+              indent! << "#{code[1].to_s} = #{d}[#{v}]\n"
+            insert_into(code[3], loop_body)
+            loop_body << unindent! << "}"
+          end
         end
 
         def generate_for_seg(code)
@@ -213,6 +215,27 @@ module Liquidscript
           unindent!
 
           function << indent_level << "}"
+        end
+
+        private
+
+        def temporary_variable(n)
+          return unless n > 0
+          variable = 'i'
+          yielded = []
+          @_temporary_variable ||= -1
+          @_temporary_variable  +=  1
+          @_temporary_variable.times { variable.succ! }
+          yielded << variable
+
+          n.times do
+            new_var = yielded.last.dup
+            @_temporary_variable += 1
+            yielded << yielded.last.succ
+          end
+          out = yield *yielded.map { |x| "_#{x}" }
+          @_temporary_variable  -=  n
+          out
         end
       end
     end

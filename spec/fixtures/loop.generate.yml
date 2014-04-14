@@ -9,8 +9,17 @@ data: |
     console.log(t)
   }
 
+  for(v in 1..5) {
+    console.log(v)
+  }
+
 compiled: |
-  var t;
+  var t, v;
   t = 0x5;
   while(t > 0) { t--; };
   for(t = 0; t < 5; t += 1) { console.log(t); };
+  var _i, _j = [1, 2, 3, 4, 5];
+  for(_i in _j) {
+    v = _j[_i];
+    console.log(v);
+  }
