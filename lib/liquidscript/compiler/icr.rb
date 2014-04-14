@@ -55,6 +55,10 @@ module Liquidscript
           when "allow"
             variables = meta[:args].split(' ')
             variables.each { |v| top.context.allow(v.intern) }
+          when "cvar"
+            variables = meta[:args].split(' ')
+            variables.each { |v| top.context.set(v.intern,
+                                 :class => true).parameter! }
           else
             raise UnknownDirectiveError.new(meta[:command])
           end

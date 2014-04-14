@@ -24,8 +24,9 @@ data: |
 
 
     class AnotherTest : Test {
+      #! cvar another-thing
       thing: -> {
-        console.log("[another test]", some-number)
+        console.log("[another test]", some-number, another-thing)
       }
     }
   }
@@ -71,7 +72,7 @@ compiled: |
   AnotherTest.prototype.__proto__ = Test.prototype;
 
   AnotherTest.prototype.thing = function() {
-    console.log("[another test]", this.someNumber);
+    console.log("[another test]", this.someNumber, this.anotherThing);
   };
 
   Something.AnotherTest = AnotherTest;;

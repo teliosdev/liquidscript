@@ -63,9 +63,9 @@ module Liquidscript
       # @param type [Symbol] the type of use.  Should be `:get` or
       #   `:set`.
       # @return [Variable]
-      def variable(name, type)
+      def variable(name, type, options = {})
         if [:get, :set].include?(type)
-          send(type, name)
+          send(type, name, options = {})
         end
       end
 
@@ -88,7 +88,7 @@ module Liquidscript
       # (see #variable).
       #
       # Passes `:get` as type.
-      def get(name)
+      def get(name, options = {})
         @variables.fetch(name) do
           case true
           when allowed_variables.include?(name)
@@ -106,11 +106,12 @@ module Liquidscript
       # (see #variable).
       #
       # Passes `:set` as type.
-      def set(name)
+      def set(name, options = {})
         @variables.fetch(name) do
           @undefined.reject! { |(n, _)| n == name }
           @variables[name] =
-            Variable.new(self, name, :class => @class)
+            Variable.new(self, name,
+                         {:class => @class}.merge(options))
         end
       end
 
