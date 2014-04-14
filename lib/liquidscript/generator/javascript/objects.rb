@@ -40,7 +40,7 @@ module Liquidscript
           _context :name        => code[1].value,
                    :inherit     => code[2],
                    :parts       => code[3],
-                   :inheritance => "%{name}.prototype.__proto__  = %{inherit};\n",
+                   :inheritance => "%{name}.prototype.__proto__  = %{inherit}.prototype;\n",
                    :identifier  => "%{name}.prototype.%{value} = %{replace};\n",
                    :istring     => "%{name}.prototype[\"%{value}\"] = %{replace};\n",
                    :property    => "%{name}.%{value} = %{replace};\n",

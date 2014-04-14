@@ -15,11 +15,12 @@ module Liquidscript
             inherit = ref(inherit)
           end
 
-
           new_context = Liquidscript::ICR::Context.new
           new_context.parents << top.context
           new_context.class!
           @classes[name.value] = new_context
+
+          new_context.parents << @classes[inherit.name.to_s] if inherit
 
           top.context = new_context
           body = _compile_class_body(false)

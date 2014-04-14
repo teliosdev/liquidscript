@@ -64,8 +64,8 @@ module Liquidscript
       #   `:set`.
       # @return [Variable]
       def variable(name, type)
-        @variables.fetch(name) do
-          find_variable(name, type)
+        if [:get, :set].include?(type)
+          send(type, name)
         end
       end
 
@@ -89,18 +89,34 @@ module Liquidscript
       #
       # Passes `:get` as type.
       def get(name)
-        variable(name, :get)
+        @variables.fetch(name) do
+          case true
+          when allowed_variables.include?(name)
+            Variable.new(self, name)
+          when parents.any?
+            get_parent(name)
+          when @class
+            add_undefined(name)
+          else
+            raise InvalidReferenceError.new(name)
+          end
+        end
       end
 
       # (see #variable).
       #
       # Passes `:set` as type.
       def set(name)
-        variable(name, :set)
+        @variables.fetch(name) do
+          @undefined.reject! { |(n, _)| n == name }
+          @variables[name] =
+            Variable.new(self, name, :class => @class)
+        end
       end
 
       def class!
         @class = true
+        self
       end
 
       def to_a
@@ -109,38 +125,27 @@ module Liquidscript
 
       private
 
-      def find_variable(name, type)
-        case true
-        when type == :set
-          @undefined.reject! { |(n, _)| n == name }
-          @variables[name] = Variable.new(self, name, :class => @class)
-        when allowed_variables.include?(name)
-          Variable.new(self, name)
-        when parents.any? && type == :get
-          get_parent(name)
-        when @class
-          add_undefined(name)
-        else
-          raise InvalidReferenceError.new(name)
-        end
-      end
-
       def get_parent(name)
-        v = parents.map { |p|
+        results = parents.map do |parent|
           begin
-            p.get(name)
+            parent.get(name)
           rescue InvalidReferenceError => e
             e
           end
-        }.compact
+        end.compact
 
-        if v.any? { |i| i.is_a?(InvalidReferenceError) }
-          e = v.first
-          p e.class
-          raise e unless @class
-          add_undefined(name, e)
+        where = results.detect { |i|
+          not i.is_a?(InvalidReferenceError) }
+
+        if where
+          where
         else
-          v.reject { |i| i.is_a?(InvalidReferenceError) }.first
+          error = results.first
+          if @class
+            add_undefined(name, error)
+          else
+            raise error
+          end
         end
       end
 

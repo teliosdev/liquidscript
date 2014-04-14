@@ -1,4 +1,8 @@
 data: |
+  #! allow require
+
+  assert = require('assert)
+
   module Something {
     class Test {
 
@@ -17,12 +21,23 @@ data: |
         "class method!"
       }
     }
+
+
+    class AnotherTest : Test {
+      thing: -> {
+        console.log("[another test]", some-number)
+      }
+    }
   }
+
+  assert.equal(new AnotherTest().some-number, 2)
 
   module.exports = Something
 
 compiled: |
-  var Something, Test;
+  var assert, Something, Test, AnotherTest;
+
+  assert = require('assert');
 
   Something = Something || {};
   Test = Test || function Test() {
@@ -45,6 +60,22 @@ compiled: |
   Test.test = function() {
     "class method!";
   };
-  Something.Test = Test;;
+  Something.Test = Test;
+
+  AnotherTest = AnotherTest || function AnotherTest() {
+    if(this.initialize) {
+      this.initialize.apply(this, arguments);
+    }
+  };
+
+  AnotherTest.prototype.__proto__ = Test.prototype;
+
+  AnotherTest.prototype.thing = function() {
+    console.log("[another test]", this.someNumber);
+  };
+
+  Something.AnotherTest = AnotherTest;;
+
+  assert.equal(new AnotherTest().someNumber, 2);
 
   module.exports = Something;
