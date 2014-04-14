@@ -21,8 +21,12 @@ module Liquidscript
         def generate_nrange(code)
           start  = code[1]
           ending = code[2]
-
-          buffer << "[" << (start..ending).to_a.join(', ') << "]"
+          
+          if ending > start
+            buffer << "[" << (start..ending).to_a.join(', ') << "]"
+          else
+            buffer << "[" << (ending..start).to_a.reverse.join(', ') << "]"
+          end
         end
 
         def generate_range(code)
