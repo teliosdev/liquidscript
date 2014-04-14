@@ -54,15 +54,21 @@ module Liquidscript
           case meta[:command].downcase
           when "allow"
             variables = meta[:args].split(' ')
-            variables.each { |v| top.context.allow(v.intern) }
+            variables.map {|x| normalize(x) }.each { |v|
+              top.context.allow(v.intern) }
           when "cvar"
             variables = meta[:args].split(' ')
-            variables.each { |v| top.context.set(v.intern,
-                                 :class => true).parameter! }
+            variables.map {|x| normalize(x) }.each { |v|
+              top.context.set(v.intern,
+                :class => true).parameter! }
           else
             raise UnknownDirectiveError.new(meta[:command])
           end
         end
+      end
+
+      def normalize(s)
+        s.gsub(/\-[a-z]/) { |p| p[1].upcase }
       end
     end
   end

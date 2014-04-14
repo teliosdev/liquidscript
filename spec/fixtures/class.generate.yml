@@ -1,5 +1,5 @@
 data: |
-  #! allow require
+  #! allow require set-timeout
 
   assert = require('assert)
 
@@ -32,6 +32,7 @@ data: |
   }
 
   assert.equal(new AnotherTest().some-number, 2)
+  set-timeout(()-> {})
 
   module.exports = Something
 
@@ -78,5 +79,6 @@ compiled: |
   Something.AnotherTest = AnotherTest;;
 
   assert.equal(new AnotherTest().someNumber, 2);
+  setTimeout(function(){});
 
   module.exports = Something;
