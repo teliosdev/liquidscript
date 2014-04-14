@@ -13,7 +13,7 @@ compiled: |
     var test;
     console = 3;
     test = (function(a, b) {
-      var out, i;
+      var out, i, t;
       out = [];
       if(a > b) {
         t = a; a = b; b = t;
