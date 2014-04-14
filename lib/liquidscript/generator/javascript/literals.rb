@@ -22,14 +22,16 @@ module Liquidscript
           start  = code[1]
           ending = code[2]
           
-          if ending > start
+          if (Integer(start) - Integer(ending)).abs > 50
+            generate_range(code, true)
+          elsif ending > start
             buffer << "[" << (start..ending).to_a.join(', ') << "]"
           else
             buffer << "[" << (ending..start).to_a.reverse.join(', ') << "]"
           end
         end
 
-        def generate_range(code)
+        def generate_range(code, norep=False)
           out = buffer
           out << "(function(a, b) {\n"                          <<
                  indent!   << "var out, i, t;\n"                <<
@@ -42,8 +44,9 @@ module Liquidscript
                  unindent! << "};\n"                            <<
                  indent    << "return t === undefined ?"        <<
                               "out : out.reverse();\n"          <<
-                 unindent! << "})(" << replace(code[1]) << ", " <<
-                 replace(code[2]) << ")"
+                 unindent! << "})(" << 
+                 (norep ? code[1] : replace(code[1])) << ", "   <<
+                 (norep ? code[2] : replace(code[2])) << ")"
           out
         end
 
