@@ -51,7 +51,7 @@ module Liquidscript
         return unless @scanner.metadata[:directives]
 
         @scanner.metadata[:directives].each do |meta|
-          case meta[:command]
+          case meta[:command].downcase
           when "allow"
             variables = meta[:args].split(' ')
             variables.each { |v| top.context.allow(v.intern) }
