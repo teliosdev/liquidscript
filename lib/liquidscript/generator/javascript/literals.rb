@@ -78,7 +78,7 @@ module Liquidscript
             loop_body = buffer
             loop_body << "var #{v}, #{d} = #{replace(code[2])};\n" <<
               indent  << "for(#{v} in #{d}) {\n"                   <<
-              indent! << "#{code[1].to_s} = #{d}[#{v}]\n"
+              indent! << "#{code[1].to_s} = #{d}[#{v}];\n"
             insert_into(code[3], loop_body)
             loop_body << unindent! << "}"
           end
@@ -160,10 +160,6 @@ module Liquidscript
 
           "#{replace(code[2])} #{op} #{replace(code[3])}"
         end
-
-        #def generate_identifier(code)
-        #  code.value
-        #end
 
         def generate_variable(code)
           code.to_s

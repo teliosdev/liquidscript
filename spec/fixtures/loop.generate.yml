@@ -22,4 +22,4 @@ compiled: |
   for(_i in _j) {
     v = _j[_i];
     console.log(v);
-  }
+  };
