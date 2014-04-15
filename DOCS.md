@@ -36,7 +36,7 @@ Note that there are also no semicolons (they don't exist in the language), and n
 
 #### String
 
-Liquidscript has a very finite set of string literals - the only two options (so far) are double quotes and single quotes.  There are plans to introduce heredocs.  Double quotes are multiline, whereas **single quotes are limited to the same characters that identifiers are limited to**.  This is so that keys for objects (in the `object[key]` syntax feels more natural (i.e., `object['key]`).  Some examples:
+Liquidscript has a very finite set of string literals - the only two options (so far) are double quotes and single quotes.  There are plans to introduce heredocs.  Double quotes are multiline, whereas **single quotes are limited to the same characters that identifiers are limited to**.  This is so that keys for objects (such that the `object[key]` syntax feels more natural (i.e., `object['key]`)).  Some examples:
 
 	string = "hello
 

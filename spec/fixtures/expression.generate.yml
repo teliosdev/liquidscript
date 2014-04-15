@@ -1,7 +1,10 @@
 data: |
   (2)
   #! allow Math
-  Math.round(5 / (10 / 100) * 100)
+  a = 1
+  b = 2
+  x = 3
+  x = Math.round(5 / (x + a + b) * 100)
 
 
-compiled: "(2); Math.round(5 / (10 / 100) * 100);"
+compiled: "var a,b,x; (2); a = 1; b = 2; x = 3; x = Math.round(5 / (x + a + b) * 100);"

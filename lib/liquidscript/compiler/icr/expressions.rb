@@ -106,7 +106,9 @@ module Liquidscript
           if peek?(:comma, :rparen)
             _compile_lparen_method_final(ident)
           else
-            value_expect(ident)
+            out = value_expect(ref(ident))
+            shift :rparen
+            code :expression, out
           end
         end
 
