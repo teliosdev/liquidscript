@@ -23,13 +23,13 @@ module Liquidscript
         puts "COMPILING: #{file}"
         perform_compiliation(file,
           options[:out] || file.gsub('.liq', '.js'))
-      end 
+      end
     end
 
     desc "syntax FILES", "Syntax check given file"
     long_desc <<-LONGDESC
      It will run a syntax check on the file listed. If the file does
-     not pass the syntax check it will return the error code 1. If 
+     not pass the syntax check it will return the error code 1. If
      the file give is - it will check the standard input.
     LONGDESC
     def syntax(*files)
@@ -47,45 +47,42 @@ module Liquidscript
     private
 
     def perform_compiliation(file, out)
-      infile = if file == '-'
-        $stdin
-      else
-        File.open(file, "r")
+      open_files(file, out) do |infile, outfile|
+        out = Liquidscript.compile(infile.read)
+        outfile.write(out)
       end
-
-      outfile = if out == '-'
-        $stdout
-      else
-        File.open(out, "w")
-      end
-
-      out = Liquidscript.compile(infile.read)
-      outfile.write(out)
-    rescue StandardError => e
-        $stderr.puts "ERROR: #{e.class}: #{e.message}"
-
-        $stderr.puts e.backtrace[0..5].map { |s| "\t#{s.gsub(/^.*?\/lib\/liquidscript\//, "")}" }.join("\n")
-        exit 1
-    ensure
-      ([infile, outfile] - [$stdin, $stdout]).each(&:close)
     end
 
     def preform_syntax_check(file)
-      infile = if file == '-'
+      open_files(file) do |infile|
+        Liquidscript.compile(infile.read)
+        puts "OK"
+      end
+    end
+
+    def open_files(inf, outf = nil)
+      inf = if inf == '-'
         $stdin
       else
-        File.open(file, "r")
+        File.open(inf, 'r')
       end
 
-      Liquidscript.compile(infile.read)
-      puts "OK"
-      return true
-    rescue StandardError => e
-        puts "FAIL"
+      outf = if outf == '-'
+        $stdout
+      elsif outf
+        File.open(outf, 'w')
+      end
+
+      begin
+        yield inf, outf
+      rescue StandardError => e
         $stderr.puts "ERROR: #{e.class}: #{e.message}"
-        return false
-    ensure
-      ([infile] - [$stdin]).each(&:close)
+        $stderr.puts e.backtrace[0..5].map { |s| "\t" +
+          s.gsub(/^lib\/liquidscript\//, "") }.join("\n")
+        false
+      ensure
+        ( [ inf, outf].compact - [$stdin, $stdout]).each(&:close)
+      end
     end
   end
 end

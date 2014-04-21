@@ -1,6 +1,5 @@
 (function() {
-
-  var root,breaker,previousUnderscore,ArrayProto,ObjProto,FuncProto,push,slice,concat,toString,hasOwnProperty,nativeForEach,nativeMap,nativeReduce,nativeReduceRight,nativeFilter,nativeEvery,nativeSome,nativeIndexOf,nativeLastIndexOf,nativeIsArray,nativeKeys,nativeBind,_,each;
+  var root, breaker, previousUnderscore, ArrayProto, ObjProto, FuncProto, push, slice, concat, toString, hasOwnProperty, nativeForEach, nativeMap, nativeReduce, nativeReduceRight, nativeFilter, nativeEvery, nativeSome, nativeIndexOf, nativeLastIndexOf, nativeIsArray, nativeKeys, nativeBind, _, each;
   root = this;
   breaker = {};
   previousUnderscore = root._;
@@ -26,16 +25,16 @@
   nativeKeys = Object.keys;
   nativeBind = FuncProto.bind;
   _ = function(obj) {
-    if( obj instanceof _) {
-       return obj;
+    if(obj instanceof _) {
+      return obj;
     };
-    if( ! ( this instanceof _)) {
-       return  new _(obj);
+    if(! (this instanceof _)) {
+      return new _(obj);
     };
-    this._wrapped = obj;
+    return this._wrapped = obj;
   };
-  if( typeof  exports !== 'undefined') {
-    if( typeof  root.module !==  'undefined' && root.module.exports) {
+  if(typeof exports !== 'undefined') {
+    if(typeof root.module !== 'undefined' && root.module.exports) {
       exports = root.module.exports = _;
     };
     exports._ = _;
@@ -43,46 +42,44 @@
     root._ = _;
   };
   _.VERSION = "1.6.0";
-  each = _.each = _.forEach = function(obj,iterator,context) {
-
-    var i,length,keys;
-    if( obj ===  null ) {
-       return obj;
+  each = _.each = _.forEach = function(obj, iterator, context) {
+    var i, length, keys;
+    if(obj === null) {
+      return obj;
     };
-    if( nativeForEach &&  obj.forEach === nativeForEach) {
-      obj.forEach(iterator,context);
-    }else if( obj.length === (+obj.length)) {
+    if(nativeForEach && obj.forEach === nativeForEach) {
+      obj.forEach(iterator, context);
+    }else if(obj.length === (+obj.length)) {
       i = 0;
       length = obj.length;
-      for(i = 0; i < length;i++) {
-      if( iterator.call(context,obj[i],i,obj) === breaker) {
-         return  null ;
-      };
+      for(i = 0; i < length; i++) {
+        if(iterator.call(context, obj[i], i, obj) === breaker) {
+          return null;
+        };
       };
     } else {
       keys = _.keys(obj);
       length = keys.length;
-      for(i = 0; i < length;i++) {
-      if( iterator.call(context,obj[keys[i]],keys[i],obj) === breaker) {
-         return  null ;
-      };
+      for(i = 0; i < length; i++) {
+        if(iterator.call(context, obj[keys[i]], keys[i], obj) === breaker) {
+          return null;
+        };
       };
     };
-     return obj;
+    return obj;
   };
-  _.map = _.collect = function(obj,iterator,context) {
-
+  return _.map = _.collect = function(obj, iterator, context) {
     var results;
     results = [];
-    if( obj ==  null ) {
-       return results;
+    if(obj == null) {
+      return results;
     };
-    if( nativeMap &&  obj.map === nativeMap) {
-       return obj.map(iterator,context);
+    if(nativeMap && obj.map === nativeMap) {
+      return obj.map(iterator, context);
     };
-    each(obj,function(value,index,list) {
-      results.push(iterator.call(context,value,index,list));
+    each(obj, function(value, index, list) {
+      return results.push(iterator.call(context, value, index, list));
     });
-     return results;
+    return results;
   };
 }).call();
