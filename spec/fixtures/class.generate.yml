@@ -1,5 +1,5 @@
 data: |
-  #! allow require set-timeout
+  ![ allow require set-timeout ]
 
   assert = require('assert)
 
@@ -52,15 +52,15 @@ compiled: |
 
   Test.prototype.initialize = function() {
     "this should be init";
-    this.wee();
+    return this.wee();
   };
 
   Test.prototype.wee = function() {
-    console.log(this.someNumber);
+    return console.log(this.someNumber);
   };
 
   Test.test = function() {
-    "class method!";
+    return "class method!";
   };
   Something.Test = Test;
 
@@ -73,7 +73,7 @@ compiled: |
   AnotherTest.prototype.__proto__ = Test.prototype;
 
   AnotherTest.prototype.thing = function() {
-    console.log("[another test]", this.someNumber, this.anotherThing);
+    return console.log("[another test]", this.someNumber, this.anotherThing);
   };
 
   Something.AnotherTest = AnotherTest;;

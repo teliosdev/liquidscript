@@ -45,7 +45,7 @@ describe Liquidscript::Scanner::Liquidscript, :lexer_helper do
 
     it "scans keywords" do
       scan("return test = new foo").should eq [
-        [:preunop, "return"],
+        [:return, nil],
         [:identifier, "test"],
         [:equal, nil],
         [:preunop, "new"],
@@ -75,8 +75,8 @@ describe Liquidscript::Scanner::Liquidscript, :lexer_helper do
     end
 
     describe "scanning directives" do
-      subject { c = described_class.new("#! test thing\n"); c.scan; c }
-      its(:metadata) { should eq :directives => [{:command => "test", :args => "thing"}] }
+      subject { c = described_class.new("![ test thing ]\n"); c.scan; c }
+      its(:tokens) { should eq [[:directive, ["test", "thing"]]] }
     end
   end
 end

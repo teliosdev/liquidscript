@@ -8,6 +8,45 @@ require "liquidscript/compiler/icr/groups"
 
 module Liquidscript
   module Compiler
+
+    # A list of codes:
+    #
+    # - :class
+    # - :module
+    # - :neg
+    # - :pos
+    # - :binop
+    # - :unop
+    # - :set
+    # - :expression
+    # - :property
+    # - :access
+    # - :call
+    # - :function
+    # - :if
+    # - :elsif
+    # - :unless
+    # - :else
+    # - :try
+    # - :catch
+    # - :finally
+    # - :nrange
+    # - :number
+    # - :action
+    # - :range
+    # - :while
+    # - :for_in
+    # - :for_seg
+    # - :regex
+    # - :href
+    # - :interop
+    # - :istring
+    # - :sstring
+    # - :operator
+    # - :keyword
+    # - :object
+    # - :array
+    # - :newline (depricated)
     class ICR < Base
 
       include Expressions
@@ -20,8 +59,6 @@ module Liquidscript
       # (see Base#initialize)
       def initialize(*)
         super
-
-        handle_directives
       end
 
       # (see Base#reset!)
@@ -45,30 +82,8 @@ module Liquidscript
         compile_expression
       end
 
-      private
-
-      def handle_directives
-        return unless @scanner.metadata[:directives]
-
-        @scanner.metadata[:directives].each do |meta|
-          case meta[:command].downcase
-          when "allow"
-            variables = meta[:args].split(' ')
-            variables.map {|x| normalize(x) }.each { |v|
-              top.context.allow(v.intern) }
-          when "cvar"
-            variables = meta[:args].split(' ')
-            variables.map {|x| normalize(x) }.each { |v|
-              top.context.set(v.intern,
-                :class => true).parameter! }
-          else
-            raise UnknownDirectiveError.new(meta[:command])
-          end
-        end
-      end
-
       def normalize(s)
-        s.gsub(/\-[a-z]/) { |p| p[1].upcase }
+        s.map { |x| x.gsub(/\-[a-z]/) { |p| p[1].upcase } }
       end
     end
   end

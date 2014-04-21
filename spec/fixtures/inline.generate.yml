@@ -5,6 +5,6 @@ data: |
 compiled: |
   var someFunction;
   someFunction = function() {
-    console.log("test");
+    return console.log("test");
   };
   someFunction();

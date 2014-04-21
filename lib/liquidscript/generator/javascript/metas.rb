@@ -3,10 +3,18 @@ module Liquidscript
     class Javascript
       module Metas
 
-        def generate_exec(code)
+        def generate_exec(code, options)
           exec = buffer
+          return exec if code.codes.length == 0
           exec << _exec_context(code)
-          insert_into(code.codes, exec)
+          insert_into(code.codes[0..-2], exec)
+          last = code.codes.last
+
+          if last.value? && options[:final_return]
+            exec << indent << "return #{replace(last)};\n"
+          else
+            exec << indent << replace(last) << ";\n"
+          end
         end
 
         def generate_set(code)

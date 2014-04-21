@@ -35,7 +35,6 @@ module Liquidscript
               !
               ~
               new
-              return
               typeof
               throw
             )
@@ -82,9 +81,7 @@ module Liquidscript
             end
 
             action :directive do |_, c, a|
-              metadata[:directives] ||= []
-              metadata[:directives].push :command => c,
-                                         :args    => a
+              emit :directive, [c, a]
             end
 
             action :identifier do |m|
@@ -104,13 +101,14 @@ module Liquidscript
             on("try")       {     emit :try           }
             on("catch")     {     emit :catch         }
             on("finally")   {     emit :finally       }
+            on("return")    {     emit :return        }
             on(:number)     { |m| emit :number,  m    }
             on(:string)     { |m| emit :sstring, m    }
             on(:keywords)   { |m| emit :keyword, m    }
             on(:actions)    { |m| emit :action,  m    }
-            on(:binops)     { |m| emit :binop,    m   }
-            on(:preunops)   { |m| emit :preunop,  m   }
-            on(:unops)      { |m| emit :unop,     m   }
+            on(:binops)     { |m| emit :binop,   m    }
+            on(:preunops)   { |m| emit :preunop, m    }
+            on(:unops)      { |m| emit :unop,    m    }
             on(%r{<<([A-Z]+)}, :heredoc)
             on(%r{<<-([A-Z]+)}, :iheredoc)
             on(%r{r/((?:.|\/)*)/([gimy]*)}, :regex)
@@ -132,7 +130,7 @@ module Liquidscript
             on("+")         {     emit :plus          }
             on("\n")        {     line!               }
             on(:identifier, :identifier)
-            on(%r{#! ([A-Za-z]+) ?(.*?)\n}, :directive)
+            on(%r{!\[\s*([A-Za-z]+)\s*(.*?)\s*\]\n}, :directive)
 
             on(%r{#.*?\n}) { }
             on(%r{\s})     { }

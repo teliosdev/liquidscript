@@ -1,6 +1,6 @@
 (-> {
 
-  #! allow Array Object Function
+  ![ allow Array Object Function ]
 
   root               = this
   breaker            = {}

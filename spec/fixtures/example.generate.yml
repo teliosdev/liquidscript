@@ -25,16 +25,16 @@ compiled: |
   };
 
   Greeter.prototype.initialize = function(name) {
-    this.name = name;
+    return this.name = name;
   };
 
   Greeter.prototype.greet = function() {
-    console.log("Hello " + (this.name) + "!");
+    return console.log("Hello " + (this.name) + "!");
   };
 
   Greeter.meet = function(first, second) {
     new Greeter(first).greet();
-    new Greeter(second).greet();
+    return new Greeter(second).greet();
   };;
 
   Greeter.meet("Alice", "Bob");

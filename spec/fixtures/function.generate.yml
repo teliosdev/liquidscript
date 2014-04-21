@@ -12,7 +12,7 @@ compiled: |
   some_function = function() {
     var test;
     console = 3;
-    test = (function(a, b) {
+    return test = (function(a, b) {
       var out, i, t;
       out = [];
       if(a > b) {

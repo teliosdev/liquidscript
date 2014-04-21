@@ -8,12 +8,17 @@ module Liquidscript
         #
         # @param code [ICR::Code, #type]
         # @param context [Hash]
-        def replace(code)
-          send(:"generate_#{code.type}",
-            code)
+        def replace(code, options = {})
+          method_name = :"generate_#{code.type}"
+
+          if method(method_name).arity.abs == 1
+            send(method_name, code)
+          else
+            send(method_name, code, options)
+          end
 
         rescue NoMethodError => e
-          if e.name == :"generate_#{code.type}"
+          if e.name == method_name
             raise InvalidCodeError.new(code.type)
           else
             raise

@@ -143,36 +143,26 @@ describe Compiler::ICR do
 
   describe "invalid directives" do
     let(:scanner) do
-      scanner = double("scanner")
-      iterator = double("iterator")
-      allow(iterator).to receive(:rewind)
-
-      expect(scanner).to receive(:each).once.and_return(iterator)
-      expect(scanner).to receive(:metadata).twice.and_return(
-        {:directives =>
-          [{:command => "test", :args => ""},
-           {:command => "allow", :args => "test"}]})
-      scanner
+      s = Liquidscript::Scanner::Liquidscript.new(
+        "![ test thing ]\n![ allow thing ]")
+      s.scan
+      s
     end
 
     it "raises an error" do
-      expect { subject }.to raise_error(Liquidscript::UnknownDirectiveError)
+      expect { subject.compile }.to raise_error(Liquidscript::UnknownDirectiveError)
     end
   end
 
   describe "directives" do
     let(:scanner) do
-      scanner = double("scanner")
-      iterator = double("iterator")
-      allow(iterator).to receive(:rewind)
-
-      expect(scanner).to receive(:each).once.and_return(iterator)
-      expect(scanner).to receive(:metadata).twice.and_return(
-        {:directives => [{:command => "allow", :args => "test"}]})
-      scanner
+      s = Liquidscript::Scanner::Liquidscript.new("![ allow test ]\n")
+      s.scan
+      s
     end
 
     it "raises an error" do
+      subject.compile
       subject.top.context.get(:test)
     end
   end

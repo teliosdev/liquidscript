@@ -43,6 +43,18 @@ module Liquidscript
         [@action, *@arguments]
       end
 
+      # If this code respresents something with a definite
+      # value.
+      #
+      # @return [Boolean]
+      def value?
+        @_value ||= ![
+          :class, :module, :if, :elseif, :unless,
+          :else, :try, :catch, :finally, :while, :for_in,
+          :for_seg, :return
+        ].include?(@action)
+      end
+
       # If we don't respond to it, the @arguments array
       # might.  Ask them if they do, and if they don't,
       # respond accordingly.

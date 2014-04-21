@@ -21,9 +21,9 @@ module Liquidscript
         def generate_nrange(code)
           start  = code[1]
           ending = code[2]
-          
+
           if (start.to_i - ending.to_i).abs > 50
-            generate_range(code, true)
+            generate_range(code, {}, true)
           elsif ending > start
             buffer << "[" << (start..ending).to_a.join(', ') << "]"
           else
@@ -31,7 +31,7 @@ module Liquidscript
           end
         end
 
-        def generate_range(code, norep=false)
+        def generate_range(code, options = {}, norep = false)
           out = buffer
           a = norep ? code[1] : replace(code[1])
           b = norep ? code[2] : replace(code[2])
@@ -46,7 +46,7 @@ module Liquidscript
                  unindent! << "};\n"                            <<
                  indent    << "return t === undefined ?"        <<
                               "out : out.reverse();\n"          <<
-                 unindent! << "})(" << a << ", " << b << ")"  
+                 unindent! << "})(" << a << ", " << b << ")"
           out
         end
 
@@ -130,6 +130,10 @@ module Liquidscript
           "#{code[1].value} #{replace(code[2])}"
         end
 
+        def generate_return(code)
+          "return #{replace(code[1])}"
+        end
+
         def generate_href(code)
           heredoc = code[1]
           hbuf = buffer
@@ -207,7 +211,7 @@ module Liquidscript
             "function("                   <<
             code[1].parameters.join(', ') <<
             ") {\n"                       <<
-            replace(code[1])
+            replace(code[1], :final_return => true)
           unindent!
 
           function << indent_level << "}"

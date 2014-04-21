@@ -9,7 +9,8 @@ module Liquidscript
         # @return [ICR::Code]
         def compile_expression
           expect :if, :unless, :class, :module, :loop, :for,
-                 :while, :action, :try, :_ => :vexpression
+                 :while, :action, :try, :return, :directive,
+                 :_ => :vexpression
         end
 
         # Compiles an expression that returns a value.
@@ -62,6 +63,11 @@ module Liquidscript
           code :unop, shift(:unop, :preunop), compile_vexpression
         end
 
+        def compile_return
+          shift :return
+          code :return, compile_vexpression
+        end
+
         # Handles an assignment of the form `identifier = expression`,
         # with the argument being the identifier, and the position of
         # the compiler being after it.
@@ -100,6 +106,26 @@ module Liquidscript
           end
         end
 
+        def compile_directive
+          directive = shift(:directive)
+          command, arguments = directive.value
+
+          case command
+          when "allow"
+            normalize(arguments.split(' ')).each do |a|
+              top.context.allow(a.intern)
+            end
+          when "cvar"
+            normalize(arguments.split(' ')).each do |a|
+              top.context.set(a.intern, :class => true).parameter!
+            end
+          else
+            raise UnknownDirectiveError.new(command)
+          end
+
+          nil
+        end
+
         def _compile_lparen_method
           ident = shift :identifier
 
@@ -111,6 +137,7 @@ module Liquidscript
             code :expression, out
           end
         end
+
 
         def _compile_lparen_method_final(ident = nil)
           components = [ident].compact
