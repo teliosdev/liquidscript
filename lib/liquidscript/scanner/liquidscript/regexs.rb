@@ -13,7 +13,7 @@ module Liquidscript
               exit
             end
             on(%r{#.*?\n}) { }
-            on("\n")       { }
+            on(/\s/)       { }
             on(:_)         { |m| @buffer << m }
           end
         end
