@@ -18,8 +18,6 @@ module Liquidscript
 
           extend Forwardable
 
-          def_delegators "self.class", :directives, :define_directive
-
           def handle_directive(directive)
             command, args = directive[:command], directive[:arguments]
 
@@ -30,6 +28,14 @@ module Liquidscript
 
           rescue KeyError
             raise UnknownDirectiveError.new(command)
+          end
+
+          def directives
+            @_directives ||= self.class.directives.dup
+          end
+
+          def define_directive(name, body)
+            directives[name] = Base::Callable.new(nil, body, "")
           end
 
           def directive_allow(*args)
