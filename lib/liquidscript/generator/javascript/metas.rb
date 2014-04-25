@@ -67,9 +67,11 @@ module Liquidscript
         protected
 
         def _exec_context(code)
+          out = buffer
 
+          out << "#{indent}\"use strict\";\n" if code[:strict]
           unless code.locals.empty?
-            "#{indent_level}var #{code.locals.join(', ')};\n"
+            out << "#{indent_level}var #{code.locals.join(', ')};\n"
           end
         end
       end

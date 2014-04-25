@@ -1,6 +1,7 @@
 data: |
   console = 2
   some_function = ()-> {
+    :[strict]
     console = 3
     test = 0..console
   }
@@ -10,6 +11,7 @@ compiled: |
   console = 2;
 
   some_function = function() {
+    "use strict";
     var test;
     console = 3;
     return test = (function(a, b) {

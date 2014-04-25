@@ -26,13 +26,13 @@ module Liquidscript
             callable = directives.fetch(command)
 
             callable.bind = self
-            callable.call(args)
+            callable.call(*args)
 
           rescue KeyError
             raise UnknownDirectiveError.new(command)
           end
 
-          def directive_allow(args)
+          def directive_allow(*args)
             args.each do |a|
               top.context.allow(a.value.intern)
             end
@@ -49,7 +49,9 @@ module Liquidscript
           end
 
           def directive_strict
-            code :sstring, "use strict"
+            top.metadata[:strict] = true
+
+            nil
           end
 
         end
