@@ -9,8 +9,8 @@ module Liquidscript
         # @return [ICR::Code]
         def compile_expression
           expect :if, :unless, :class, :module, :loop, :for,
-                 :while, :action, :try, :return, :directive,
-                 :_ => :vexpression
+                 :while, :action, :try, :return,
+                 :colon => :directive, :_ => :vexpression
         end
 
         # Compiles an expression that returns a value.
@@ -107,23 +107,27 @@ module Liquidscript
         end
 
         def compile_directive
-          directive = shift(:directive)
-          command, arguments = directive.value
-
-          case command
-          when "allow"
-            normalize(arguments.split(' ')).each do |a|
-              top.context.allow(a.intern)
-            end
-          when "cvar"
-            normalize(arguments.split(' ')).each do |a|
-              top.context.set(a.intern, :class => true).parameter!
-            end
-          else
-            raise UnknownDirectiveError.new(command)
+          shift :colon
+          shift :lbrack
+          command = shift(:identifier).value
+          old, @in_directive = @in_directive, true
+          arguments = collect_compiles :rbrack do
+            expect :lbrace     => action { _compile_block },
+                   :identifier => action.shift,
+                   :_          => :vexpression
           end
 
-          nil
+          directive = {
+            :command => command,
+            :arguments => arguments }
+
+          @in_directive = old
+
+          if @in_directive
+            directive
+          else
+            handle_directive(directive)
+          end
         end
 
         def _compile_lparen_method

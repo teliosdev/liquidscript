@@ -85,7 +85,7 @@ module Liquidscript
             end
 
             action :identifier do |m|
-              emit :identifier, m.gsub(/\-[a-z]/) { |p| p[1].upcase }
+              emit :identifier, normalize_identifier(m)
             end
 
             set :identifier, %r{[A-Za-z_$]([A-Za-z0-9_$-]*[A-Za-z0-9_$])?}

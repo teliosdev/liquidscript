@@ -7,6 +7,8 @@ module Liquidscript
   class GeneratorError < Error; end
 
   class UnexpectedEndError < CompileError; end
+  class DirectiveError < CompileError; end
+
   class InvalidReferenceError < CompileError
 
     def initialize(name)
@@ -14,7 +16,8 @@ module Liquidscript
     end
   end
 
-  class UnknownDirectiveError < CompileError
+
+  class UnknownDirectiveError < DirectiveError
     def initialize(directive)
       super "Unkown directive: #{directive}"
     end

@@ -144,7 +144,7 @@ describe Compiler::ICR do
   describe "invalid directives" do
     let(:scanner) do
       s = Liquidscript::Scanner::Liquidscript.new(
-        "![ test thing ]\n![ allow thing ]")
+        ":[test thing]\n:[allow thing]\n")
       s.scan
       s
     end
@@ -156,7 +156,7 @@ describe Compiler::ICR do
 
   describe "directives" do
     let(:scanner) do
-      s = Liquidscript::Scanner::Liquidscript.new("![ allow test ]\n")
+      s = Liquidscript::Scanner::Liquidscript.new(":[allow test]\n")
       s.scan
       s
     end

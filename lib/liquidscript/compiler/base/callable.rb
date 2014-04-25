@@ -3,16 +3,18 @@ module Liquidscript
     class Base
       class Callable
 
+        attr_accessor :bind
+
         # Initialize the callable.
         #
         # @param bind [Object] the object that holds the method (if
         #   this represents a method call).
         # @param block [Symbol, Block] if it's a Symbol, it represents
         #   a method on bind; otherwise, it's a pure block.
-        def initialize(bind, block)
+        def initialize(bind, block, prefix = "compile_")
           @bind = bind
           @block = if block.is_a? Symbol
-            :"compile_#{block}"
+            :"#{prefix}#{block}"
           else
             block
           end

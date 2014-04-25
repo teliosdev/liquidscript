@@ -37,6 +37,10 @@ module Liquidscript
         end
       end
 
+      def normalize_identifier(ident)
+        ident.gsub(/\-[a-z]/) { |p| p[1].upcase }
+      end
+
       def line
         @line
       end

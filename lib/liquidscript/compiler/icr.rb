@@ -1,4 +1,5 @@
 require "liquidscript/compiler/icr/expressions"
+require "liquidscript/compiler/icr/directives"
 require "liquidscript/compiler/icr/functions"
 require "liquidscript/compiler/icr/literals"
 require "liquidscript/compiler/icr/classes"
@@ -50,6 +51,7 @@ module Liquidscript
     class ICR < Base
 
       include Expressions
+      include Directives
       include Functions
       include Literals
       include Classes

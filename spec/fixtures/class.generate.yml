@@ -1,5 +1,5 @@
 data: |
-  ![ allow require set-timeout ]
+  :[allow require set-timeout]
 
   assert = require('assert)
 

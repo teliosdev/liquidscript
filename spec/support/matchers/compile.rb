@@ -32,7 +32,11 @@ RSpec::Matchers.define :compile do
   end
 
   def actual
-    (@_out || []).to_a!
+    if @_out.respond_to?(:to_a!)
+      @_out.to_a!
+    else
+      @_out
+    end
   end
 
   def compiler(data)
