@@ -121,13 +121,14 @@ module Liquidscript
             :command => command,
             :arguments => arguments }
 
-          @in_directive = old
 
-          if @in_directive
+          if old
             directive
           else
             handle_directive(directive)
           end
+
+          @in_directive = old
         end
 
         def _compile_lparen_method
