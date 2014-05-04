@@ -17,21 +17,19 @@ module Liquidscript
               inherit = ref(inherit)
             end
 
-            expressions = Liquidscript::ICR::Set.new
-            context = expressions.context = Liquidscript::ICR::Context.new
-            @classes[name.value] = expressions
-            context.class!
+            @classes[name.value] =
+              expressions = Liquidscript::ICR::Set.new
+            expressions.context =
+              Liquidscript::ICR::Context.new.tap(&:class!)
             expressions.parent = if inherit
-              to_inherit = @classes[inherit.name.to_s]
-              to_inherit.parent = top
-              to_inherit
+              @classes[inherit.name.to_s].tap { |t| t.parent = top }
             else
               top
             end
 
             @set << expressions
             body = _compile_class_body(false)
-            context.force_defined!
+            expressions.context.force_defined!
             out  = code(:class, name, inherit, body)
             @set.pop
             out[:existed] = existed
@@ -99,7 +97,6 @@ module Liquidscript
 
         def delegate_if_class
           if top.context.class?
-            puts "CLASS - DELEGATING"
             top.context.delegate(&Proc.new)
           else
             yield

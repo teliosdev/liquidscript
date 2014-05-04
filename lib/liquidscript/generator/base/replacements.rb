@@ -1,5 +1,3 @@
-require 'pp'
-
 module Liquidscript
   module Generator
     class Base

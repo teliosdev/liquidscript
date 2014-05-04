@@ -13,7 +13,9 @@ module Liquidscript
 
         def check(literal)
           top.context.get(literal.value.intern,
-            :dry_run => true) rescue false
+            :dry_run => true)
+        rescue InvalidReferenceError
+          false
         end
 
         def code(type, *args)

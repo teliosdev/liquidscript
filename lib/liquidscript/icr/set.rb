@@ -29,6 +29,10 @@ module Liquidscript
         parent
       end
 
+      def parent
+        @metadata[:parent]
+      end
+
       #
       def context=(context)
         @context = context

@@ -90,45 +90,46 @@ module Liquidscript
 
             set :identifier, %r{[A-Za-z_$]([A-Za-z0-9_$-]*[A-Za-z0-9_$])?}
 
-            on("class")     {     emit :class         }
-            on("module")    {     emit :module        }
-            on("if")        {     emit :if            }
-            on("unless")    {     emit :unless        }
-            on("elsif")     {     emit :elsif         }
-            on("else")      {     emit :else          }
-            on("for")       {     emit :for           }
-            on("while")     {     emit :while         }
-            on("try")       {     emit :try           }
-            on("catch")     {     emit :catch         }
-            on("finally")   {     emit :finally       }
-            on("return")    {     emit :return        }
-            on(:number)     { |m| emit :number,  m    }
-            on(:string)     { |m| emit :sstring, m    }
-            on(:keywords)   { |m| emit :keyword, m    }
-            on(:actions)    { |m| emit :action,  m    }
-            on(:binops)     { |m| emit :binop,   m    }
-            on(:preunops)   { |m| emit :preunop, m    }
-            on(:unops)      { |m| emit :unop,    m    }
+            on("class")     {     emit :class           }
+            on("module")    {     emit :module          }
+            on("if")        {     emit :if              }
+            on("unless")    {     emit :unless          }
+            on("elsif")     {     emit :elsif           }
+            on("else")      {     emit :else            }
+            on("for")       {     emit :for             }
+            on("while")     {     emit :while           }
+            on("try")       {     emit :try             }
+            on("catch")     {     emit :catch           }
+            on("finally")   {     emit :finally         }
+            on("return")    {     emit :return          }
+            on("nil")       {     emit :keyword, "null" }
+            on(:number)     { |m| emit :number,  m      }
+            on(:string)     { |m| emit :sstring, m      }
+            on(:keywords)   { |m| emit :keyword, m      }
+            on(:actions)    { |m| emit :action,  m      }
+            on(:binops)     { |m| emit :binop,   m      }
+            on(:preunops)   { |m| emit :preunop, m      }
+            on(:unops)      { |m| emit :unop,    m      }
             on(%r{<<([A-Z]+)}, :heredoc)
             on(%r{<<-([A-Z]+)}, :iheredoc)
             on(%r{r/((?:.|\/)*)/([gimy]*)}, :regex)
             on(%r{"} => :istring)
             on("///" => :block_regex)
-            on("->")        {     emit :arrow         }
-            on("=")         {     emit :equal         }
-            on("{")         {     emit :lbrace        }
-            on("(")         {     emit :lparen        }
-            on("[")         {     emit :lbrack        }
-            on("}")         {     emit :rbrace        }
-            on(")")         {     emit :rparen        }
-            on("]")         {     emit :rbrack        }
-            on(":")         {     emit :colon         }
-            on("..")        {     emit :range         }
-            on(".")         {     emit :prop          }
-            on(",")         {     emit :comma         }
-            on("-")         {     emit :minus         }
-            on("+")         {     emit :plus          }
-            on("\n")        {     line!               }
+            on("->")        {     emit :arrow           }
+            on("=")         {     emit :equal           }
+            on("{")         {     emit :lbrace          }
+            on("(")         {     emit :lparen          }
+            on("[")         {     emit :lbrack          }
+            on("}")         {     emit :rbrace          }
+            on(")")         {     emit :rparen          }
+            on("]")         {     emit :rbrack          }
+            on(":")         {     emit :colon           }
+            on("..")        {     emit :range           }
+            on(".")         {     emit :prop            }
+            on(",")         {     emit :comma           }
+            on("-")         {     emit :minus           }
+            on("+")         {     emit :plus            }
+            on("\n")        {     line!                 }
             on(:identifier, :identifier)
             on(%r{!\[\s*([A-Za-z]+)\s*(.*?)\s*\]\n}, :directive)
 

@@ -22,8 +22,8 @@ class Liquidscript {
       }
     }
 
-    reject: -> null
-    fulfill: -> null
+    reject: -> nil
+    fulfill: -> nil
 
     resolve: (value)-> {
       self = this

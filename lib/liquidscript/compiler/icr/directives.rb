@@ -56,9 +56,8 @@ module Liquidscript
 
           def directive_include(file)
             file_name = file[1]
-            p file_name, file
-            path = include_paths.find do |path|
-              File.file?(File.join(path, file_name))
+            path = include_paths.find do |part|
+              File.file?(File.join(part, file_name))
             end
 
             raise LoadError,

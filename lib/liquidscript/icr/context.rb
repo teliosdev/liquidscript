@@ -209,7 +209,7 @@ module Liquidscript
         parent.get(name, options)
 
       rescue InvalidReferenceError => e
-        if class?
+        if class? && !options[:dry_run]
           add_undefined(name, e)
         else
           raise
