@@ -44,7 +44,7 @@ module Liquidscript
                  indent    << "for(i = a; i <= b; i++) {\n"     <<
                  indent!   << "out.push(i);\n"                  <<
                  unindent! << "};\n"                            <<
-                 indent    << "return t === undefined ?"        <<
+                 indent    << "return t === undefined ? "       <<
                               "out : out.reverse();\n"          <<
                  unindent! << "})(" << a << ", " << b << ")"
           out
