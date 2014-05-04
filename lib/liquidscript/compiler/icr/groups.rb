@@ -54,7 +54,8 @@ module Liquidscript
 
         def compile_catch
           _compile_group(:catch, false, [:finally]) do
-            shift :identifier
+            ident = shift :identifier
+            set(ident).hidden!
           end
         end
 

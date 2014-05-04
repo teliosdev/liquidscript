@@ -40,7 +40,7 @@ module Liquidscript
 
           def directive_allow(*args)
             args.each do |a|
-              top.context.allow(a.value.intern)
+              top.context.set(a.value.intern).hidden!
             end
 
             nil
@@ -48,9 +48,33 @@ module Liquidscript
 
           def directive_cvar(*args)
             args.each do |a|
-              top.context.set(a.value.intern, :class => true).parameter!
+              top.context.set(a.value.intern, :class => true).hidden!
             end
 
+            nil
+          end
+
+          def directive_include(file)
+            file_name = file[1]
+            p file_name, file
+            path = include_paths.find do |path|
+              File.file?(File.join(path, file_name))
+            end
+
+            raise LoadError,
+              "cannot load such file -- #{file}" unless path
+
+            full_path = File.join(path, file_name)
+            f         = File.open(full_path)
+            scanner   = Scanner::Liquidscript.new(f.read, full_path)
+            compiler  = Compiler::ICR.new(scanner)
+            compiler.top.parent = top
+            compiler.top.context.delegate!
+            compiler.compile
+          end
+
+          def directive_include_path(*paths)
+            include_paths.push(*paths.map(&:value))
             nil
           end
 
@@ -60,6 +84,16 @@ module Liquidscript
             nil
           end
 
+          private
+
+          def include_paths
+            @_include_paths ||= [
+              ".",
+              File.expand_path("../", @scanner.metadata[:file]),
+              *ENV.fetch("LIQUID_PATHS", "").split(':')
+            ]
+          end
+
         end
 
         def self.included(receiver)
@@ -67,8 +101,8 @@ module Liquidscript
           receiver.send :include, InstanceMethods
 
           InstanceMethods.instance_methods.each do |m|
-            if m.to_s =~ /\A_?directive_([A-Za-z0-9]+)\z/
-              receiver.define_directive($1, m)
+            if m.to_s =~ /\A_?directive_([A-Za-z0-9\_]+)\z/
+              receiver.define_directive($1.gsub(/\_[a-z]/) { |m| m[1].upcase }, m)
             end
           end
         end

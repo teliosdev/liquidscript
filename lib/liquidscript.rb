@@ -12,7 +12,7 @@ end
 
 module Liquidscript
   def self.compile(data, options = {})
-    scanner = Scanner::Liquidscript.new(data)
+    scanner = Scanner::Liquidscript.new(data, options[:file])
     if options[:tokens]
       return scanner.each.to_a.to_sexp
     end

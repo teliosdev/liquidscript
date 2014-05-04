@@ -13,12 +13,12 @@ describe ICR::Set do
     context "with metadata" do
       subject do
         set = ICR::Set.new
-        set.metadata.merge! :hello => "world"
+        set.metadata.merge! :arguments => "world"
         set
       end
 
       specify { expect(subject.to_a).to have(2).items }
-      specify { expect(subject.to_a).to eq [:exec, [:_hello, "world"]] }
+      specify { expect(subject.to_a).to eq [:exec, [:_arguments, "world"]] }
 
     end
 
@@ -37,13 +37,13 @@ describe ICR::Set do
     context "with both" do
       subject do
         set = ICR::Set.new
-        set.metadata.merge! :hello => "world"
+        set.metadata.merge! :arguments => "world"
         set << "test"
         set
       end
 
       specify { expect(subject.to_a).to have(3).items }
-      specify { expect(subject.to_a).to eq [:exec, [:_hello, "world"], "test"] }
+      specify { expect(subject.to_a).to eq [:exec, [:_arguments, "world"], "test"] }
 
     end
   end

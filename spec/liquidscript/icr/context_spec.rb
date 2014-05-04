@@ -18,13 +18,13 @@ describe ICR::Context do
 
     let(:parent) do
       parent = double("parent")
-      expect(parent).to receive(:get).once.with(:foo).and_return(:test)
+      expect(parent).to receive(:get).once.with(:foo, {}).and_return(:test)
       parent
     end
 
     subject do
       context = ICR::Context.new
-      context.parents << parent
+      context.parent = parent
       context
     end
 

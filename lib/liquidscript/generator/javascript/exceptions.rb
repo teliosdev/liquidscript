@@ -6,7 +6,9 @@ module Liquidscript
         def generate_try(code)
           out = buffer
           out << "try {\n"
+          indent!
           insert_into(code[1], out)
+          unindent!
           out << indent_level << "}"
 
           if code[2]
@@ -18,8 +20,10 @@ module Liquidscript
 
         def generate_catch(code)
           out = buffer
-          out << "catch(#{code[1].value}) {\n"
+          out << "catch(#{replace(code[1])}) {\n"
+          indent!
           insert_into(code[2], out)
+          unindent!
           out << indent_level << "}"
 
           if code[3]

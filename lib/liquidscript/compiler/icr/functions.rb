@@ -58,7 +58,7 @@ module Liquidscript
         def _build_set(parameters = [])
           expressions = Liquidscript::ICR::Set.new
           expressions.context = Liquidscript::ICR::Context.new
-          expressions.context.parents << top.context
+          expressions.context.parent = top.context
           expressions[:arguments] = parameters
           @set << expressions
 

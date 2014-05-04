@@ -47,6 +47,16 @@ module Liquidscript
         end
 
         top
+
+      rescue InvalidReferenceError => e
+        p top.context
+        raise
+      rescue CompileError => e
+        token = peek
+        part = "#{File.expand_path(@scanner.metadata[:file])}" +
+          ":#{token.line}:#{token.column}: " +
+          "before #{token.type.to_s.upcase}"
+        raise e, e.message, [part, *e.backtrace]
       end
 
       # Checks to see if the given input compiles.

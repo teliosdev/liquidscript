@@ -26,7 +26,7 @@ module Liquidscript
   class UnexpectedError < CompileError
     def initialize(expected, got)
       @expected = expected
-      @got = got
+      @got      = got
 
       super build_error_message
     end
@@ -34,23 +34,24 @@ module Liquidscript
     private
 
     def build_error_message
-      str = "Expected one of %{expected}, got %{type}(%{value})"
+      str = "Expected one of %{expected}, got %{type}(%{value}) "
       hash = {
-        :expected => @expected.map { |e| e.to_s.upcase }.join(', ')
+        :expected => @expected.map { |e| ns(e) }.join(', ')
       }
 
       if @got.is_a? Symbol
-        hash[:type]  = @got.to_s.upcase
+        hash[:type]  = ns(@got)
         hash[:value] = ""
       else
-        str << " (line %{line}, column %{column})"
-        hash.merge! :type   => @got.type.to_s.upcase,
-                    :line   => @got.line,
-                    :column => @got.column,
+        hash.merge! :type   => ns(@got.type),
                     :value  => @got.value
       end
 
       sprintf(str, hash)
+    end
+
+    def ns(sym)
+      sym.to_s.upcase
     end
   end
 

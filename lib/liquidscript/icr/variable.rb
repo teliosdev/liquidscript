@@ -50,6 +50,23 @@ module Liquidscript
         self
       end
 
+      # Marks this variable as hidden.  This variable does not show
+      # up as a parameter nor a class variable.
+      #
+      # @return [self]
+      def hidden!
+        @hidden = true
+        self
+      end
+
+      # WHether or not this variable is hidden.
+      #
+      # @see {#hidden!}
+      # @return [Boolean]
+      def hidden?
+        @hidden
+      end
+
       # Whether or not the variable is an argument to a function.
       #
       # @see {#parameter!}

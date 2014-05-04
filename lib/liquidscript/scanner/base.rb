@@ -17,12 +17,18 @@ module Liquidscript
 
       attr_accessor :metadata
 
-      def initialize(source)
+      def initialize(source, file = nil)
         @source   = source
         @scanner  = StringScanner.new(@source)
         @tokens   = []
         @_scan    = nil
         @metadata = {}
+
+        if !file and source.respond_to?(:to_path)
+          file = source.to_path
+        end
+
+        @metadata[:file] = file || "<none>"
       end
 
       def contexts

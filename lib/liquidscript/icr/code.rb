@@ -19,6 +19,8 @@ module Liquidscript
       # @return [Array]
       attr_reader :arguments
 
+      attr_reader :metadata
+
       alias_method :type, :action
 
       include Representable
@@ -32,6 +34,7 @@ module Liquidscript
       def initialize(action, *arguments)
         @action = action
         @arguments = arguments
+        @metadata = {}
       end
 
       # Turns the code into an array, containing the
@@ -40,7 +43,9 @@ module Liquidscript
       #
       # @return [Array]
       def to_a
-        [@action, *@arguments]
+        part = [@action]
+        part.concat(@arguments)
+        part
       end
 
       # If this code respresents something with a definite
@@ -51,8 +56,38 @@ module Liquidscript
         @_value ||= ![
           :class, :module, :if, :elseif, :unless,
           :else, :try, :catch, :finally, :while, :for_in,
-          :for_seg, :return
+          :for_seg, :return, :exec
         ].include?(@action)
+      end
+
+      # Access either the metadata or the codes.  If
+      # the accessor is a Symbol, it access the metadata;
+      # if it the accessor is a Numeric, it access the
+      # codes.
+      #
+      # @param key [Symbol, Numeric] the key.
+      # @return [Object]
+      def [](key)
+        if argument_key?(key)
+          super
+        else
+          @metadata[key]
+        end
+      end
+
+      # Sets something from the metadata.  Unlike the
+      # accessor, it does not distinguish between
+      # Numeric and Symbol keys.
+      #
+      # @param key [Object] the key.
+      # @param value [Object] the value.
+      # @return [Object]
+      def []=(key, value)
+        if argument_key?(key)
+          super
+        else
+          @metadata[key] = value
+        end
       end
 
       # If we don't respond to it, the @arguments array
@@ -73,6 +108,12 @@ module Liquidscript
       # @return [Object]
       def method_missing(method, *args, &block)
         @arguments.public_send(method, *args, &block)
+      end
+
+      private
+
+      def argument_key?(key)
+        key.is_a?(Numeric) or key.is_a?(Range)
       end
 
     end

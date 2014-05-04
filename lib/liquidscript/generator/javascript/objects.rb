@@ -40,6 +40,7 @@ module Liquidscript
           _context :name        => code[1].value,
                    :inherit     => code[2],
                    :parts       => code[3],
+                   :existed     => code[:existed],
                    :inheritance => "%{name}.prototype.__proto__  = %{inherit}.prototype;\n",
                    :identifier  => "%{name}.prototype.%{value} = %{replace};\n",
                    :istring     => "%{name}.prototype[\"%{value}\"] = %{replace};\n",
@@ -52,6 +53,7 @@ module Liquidscript
         def generate_module(code)
           _context :name       => code[1].value,
                    :parts      => code[2],
+                   :existed    => code[:existed],
                    :head       => "%{name} = %{name} || {};\n",
                    :identifier => "%{name}.%{value} = %{replace};\n",
                    :istring    => "%{name}[\"%{value}\"] = %{replace};\n",
@@ -120,6 +122,7 @@ module Liquidscript
         end
 
         def _build_header(body, options, opts)
+          return body if options[:existed]
           body << indent << sprintf(options[:head], opts)
 
           if options[:inherit]

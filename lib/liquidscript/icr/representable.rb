@@ -9,7 +9,7 @@ module Liquidscript
       extend Forwardable
       include Comparable
 
-      def_delegators :to_a, :to_s, :inspect, :[], :each, :'<=>'
+      def_delegators :to_a, :to_s, :inspect, :[], :each, :'<=>', :length
 
 
       def to_ary

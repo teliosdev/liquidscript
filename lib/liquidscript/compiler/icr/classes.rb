@@ -4,42 +4,51 @@ module Liquidscript
       module Classes
 
         def compile_class
-          shift :class
-          name = shift :identifier
-          inherit = nil
-          set name
-          # Inheritance ftw!
-          if peek?(:colon)
-            shift :colon
-            inherit = shift :identifier
-            inherit = ref(inherit)
+          delegate_if_class do
+            shift :class
+            name    = shift :identifier
+            inherit = nil
+            existed = check(name)
+            set(name)
+            # Inheritance ftw!
+            if peek?(:colon)
+              shift :colon
+              inherit = shift :identifier
+              inherit = ref(inherit)
+            end
+
+            expressions = Liquidscript::ICR::Set.new
+            context = expressions.context = Liquidscript::ICR::Context.new
+            expressions.parent = top
+            @classes[name.value] = context
+            context.class!
+            context.parent = if inherit
+              @classes[inherit.name.to_s]
+            else
+              top.context
+            end
+
+            @set << expressions
+            body = _compile_class_body(false)
+            context.force_defined!
+            out = code(:class, name, inherit, body)
+            @set.pop
+            out[:existed] = existed
+            out
           end
-
-          new_context = Liquidscript::ICR::Context.new
-          new_context.parents << top.context
-          new_context.class!
-          @classes[name.value] = new_context
-
-          new_context.parents << @classes[inherit.name.to_s] if inherit
-
-          top.context = new_context
-          body = _compile_class_body(false)
-
-          new_context.undefined.each do |f|
-            raise f[1]
-          end
-
-          code :class, name, inherit, body, top.contexts.pop
         end
 
         def compile_module
           m = shift :module
           if peek? :identifier
-            name = shift :identifier
-            set name
-            body = _compile_class_body(true)
+            name    = shift :identifier
+            existed = check(name)
+            set(name)
+            body    = _compile_class_body(true)
 
-            code :module, name, body
+            out           = code :module, name, body
+            out[:existed] = existed
+            out
           else
             value_expect _new_token(m, :identifier)
           end
@@ -85,6 +94,15 @@ module Liquidscript
 
           shift :colon
           item
+        end
+
+        def delegate_if_class
+          if top.context.class?
+            puts "CLASS - DELEGATING"
+            top.context.delegate(&Proc.new)
+          else
+            yield
+          end
         end
       end
     end

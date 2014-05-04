@@ -40,10 +40,11 @@ module Liquidscript
           out
         end
 
-        def error(scanner = @scanner, context = @context)
+        def error(scanner = @scanner, context = @context,
+                  file = @metadata[:file])
           raise SyntaxError, "Unexpected " +
             "#{scanner.matched}#{scanner.peek(2)}".inspect +
-            " (line: #{line}, column: #{column})"
+            " (line: #{line}, column: #{column}, file: #{file})"
         end
 
         private

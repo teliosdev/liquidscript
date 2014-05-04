@@ -11,6 +11,8 @@ module Liquidscript
     # forcibly created.
     class Context
 
+      include Representable
+
       # The variables that are allowed to be used as a global scope,
       # i.e. used in a `get` context without a previous `set`.
       DEFAULT_ALLOWED_VARIABLES = %w(
@@ -22,138 +24,214 @@ module Liquidscript
         Date String  RegExp Array Float32Array Float64Array Int16Array
         Int32Array Int8Array Uint16Array Uint32Array Uint8Array
         Uint8ClampedArray ArrayBuffer DataView JSON Intl
-      ).map(&:intern)
+      ).map(&:intern).freeze
 
-      # The parent of the current context.
-      #
-      # @return [Parent]
-      attr_accessor :parents
-
-      # The variables that are a part of this context.
-      #
-      # @return [Hash<Symbol, Variable>]
+      attr_accessor :parent
       attr_reader :variables
 
-      # The variables that are allowed to be used as a global scope,
-      # i.e. used in a `get` context without a previous set.
-      #
-      # @see [DEFAULT_ALLOWED_VARIABLES]
-      # @return [Array<Symbol>]
-      attr_reader :allowed_variables
-
-      attr_reader :undefined
-
-      include Representable
-
-      # Initializes the context.
       def initialize
-        @undefined = []
         @variables = {}
-        @allowed_variables = [DEFAULT_ALLOWED_VARIABLES].flatten
-        @parents = []
+        @undefined = []
       end
 
-      # Returns a variable reference.  If checks the local variables
-      # first; if it doesn't exist there, then if the type is `:get`,
-      # checks the parent; otherwise, sets the value of the variable.
-      # If there is no parent and the type is `:get`, it raises an
-      # {InvalidReferenceError}.
-      #
-      # @param name [Symbol] the name of the variable.
-      # @param type [Symbol] the type of use.  Should be `:get` or
-      #   `:set`.
-      # @return [Variable]
-      def variable(name, type, options = {})
-        if [:get, :set].include?(type)
-          send(type, name, options = {})
-        end
+      def allowed_variables
+        DEFAULT_ALLOWED_VARIABLES
       end
 
-      # Allows a specific variable to be used - but doesn't define it
-      # in the current context.
+      # If the context delegates setting variables to its parents.
+      # This keeps this context from getting any variables set on
+      # it, and instead sets variables on the parent.
       #
-      # @param name [Symbol]
-      # @return [void]
-      def allow(name)
-        allowed_variables << name
+      # @see {#delegate!}
+      # @return [Boolean]
+      def delegate?
+        @delegate
       end
 
-      # All of the parameter variables.
+      # Sets whether or not the context will delegate setting
+      # variables to its parent.
       #
-      # @return [Array<Variable>]
-      def parameters
-        @variables.values.select(&:parameter?)
+      # @see {#delegate?}
+      # @return [Boolean]
+      def delegate!
+        @delegate = !delegate?
       end
 
-      # (see #variable).
+      # Delegates a block, such that the contents don't affect
+      # the current context.
       #
-      # Passes `:get` as type.
+      # @return [Object] the value of the block
+      def delegate
+        old, @delegate = @delegate, true
+        out = yield
+        @delegate = old
+        out
+      end
+
+      # If this context is associated with a class.  The context
+      # will forward any errors until after the context is completely
+      # finalized.
+      #
+      # @see {#class!}
+      # @return [Boolean]
+      def class?
+        @class
+      end
+
+      # Sets this context to be associated with a class.
+      # @see {#class?}
+      # @return [Boolean]
+      def class!
+        @class = true
+      end
+
+      # Retrieves a reference to a variable.  If the local
+      # context doesn't have a reference, then it will try
+      # a few things; first, it will check to see if that
+      # variable is one of our allowed variables; second,
+      # it will check if the parent has a reference; otherwise,
+      # it will add an undefined reference if this context
+      # is associated with a class.
+      #
+      # @see {#parent}
+      # @see {#allowed_variables}
+      # @see {#add_undefined}
+      # @see {#variables}
+      # @param name [Symbol] the variable to reference.
+      # @param options [Hash] Extra options.
+      # @option options [Boolean] :dry_run if this is a dry
+      #   run.  In that case, it won't add an undefined
+      #   reference.
+      # @raise [InvalidReferenceError] if the variable could
+      #   not be handled correctly.
+      # @return [Variable, Boolean]
       def get(name, options = {})
-        @variables.fetch(name) do
+        variables.fetch(name) do
           case true
+          # If the asking variable is an allowed variable, we'll
+          # allow it, and just return a variable instance.
           when allowed_variables.include?(name)
-            Variable.new(self, name)
-          when parents.any?
-            get_parent(name)
-          when @class
+            Variable.new(self, name, :allowed => true)
+          # If we have a parent, we can ask the parent for the
+          # variable.  This takes precedence over the class
+          # so we can get a proper reference to the correct
+          # variable.
+          when !!parent
+            parent_get(name, options)
+          # If this context is associated with a class, and
+          # we're not doing a dry run, then we'll add an
+          # undefined.
+          when @class && !options[:dry_run]
             add_undefined(name)
+          # If we are doing a dry run, however, then just let
+          # the caller know that it would have been successful.
+          when @class && options[:dry_run]
+            true
+          # If none of those options fit, raise an error.
           else
             raise InvalidReferenceError.new(name)
           end
         end
       end
 
-      # (see #variable).
+      # If this context delegates, it delegates to the parent;
+      # otherwise, it will check if we have set this variable
+      # before.  Otherwise, it will first reject any undefined
+      # variables that existed with the specific name, and then
+      # create a new variable with the given options.
       #
-      # Passes `:set` as type.
+      # @see {#variables}
+      # @see {#parent}
+      # @see {#delegate?}
+      # @param name [Symbol] the name of the variable.
+      # @param options [Hash] the options to pass to the new
+      #   variable instance.
+      # @return [Variable]
       def set(name, options = {})
-        @variables.fetch(name) do
+        return parent.set(name, options) if delegate?
+
+        variables.fetch(name) do
           @undefined.reject! { |(n, _)| n == name }
-          @variables[name] =
-            Variable.new(self, name,
-                         {:class => @class}.merge(options))
+          variables[name] = Variable.new(self, name,
+            { :class => class? }.merge(options))
         end
       end
 
-      def class!
-        @class = true
-        self
+      # Retrieves all of the variables that are parameters
+      # in the current context.
+      #
+      # @see {Variable#parameter?}
+      # @return [Array<Variable>]
+      def parameters
+        variables.values.select(&:parameter?)
       end
 
+      # Retrieves all of the variables that are hidden in
+      # the current context.
+      #
+      # @see {Variable#hidden?}
+      # @return [Array<Variable>]
+      def hidden
+        variables.values.select(&:hidden?)
+      end
+
+      # Returns the name of the variables in this context.
+      #
+      # @return [Array<Symbol>]
       def to_a
-        @variables.keys
+        variables.keys
+      end
+
+      # Check if there are any undefined variables, and if
+      # there are, raise the first one it sees.
+      #
+      #
+      def force_defined!
+        @undefined.each { |f| raise f[1] }
       end
 
       private
 
-      def get_parent(name)
-        results = parents.map do |parent|
-          begin
-            parent.get(name)
-          rescue InvalidReferenceError => e
-            e
-          end
-        end.compact
+      # Retrieves a variable from a parent.  If this context
+      # is associated with a class, it will add an undefined
+      # variable if the parent raises an
+      # InvalidReferenceError.  Otherwise, it will just allow
+      # the error to be raised.
+      #
+      # @see {#parent}
+      # @see {#add_undefined}
+      # @raise [InvalidReferenceError]
+      # @param name [Symbol] the name of the variable.
+      # @param options [Hash] the options to be passed to the
+      #   parent.
+      # @return [Variable]
+      def parent_get(name, options)
+        parent.get(name, options)
 
-        where = results.detect { |i|
-          not i.is_a?(InvalidReferenceError) }
-
-        if where
-          where
+      rescue InvalidReferenceError => e
+        if class?
+          add_undefined(name, e)
         else
-          error = results.first
-          if @class
-            add_undefined(name, error)
-          else
-            raise error
-          end
+          raise
         end
       end
 
-      def add_undefined(name, e = InvalidReferenceError.new(name))
-        @undefined << [name, e]
+      # Adds an undefined variable to the list.  If there are
+      # any at the end of compiling, then the corresponding
+      # errors will be raised.  This only applies if the context
+      # is associated with a class.
+      #
+      # @see {#class?}
+      # @param name [Symbol] the name of the variable.
+      # @param error [InvalidReferenceError] the error to be
+      #   raised if the undefined variable is not defined
+      #   by the end of compilation.
+      # @return [Variable]
+      def add_undefined(name, error = InvalidReferenceError.new(name))
+        @undefined << [name, error]
         Variable.new(self, name, :class => true)
       end
+
     end
 
   end

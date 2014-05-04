@@ -11,6 +11,11 @@ module Liquidscript
           top.context.set(literal.value.intern)
         end
 
+        def check(literal)
+          top.context.get(literal.value.intern,
+            :dry_run => true) rescue false
+        end
+
         def code(type, *args)
           Liquidscript::ICR::Code.new type, *args
         end
