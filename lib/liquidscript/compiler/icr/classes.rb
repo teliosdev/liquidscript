@@ -19,19 +19,20 @@ module Liquidscript
 
             expressions = Liquidscript::ICR::Set.new
             context = expressions.context = Liquidscript::ICR::Context.new
-            expressions.parent = top
-            @classes[name.value] = context
+            @classes[name.value] = expressions
             context.class!
-            context.parent = if inherit
-              @classes[inherit.name.to_s]
+            expressions.parent = if inherit
+              to_inherit = @classes[inherit.name.to_s]
+              to_inherit.parent = top
+              to_inherit
             else
-              top.context
+              top
             end
 
             @set << expressions
             body = _compile_class_body(false)
             context.force_defined!
-            out = code(:class, name, inherit, body)
+            out  = code(:class, name, inherit, body)
             @set.pop
             out[:existed] = existed
             out
