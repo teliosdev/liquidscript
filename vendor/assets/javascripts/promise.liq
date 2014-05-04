@@ -1,5 +1,5 @@
 class Liquidscript {
-    class Promise {
+  class Promise {
     on-fulfilled: []
     on-rejected:  []
     func:         undefined
