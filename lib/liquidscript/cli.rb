@@ -48,7 +48,7 @@ module Liquidscript
 
     def perform_compiliation(file, out)
       open_files(file, out) do |infile, outfile|
-        out = Liquidscript.compile(infile.read, :file => file, :ast => true)
+        out = Liquidscript.compile(infile.read, :file => file)
         outfile.write(out)
       end
     end
@@ -77,7 +77,7 @@ module Liquidscript
         yield inf, outf
       rescue StandardError => e
         $stderr.puts "ERROR: #{e.class}: #{e.message}"
-        $stderr.puts e.backtrace[0..30].map { |s| "\t" +
+        $stderr.puts e.backtrace[0..5].map { |s| "\t" +
           s.gsub(/^lib\/liquidscript\//, "") }.join("\n")
         false
       ensure

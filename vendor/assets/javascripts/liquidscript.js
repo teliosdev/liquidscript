@@ -1,336 +1,103 @@
-(exec 
-  (_context 
-   ()) 
-  (call 
-   (expression 
-    (function 
-     (exec 
-      (_context 
-       (Liquidscript Promise)) 
-      (_arguments 
-       ()) 
-      (set 
-       (_variable Liquidscript) 
-       (function 
-        (exec 
-         (_context 
-          (opt)) 
-         (_arguments 
-          (
-           (identifier opt))) 
-         (if 
-          (unop 
-           (preunop !) 
-           (expression 
-            (binop 
-             (binop instanceof) 
-             (_variable this) 
-             (_variable Liquidscript)))) 
-          (
-           (return 
-            (unop 
-             (preunop new) 
-             (call 
-              (_variable Liquidscript) 
-              (_variable opt))))) 
-          (elsif 
-           (property 
-            (_variable this) initialize) 
-           (
-            (call 
-             (property 
-              (property 
-               (_variable this) initialize) apply) 
-             (_variable this) 
-             (_variable arguments)))))))) 
-      (set 
-       (property 
-        (_variable Liquidscript) prototype) 
-       (_variable Liquidscript)) 
-      (class 
-       (identifier Liquidscript) 
-       (
-        (
-         (identifier singleton) 
-         (function 
-          (exec 
-           (_context 
-            (fn ran memo)) 
-           (_arguments 
-            (
-             (identifier fn))) 
-           (set 
-            (_variable ran) 
-            (keyword 
-             (keyword false))) 
-           (set 
-            (_variable memo) 
-            (call 
-             (keyword 
-              (keyword undefined)))) 
-           (function 
-            (exec 
-             (_context 
-              (ran memo)) 
-             (_arguments 
-              ()) 
-             (if 
-              (_variable ran) 
-              (
-               (return 
-                (_variable memo)))) 
-             (set 
-              (_variable ran) 
-              (keyword 
-               (keyword true))) 
-             (set 
-              (_variable memo) 
-              (call 
-               (property 
-                (_variable fn) apply) 
-               (keyword 
-                (keyword null)) 
-               (_variable arguments)))))))))) 
-      (exec 
-       (_context 
-        ()) 
-       (class 
-        (identifier Liquidscript) 
-        (
-         (class 
-          (identifier Promise) 
-          (
-           (
-            (identifier onFulfilled) 
-            (array 
-             ())) 
-           (
-            (identifier onRejected) 
-            (array 
-             ())) 
-           (
-            (identifier func) 
-            (keyword 
-             (keyword undefined))) 
-           (
-            (identifier state) 
-            (keyword 
-             (keyword undefined))) 
-           (
-            (identifier initialize) 
-            (function 
-             (exec 
-              (_context 
-               (fn)) 
-              (_arguments 
-               (
-                (identifier fn))) 
-              (set 
-               (property 
-                (_variable this) onFulfilled) 
-               (array 
-                ())) 
-              (set 
-               (property 
-                (_variable this) onRejected) 
-               (array 
-                ())) 
-              (set 
-               (property 
-                (_variable this) func) 
-               (_variable fn)) 
-              (set 
-               (property 
-                (_variable this) state) 
-               (istring pending))))) 
-           (
-            (identifier then) 
-            (function 
-             (exec 
-              (_context 
-               (fulfilled rejected)) 
-              (_arguments 
-               (
-                (identifier fulfilled) 
-                (identifier rejected))) 
-              (if 
-               (binop 
-                (binop instanceof) 
-                (_variable fulfilled) 
-                (_variable Function)) 
-               (
-                (call 
-                 (property 
-                  (property 
-                   (_variable this) onFulfilled) push) 
-                 (_variable fulfilled)))) 
-              (if 
-               (binop 
-                (binop instanceof) 
-                (_variable rejected) 
-                (_variable Function)) 
-               (
-                (call 
-                 (property 
-                  (property 
-                   (_variable this) onRejected) push) 
-                 (_variable rejected))))))) 
-           (
-            (identifier reject) 
-            (function 
-             (exec 
-              (_context 
-               ()) 
-              (_arguments 
-               ()) 
-              (keyword 
-               (keyword null))))) 
-           (
-            (identifier fulfill) 
-            (function 
-             (exec 
-              (_context 
-               ()) 
-              (_arguments 
-               ()) 
-              (keyword 
-               (keyword null))))) 
-           (
-            (identifier resolve) 
-            (function 
-             (exec 
-              (_context 
-               (value self thenProperty e resolved)) 
-              (_arguments 
-               (
-                (identifier value))) 
-              (set 
-               (_variable self) 
-               (_variable this)) 
-              (set 
-               (property 
-                (_variable this) value) 
-               (_variable value)) 
-              (if 
-               (binop 
-                (binop ==) 
-                (_variable this) 
-                (_variable value)) 
-               (
-                (return 
-                 (call 
-                  (_variable reject) 
-                  (_variable TypeError)))) 
-               (elsif 
-                (binop 
-                 (binop instanceof) 
-                 (_variable value) 
-                 (_variable Promise)) 
-                (
-                 (call 
-                  (property 
-                   (_variable value) then) 
-                  (function 
-                   (exec 
-                    (_context 
-                     (v)) 
-                    (_arguments 
-                     (
-                      (identifier v))) 
-                    (call 
-                     (property 
-                      (_variable self) fulfill) 
-                     (_variable v)))) 
-                  (function 
-                   (exec 
-                    (_context 
-                     (e)) 
-                    (_arguments 
-                     (
-                      (identifier e))) 
-                    (call 
-                     (property 
-                      (_variable self) reject) 
-                     (_variable e)))))))) 
-              (try 
-               (
-                (set 
-                 (_variable thenProperty) 
-                 (property 
-                  (_variable value) then))) 
-               (catch 
-                (_variable e) 
-                (
-                 (return 
-                  (call 
-                   (_variable reject) 
-                   (_variable e)))))) 
-              (if 
-               (_variable thenProperty) 
-               (
-                (set 
-                 (_variable resolved) 
-                 (keyword 
-                  (keyword false))) 
-                (try 
-                 (
-                  (call 
-                   (_variable thenProperty) 
-                   (function 
-                    (exec 
-                     (_context 
-                      (v resolved)) 
-                     (_arguments 
-                      (
-                       (identifier v))) 
-                     (if 
-                      (_variable resolved) 
-                      (
-                       (return 
-                        (keyword 
-                         (keyword null))))) 
-                     (set 
-                      (_variable resolved) 
-                      (keyword 
-                       (keyword true))) 
-                     (call 
-                      (property 
-                       (_variable self) resolve) 
-                      (_variable v)))) 
-                   (function 
-                    (exec 
-                     (_context 
-                      (e resolved)) 
-                     (_arguments 
-                      (
-                       (identifier e))) 
-                     (if 
-                      (_variable resolved) 
-                      (
-                       (return 
-                        (keyword 
-                         (keyword null))))) 
-                     (set 
-                      (_variable resolved) 
-                      (keyword 
-                       (keyword true))) 
-                     (call 
-                      (property 
-                       (_variable self) reject) 
-                      (_variable e)))))) 
-                 (catch 
-                  (_variable e) 
-                  (
-                   (if 
-                    (unop 
-                     (preunop !) 
-                     (_variable resolved)) 
-                    (
-                     (call 
-                      (_variable reject) 
-                      (_variable e)))))))) 
-               (else 
-                (
-                 (call 
-                  (_variable fulfill) 
-                  (_variable value))))))))))))))))))
+(function() {
+  "use strict";
+  var Liquidscript, Promise;
+  Liquidscript = function(opt) {
+    if(! (this instanceof Liquidscript)) {
+      return new Liquidscript(opt);
+    }else if(this.initialize) {
+      this.initialize.apply(this, arguments);
+    };
+  };
+  Liquidscript.prototype = Liquidscript;
+    Liquidscript.prototype.singleton = function(fn) {
+    var ran, memo;
+    ran = false;
+    memo = undefined();
+    return function() {
+      var ran, memo;
+      if(ran) {
+        return memo;
+      };
+      ran = true;
+      return memo = fn.apply(null, arguments);
+    };
+  };
+;
+      Promise = Promise || function Promise() {
+    if(this.initialize) {
+      this.initialize.apply(this, arguments);
+    }
+  };
+  Promise.prototype.onFulfilled = [];
+  Promise.prototype.onRejected = [];
+  Promise.prototype.func = undefined;
+  Promise.prototype.state = undefined;
+  Promise.prototype.initialize = function(fn) {
+    this.onFulfilled = [];
+    this.onRejected = [];
+    this.func = fn;
+    return this.state = "pending";
+  };
+  Promise.prototype.then = function(fulfilled, rejected) {
+    if(fulfilled instanceof Function) {
+      this.onFulfilled.push(fulfilled);
+    };
+    if(rejected instanceof Function) {
+      this.onRejected.push(rejected);
+    };
+  };
+  Promise.prototype.reject = function() {
+    return null;
+  };
+  Promise.prototype.fulfill = function() {
+    return null;
+  };
+  Promise.prototype.resolve = function(value) {
+    var self, thenProperty, resolved;
+    self = this;
+    this.value = value;
+    if(this === value) {
+      return this.reject(TypeError);
+    }else if(value instanceof Promise) {
+      value.then(function(v) {
+        return self.fulfill(v);
+      }, function(e) {
+        return self.reject(e);
+      });
+    };
+    try {
+      thenProperty = value.then;
+    }catch(e) {
+      return this.reject(e);
+    };
+    if(thenProperty) {
+      resolved = false;
+      try {
+        thenProperty(function(v) {
+          var resolved;
+          if(resolved) {
+            return null;
+          };
+          resolved = true;
+          return self.resolve(v);
+        }, function(e) {
+          var resolved;
+          if(resolved) {
+            return null;
+          };
+          resolved = true;
+          return self.reject(e);
+        });
+      }catch(e) {
+        if(! resolved) {
+          this.reject(e);
+        };
+      };
+    } else {
+      this.fulfill(value);
+    };
+  };
+  Liquidscript.Promise = Promise;
+;
+;
+})();
