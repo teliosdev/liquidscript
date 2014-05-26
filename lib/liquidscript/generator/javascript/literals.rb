@@ -31,6 +31,19 @@ module Liquidscript
           end
         end
 
+        def generate_nerange(code)
+          start  = code[1]
+          ending = code[2]
+
+          if (start.to_i - ending.to_i).abs > 50
+            generate_erange(code, {}, true)
+          elsif ending > start
+            buffer << "[" << (start...ending).to_a.join(', ') << "]"
+          else
+            buffer << "[" << (ending...start).to_a.reverse.join(', ') << "]"
+          end
+        end
+
         def generate_range(code, options = {}, norep = false)
           out = buffer
           a = norep ? code[1] : replace(code[1])
@@ -42,6 +55,25 @@ module Liquidscript
                  indent!   << "t = a; a = b; b = t;\n"          <<
                  unindent! << "}\n"                             <<
                  indent    << "for(i = a; i <= b; i++) {\n"     <<
+                 indent!   << "out.push(i);\n"                  <<
+                 unindent! << "};\n"                            <<
+                 indent    << "return t === undefined ? "       <<
+                              "out : out.reverse();\n"          <<
+                 unindent! << "})(" << a << ", " << b << ")"
+          out
+        end
+
+        def generate_erange(code, options = {}, norep = false)
+          out = buffer
+          a = norep ? code[1] : replace(code[1])
+          b = norep ? code[2] : replace(code[2])
+          out << "(function(a, b) {\n"                          <<
+                 indent!   << "var out, i, t;\n"                <<
+                 indent    << "out = [];\n"                     <<
+                 indent    << "if(a > b) {\n"                   <<
+                 indent!   << "t = a; a = b; b = t;\n"          <<
+                 unindent! << "}\n"                             <<
+                 indent    << "for(i = a; i < b; i++) {\n"      <<
                  indent!   << "out.push(i);\n"                  <<
                  unindent! << "};\n"                            <<
                  indent    << "return t === undefined ? "       <<

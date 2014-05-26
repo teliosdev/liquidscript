@@ -6,13 +6,14 @@ module Liquidscript
         def compile_number
           n = shift(:number)
 
-          if peek?(:range)
-            shift(:range)
+          if peek?(:range, :erange)
+            range = shift(:range, :erange)
 
             if peek?(:number)
-              code :nrange, n.value, shift(:number).value
+              type = :"n#{range.type}"
+              code(type, n.value, shift(:number).value)
             else
-              compile_range(code(:number, n.value))
+              send(:"compile_#{range.type}", code(:number, n.value))
             end
           else
             code :number, n.value
@@ -25,6 +26,10 @@ module Liquidscript
 
         def compile_range(subject)
           code :range, subject, compile_vexpression
+        end
+
+        def compile_erange(subject)
+          code :erange, subject, compile_vexpression
         end
 
         def compile_while

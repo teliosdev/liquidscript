@@ -38,6 +38,7 @@ module Liquidscript
                  :prop   => action { compile_property(v)   },
                  :lbrack => action { compile_access(v)     },
                  :range  => action { |_| compile_range(v)  },
+                 :erange => action { |_| compile_erange(v) },
                  [:binop,
                   :minus,
                   :plus] => action { compile_binop(v)      },
