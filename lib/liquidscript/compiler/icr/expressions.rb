@@ -135,8 +135,15 @@ module Liquidscript
         def _compile_lparen_method
           ident = shift :identifier
 
+          if peek?(:equal)
+            shift(:equal)
+            v = compile_vexpression
+          else
+            v = nil
+          end
+
           if peek?(:comma, :rparen)
-            _compile_lparen_method_final(ident)
+            _compile_lparen_method_final([ident, v])
           else
             out = value_expect(ref(ident))
             shift :rparen
@@ -147,11 +154,14 @@ module Liquidscript
 
         def _compile_lparen_method_final(ident = nil)
           components = [ident].compact
+          _build_set
+          set(ident[0]) if ident
 
-          while peek?(:comma) do
-            shift(:comma)
-            components << shift(:identifier)
+          while peek?(:comma)
+            components << _compile_lparen_argument
           end
+
+          @set.pop
 
           shift :rparen
           compile_function_with_parameters(components)
@@ -161,6 +171,28 @@ module Liquidscript
           out = compile_vexpression
           shift :rparen
           code :expression, out
+        end
+
+        def _compile_lparen_argument
+          shift(:comma)
+
+          ident = shift(:identifier)
+          set(ident)
+
+          erange = action do |_|
+            if top[:etc]
+              raise CompileError,
+                "A drain argument has already been specified!"
+            end
+
+            top[:etc] = ident
+            :etc
+          end
+
+          value = expect :equal  => action { |_| compile_vexpression },
+                         :erange => erange, :_ => action { nil }
+
+          [ident, value]
         end
 
       end

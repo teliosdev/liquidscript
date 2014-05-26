@@ -31,6 +31,10 @@ module Liquidscript
         @metadata[:file] = file || "<none>"
       end
 
+      def file
+        @metadata[:file]
+      end
+
       def contexts
         self.class.contexts
       end

@@ -40,15 +40,7 @@ module Liquidscript
           shift :arrow
 
           expressions = _build_set(parameters)
-
-          if peek?(:lbrace)
-            shift :lbrace
-            collect_compiles(:rbrace) do
-              expressions << compile_expression
-            end
-          else
-            expressions << compile_expression
-          end
+          expressions.push(*_compile_block)
 
           code :function, @set.pop
         end
@@ -63,7 +55,11 @@ module Liquidscript
           @set << expressions
 
           parameters.each do |parameter|
-            set(parameter).parameter!
+            if parameter[1] == :etc
+              set(parameter[0]).hidden!
+            else
+              set(parameter[0]).parameter!
+            end
           end
 
           expressions

@@ -114,7 +114,7 @@ describe Compiler::ICR do
         [:_context, []], [:function,
           [:exec,
             [:_context, [:test]],
-            [:_arguments, [[:identifier, "test"]]],
+            [:_arguments, [[[:identifier, "test"], nil]]],
             [:number, "2"]
           ]
       ]])

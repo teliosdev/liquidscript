@@ -54,6 +54,11 @@ module Liquidscript
             nil
           end
 
+          def directive_todo(comment)
+            $stderr.puts "TODO (file: #{@scanner.file}): #{comment[1]}"
+            nil
+          end
+
           def directive_include(file)
             file_name = file[1]
             path = include_paths.find do |part|

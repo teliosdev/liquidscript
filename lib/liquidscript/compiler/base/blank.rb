@@ -12,6 +12,13 @@ module Liquidscript
           nil
         end
 
+        # We are nil.  Yay.
+        #
+        # @return [true]
+        def nil?
+          true
+        end
+
         # Tells Ruby that we respond to all methods.
         #
         # @return [true]

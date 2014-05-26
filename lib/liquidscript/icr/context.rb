@@ -35,7 +35,7 @@ module Liquidscript
       end
 
       def allowed_variables
-        DEFAULT_ALLOWED_VARIABLES
+        DEFAULT_ALLOWED_VARIABLES.dup
       end
 
       # If the context delegates setting variables to its parents.

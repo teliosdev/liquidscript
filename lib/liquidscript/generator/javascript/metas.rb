@@ -71,8 +71,21 @@ module Liquidscript
 
           out << "#{indent}\"use strict\";\n" if code[:strict]
           unless code.locals.empty?
-            out << "#{indent_level}var #{code.locals.join(', ')};\n"
+            out << "#{indent}var #{code.locals.join(', ')};\n"
           end
+
+          if code[:arguments] and code[:arguments].any?
+            code[:arguments].each do |(k, v)|
+              if v == :etc
+                index = code[:arguments].map(&:first).index(k)
+                out << "#{indent}#{k[1]} = [].slice.call(arguments, #{index});"
+              elsif v
+                out << "#{indent}if(#{k[1]} == null) {\n#{indent!}#{k[1]} = #{replace(v)};\n#{unindent!}}\n"
+              end
+            end
+          end
+
+          out
         end
       end
     end

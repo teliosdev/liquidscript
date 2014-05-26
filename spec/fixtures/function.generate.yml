@@ -6,8 +6,12 @@ data: |
     test = 0..console
   }
 
+  another_function = (a, b = a, c...)-> {
+    console.log()
+  }
+
 compiled: |
-  var some_function;
+  var some_function, another_function;
   console = 2;
 
   some_function = function() {
@@ -25,4 +29,13 @@ compiled: |
       };
       return t === undefined ? out : out.reverse();
     })(0, console);
+  };
+
+  another_function = function(a, b) {
+    if(b == null) {
+      b = a;
+    }
+    c = [].slice.call(arguments, 2);
+
+    return console.log();
   };
