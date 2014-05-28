@@ -2,8 +2,15 @@ require "rubygems"
 require "bundler/setup"
 Bundler.setup
 
+require "simplecov"
 require "coveralls"
-Coveralls.wear!
+
+SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+SimpleCov.start do
+  add_filter 'spec'
+  add_filter 'lib/liquidscript/icr/sexp.rb'
+
+end
 
 require "liquidscript"
 
