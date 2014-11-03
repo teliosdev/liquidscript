@@ -23,7 +23,8 @@ module Liquidscript
         ReferenceError SyntaxError TypeError URIError Number Math
         Date String  RegExp Array Float32Array Float64Array Int16Array
         Int32Array Int8Array Uint16Array Uint32Array Uint8Array
-        Uint8ClampedArray ArrayBuffer DataView JSON Intl
+        Uint8ClampedArray ArrayBuffer DataView JSON Intl setTimeout
+        clearTimeout setInterval clearInterval
       ).map(&:intern).freeze
 
       attr_accessor :parent
