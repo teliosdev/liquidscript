@@ -16,7 +16,7 @@ module Liquidscript
       # The variables that are allowed to be used as a global scope,
       # i.e. used in a `get` context without a previous `set`.
       DEFAULT_ALLOWED_VARIABLES = %w(
-        window global exports console this arguments
+        window global exports document $ console this arguments
         Infinity NaN undefined eval isFinite isNaN parseFloat
         parseInt decodeURI decodeURIComponent encodeURI encodeURIComponent
         Object Function Boolean Error EvalError InternalError RangeError
