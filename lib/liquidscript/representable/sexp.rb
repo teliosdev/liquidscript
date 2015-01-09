@@ -1,5 +1,5 @@
 module Liquidscript
-  module ICR
+  module Representable
 
     class ::Array; def to_sexp; Sexp.new(self); end; end
 

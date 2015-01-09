@@ -80,10 +80,6 @@ module Liquidscript
               emit :regex, [m, b]
             end
 
-            action :directive do |_, c, a|
-              emit :directive, [c, a]
-            end
-
             action :identifier do |m|
               emit :identifier, normalize_identifier(m)
             end
@@ -103,6 +99,7 @@ module Liquidscript
             on("finally")   {     emit :finally         }
             on("return")    {     emit :return          }
             on("nil")       {     emit :keyword, "null" }
+            on("in")        {     emit :in              }
             on(:number)     { |m| emit :number,  m      }
             on(:string)     { |m| emit :sstring, m      }
             on(:keywords)   { |m| emit :keyword, m      }
@@ -132,7 +129,6 @@ module Liquidscript
             on("+")         {     emit :plus            }
             on("\n")        {     line!                 }
             on(:identifier, :identifier)
-            on(%r{!\[\s*([A-Za-z]+)\s*(.*?)\s*\]\n}, :directive)
 
             on(%r{#.*?\n}) { }
             on(%r{\s})     { }

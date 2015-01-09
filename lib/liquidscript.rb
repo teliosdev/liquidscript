@@ -1,5 +1,5 @@
 require "forwardable"
-require "liquidscript/icr"
+require "liquidscript/representable"
 require "liquidscript/errors"
 require "liquidscript/version"
 require "liquidscript/scanner"
@@ -11,13 +11,13 @@ if defined? ::Sprockets
 end
 
 module Liquidscript
-  def self.compile(data, options = {})
+  def self.compile(data, options = { ast: true })
     scanner = Scanner::Liquidscript.new(data, options[:file])
     if options[:tokens]
       return scanner.each.to_a.to_sexp
     end
 
-    compiler = Compiler::ICR.new(scanner)
+    compiler = Compiler::Parser.new(scanner)
     compiler.compile
     if options[:ast]
       return compiler.top.to_sexp

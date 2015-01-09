@@ -1,5 +1,3 @@
-require "liquidscript/icr/representable"
-
 module Liquidscript
   module Scanner
     class Token
@@ -10,7 +8,7 @@ module Liquidscript
       attr_reader :column
 
       include Enumerable
-      include ICR::Representable
+      include Representable
 
       def initialize(type, value, line, column)
         @type   = type

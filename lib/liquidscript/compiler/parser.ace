@@ -1,0 +1,198 @@
+%require "~> 0.1"
+%generator "ruby"
+
+%define api.push-pull pull
+%define panic-mode true
+%define ruby.error-class {SyntaxError}
+
+%terminal REGEX
+%terminal DIRECTIVE
+%terminal IDENTIFIER
+%terminal KEYWORD
+%terminal NUMBER
+%terminal SSTRING
+%terminal ACTION
+%terminal BINOP
+%terminal PREUNOP
+%terminal UNOP
+%terminal HEREDOC
+%terminal HEREDOC_REF
+%terminal IHEREDOC
+%terminal IHEREDOC_REF
+%terminal IHEREDOC_BEGIN
+%terminal ISTRING
+%terminal ISTRING_BEGIN
+%terminal CLASS "class"
+%terminal MODULE "module"
+%terminal IF "if"
+%terminal UNLESS "unless"
+%terminal ELSIF "elsif"
+%terminal ELSE "else"
+%terminal FOR "for"
+%terminal WHILE "while"
+%terminal TRY "try"
+%terminal CATCH "catch"
+%terminal FINALLY "finally"
+%terminal RETURN "return"
+%terminal IN "in"
+%terminal ARROW "->"
+%terminal EQUAL "="
+%terminal LBRACE "{"
+%terminal LPAREN "("
+%terminal LBRACK "["
+%terminal RBRACE "}"
+%terminal RPAREN ")"
+%terminal RBRACK "]"
+%terminal COLON ":"
+%terminal RANGE ".."
+%terminal ERANGE "..."
+%terminal PROP "."
+%terminal COMMA ","
+%terminal MINUS "-"
+%terminal PLUS "+"
+%terminal NEWLINE "\n"
+
+%right EQUAL
+%left BINOP PLUS MINUS
+%left RANGE ERANGE
+%right UNOP PROP
+%nonassoc LBRACK LPAREN
+
+%null.data left LPAREN LBRACK BINOP MINUS PLUS
+%null.data right EQUAL PROP RANGE ERANGE UNOP
+
+%%
+
+main: expressions.maybe
+
+expressions.maybe: expressions
+                 | nothing { nil }
+
+expressions: expressions block { |a, b| a.concat(b) }
+           | block
+
+block: LBRACE expressions RBRACE { |_, a, _| a }
+     | expression { |a| [a] }
+
+expression: conditional
+          | class
+          | module
+          | loop
+          | action
+          | exception
+          | directive
+          | vexpression
+          | NEWLINE { nil }
+          | vvexpression EQUAL vexpression
+
+vexpression: NUMBER
+           | IDENTIFIER
+           | ISTRING
+           | SSTRING
+           | KEYWORD
+           | REGEX
+           | interpolation
+           | PLUS vexpression { |_, a| [:pos, a] }
+           | MINUS vexpression { |_, a| [:neg, a] }
+           | object
+           | array
+           | function
+           | PREUNOP vexpression { |*a| a }
+           | UNOP vexpression { |*a| a }
+           | HEREDOC_REF
+           | IHEREDOC_REF
+           | LPAREN vexpression RPAREN { |_, a, _| a }
+           | heredoc
+           | vexpression LPAREN vexpression.parameters.maybe RPAREN { |a, _, b, _| [:call, a, b] }
+           | vexpression RANGE vexpression { |a, _, b| [:range, a, b] }
+           | vexpression ERANGE vexpression { |a, _, b| [:erange, a, b] }
+           | vexpression BINOP vexpression { |a, b, c| [:binop, a, b, c] }
+           | vexpression MINUS vexpression { |a, b, c| [:binop, a, b, c] }
+           | vexpression PLUS vexpression  { |a, b, c| [:plus, a, b, c] }
+           | vexpression UNOP { |a, b| [:unop, a, b] }
+           | vvexpression
+
+vvexpression: vexpression PROP IDENTIFIER { |a, _, b| [:prop, a, b] }
+            | vexpression LBRACK vexpression RBRACK { |a, _, b| [:access, a, b] }
+
+vexpression.parameters.maybe: vexpression.parameters
+                            | nothing
+
+vexpression.parameters: vexpression.parameters COMMA vexpression { |a, _, b| a << b }
+                      | vexpression { |*a| a }
+
+object: LBRACE RBRACE { [:object] }
+array: LBRACK RBRACK { [:array] }
+function: LPAREN RPAREN ARROW { [:func] }
+        | ARROW { [:func] }
+heredoc: HEREDOC
+       | IHEREDOC
+
+interpolation: interpolation.string
+             | interpolation.heredoc
+
+interpolation.heredoc: IHEREDOC_BEGIN vexpression interpolation.heredoc.finish
+interpolation.heredoc.finish: interpolation.heredoc
+                            | IHEREDOC
+
+interpolation.string: ISTRING_BEGIN vexpression interpolation.string.finish
+interpolation.string.finish: interpolation.string
+                           | ISTRING
+
+conditional: IF LPAREN vexpression RPAREN block conditional.continue { |_, _, a, _, b, c| [:if, a, b, c] }
+  | UNLESS LPAREN vexpression RPAREN block { |_, _, a, _, b| [:unless, a, b] }
+
+conditional.continue: ELSIF LPAREN vexpression RPAREN block conditional.continue { |_, _, a, _, b, c| [:elsif, a, b, c] }
+                    | ELSE block { |_, a| [:else, a] }
+
+class: CLASS IDENTIFIER RBRACE LBRACE { [:class] }
+module: MODULE IDENTIFIER RBRACE LBRACE { [:module] }
+
+loop: WHILE LPAREN vexpression RPAREN block { |_, _, a, _, b| [:while, a, b] }
+    | FOR LPAREN IDENTIFIER IN vexpression RPAREN block { |_, _, a, _, b, _, c| [:forin, a, b, c] }
+    | FOR LPAREN vexpression RPAREN block { |_, _, a, _, b| [:for, a, b] }
+
+action: RETURN vexpression { |_, a| [:return, a] }
+      | ACTION
+
+exception: TRY block exception.catch.maybe exception.finally.maybe { |_, a, b, c| [:try, a, b, c] }
+exception.catch.maybe: exception.catch
+                     | nothing { nil }
+exception.finally.maybe: exception.finally
+                       | nothing { nil }
+exception.catch: CATCH exception.catch.possible block { |_, a, b| [:catch, a, b] }
+exception.catch.possible: LPAREN IDENTIFIER RPAREN { |_, a, _| a }
+                        | LPAREN RPAREN { nil }
+                        | nothing { nil }
+
+exception.finally: FINALLY block { |_, a| [:finally, a ] }
+
+directive: COLON LBRACK expressions RBRACK { |_, _, a, _| [:directive, a] }
+
+%%
+
+module Liquidscript
+  module Compiler
+    class Parser
+
+      def initialize(scanner)
+        @tokens = scanner.each
+      end
+
+      def compile
+        @top = parse(@tokens)
+      end
+
+      def top
+        @top || compile
+      end
+
+      def type(part)
+        p part
+        part[0].to_s.upcase.to_sym
+      end
+
+      %{write}
+    end
+  end
+end

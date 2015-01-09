@@ -1,6 +1,4 @@
-require "liquidscript/buffer"
-require "liquidscript/compiler/base"
-require "liquidscript/compiler/icr"
+require "liquidscript/compiler/parser"
 
 module Liquidscript
   module Compiler
