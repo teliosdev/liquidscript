@@ -32,7 +32,7 @@ data: |
   }
 
   assert.equal(new AnotherTest().some-number, 2)
-  set-timeout(()-> {})
+  set-timeout(->() {})
 
   module.exports = Something
 

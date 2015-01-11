@@ -10,15 +10,15 @@ describe Liquidscript::Scanner::Liquidscript, :lexer_helper do
     end
 
     it "scans a string" do
-      scan('"hello world" ').should eq [
+      expect(scan('"hello world" ')).to eq [
         [:istring, 'hello world']
       ]
 
-      scan(" 'foobar").should eq [
+      expect(scan(" 'foobar")).to eq [
         [:sstring, "'foobar"]
       ]
 
-      scan('"hello #{world}"').should eq [
+      expect(scan('"hello #{world}"')).to eq [
         [:istring_begin, "hello "],
         [:identifier, "world"],
         [:istring, ""]
@@ -26,7 +26,7 @@ describe Liquidscript::Scanner::Liquidscript, :lexer_helper do
     end
 
     it "scans an identifier" do
-      scan('test = 4').should eq [
+      expect(scan('test = 4')).to eq [
         [:identifier, "test"],
         [:equal, nil],
         [:number, "4"]
@@ -34,7 +34,7 @@ describe Liquidscript::Scanner::Liquidscript, :lexer_helper do
     end
 
     it "scans brackets" do
-      scan("{ test = 3 }").should eq [
+      expect(scan("{ test = 3 }")).to eq [
         [:lbrace, nil],
         [:identifier, "test"],
         [:equal, nil],
@@ -44,7 +44,7 @@ describe Liquidscript::Scanner::Liquidscript, :lexer_helper do
     end
 
     it "scans keywords" do
-      scan("return test = new foo").should eq [
+      expect(scan("return test = new foo")).to eq [
         [:return, nil],
         [:identifier, "test"],
         [:equal, nil],
@@ -54,29 +54,24 @@ describe Liquidscript::Scanner::Liquidscript, :lexer_helper do
     end
 
     it "scans heredocs" do
-      scan("<<TEST\nhello\nTEST\n").should eq [
+      expect(scan("<<TEST\nhello\nTEST\n")).to eq [
         [:heredoc_ref, "TEST"],
         [:heredoc, "hello"]
       ]
 
-      scan("<<-TEST\nhello \#{world}\nTEST\n").should eq [
+      expect(scan("<<-TEST\nhello \#{world}\nTEST\n")).to eq [
         [:iheredoc_ref, "TEST"],
         [:iheredoc_begin, "hello "],
         [:identifier, "world"],
         [:iheredoc, ""]
       ]
 
-      scan("hello <<TEST world\nin heredoc\nTEST\n").should eq [
+      expect(scan("hello <<TEST world\nin heredoc\nTEST\n")).to eq [
         [:identifier, "hello"],
         [:heredoc_ref, "TEST"],
         [:identifier, "world"],
         [:heredoc, "in heredoc"]
       ]
-    end
-
-    describe "scanning directives" do
-      subject { c = described_class.new("![ test thing ]\n"); c.scan; c }
-      its(:tokens) { should eq [[:directive, ["test", "thing"]]] }
     end
   end
 end

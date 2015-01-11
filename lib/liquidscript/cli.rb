@@ -48,7 +48,7 @@ module Liquidscript
 
     def perform_compiliation(file, out)
       open_files(file, out) do |infile, outfile|
-        out = Liquidscript.compile(infile.read, :file => file)
+        out = Liquidscript.compile(infile.read, :file => file, ast: true)
         outfile.write(out)
       end
     end

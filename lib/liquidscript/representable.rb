@@ -1,3 +1,5 @@
+require "liquidscript/representable/sexp"
+
 module Liquidscript
 
   # Used to show that a specific element is representable
@@ -38,4 +40,8 @@ module Liquidscript
     end
 
   end
+end
+
+class Array
+  include Liquidscript::Representable
 end

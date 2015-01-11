@@ -8,7 +8,7 @@ data: |
         this.test = new Test()
       }
 
-      do: (thing)-> {
+      do: ->(thing) {
         return this.test.do(thing)
       }
     }

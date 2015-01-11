@@ -13,11 +13,11 @@ RSpec::Matchers.define :compile do
     end
   end
 
-  failure_message_for_should do |data|
+  failure_message do |data|
     "expected #{data} to compile correctly\nexpected: #{expected}\n     got: #{actual}"
   end
 
-  failure_message_for_should_not do |data|
+  failure_message_when_negated do |data|
     "expected #{data} not to compile (compiled anyway, got: #{@_out})"
   end
 
@@ -28,7 +28,7 @@ RSpec::Matchers.define :compile do
   diffable
 
   def expected
-    @prod
+    @prod || true
   end
 
   def actual
@@ -40,6 +40,6 @@ RSpec::Matchers.define :compile do
   end
 
   def compiler(data)
-    Compiler::ICR.new(Scanner::Liquidscript.new(data))
+    Compiler::Parser.new(Scanner::Liquidscript.new(data))
   end
 end

@@ -130,7 +130,7 @@ module Liquidscript
             on("\n")        {     line!                 }
             on(:identifier, :identifier)
 
-            on(%r{#.*?\n}) { }
+            on(%r{#.*?\n}) { line! }
             on(%r{\s})     { }
             on(:_)         { |m| error }
           end

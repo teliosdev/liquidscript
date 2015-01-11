@@ -10,7 +10,7 @@ RSpec::Matchers.define :generate do |v|
     "generate #{v}"
   end
 
-  failure_message_for_should do |data|
+  failure_message do |data|
     sprintf "expected: %{dest}\n     got: %{actual}\n    tree: %{tree}",
       :source => data.inspect,
       :dest   => for_match(v).inspect,
@@ -29,16 +29,16 @@ RSpec::Matchers.define :generate do |v|
   end
 
   def generator(data)
-    compiler = Compiler::ICR.new(s = Scanner::Liquidscript.new(data))
+    compiler = Compiler::Parser.new(s = Scanner::Liquidscript.new(data))
     compiler.compile
     Generator::Javascript.new(compiler.top)
   rescue Liquidscript::UnexpectedError
-    puts ICR::Sexp.new(s.each.to_a).output
     raise
   end
 
   def tree(data)
-    compiler = Compiler::ICR.new(Scanner::Liquidscript.new(data))
+    raise
+    compiler = Compiler::Parser.new(Scanner::Liquidscript.new(data))
     compiler.compile
     compiler.top.to_sexp
   end

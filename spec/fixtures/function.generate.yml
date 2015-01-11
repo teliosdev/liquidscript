@@ -1,12 +1,12 @@
 data: |
   console = 2
-  some_function = ()-> {
+  some_function = ->() {
     :[strict]
     console = 3
     test = 0..console
   }
 
-  another_function = (a, b = a, c...)-> {
+  another_function = ->(a, b = a, c...) {
     console.log()
   }
 

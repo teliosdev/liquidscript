@@ -30,7 +30,7 @@
   nativeKeys        = Object.keys
   nativeBind        = FuncProto.bind
 
-  _ = (obj)-> {
+  _ = ->(obj) {
     if(obj instanceof _) {
        obj
     }
@@ -53,7 +53,7 @@
 
   _.VERSION = "1.6.0"
 
-  each = _.each = _.forEach = (obj, iterator, context)-> {
+  each = _.each = _.forEach = ->(obj, iterator, context) {
     if(obj == null) {
       return obj
     }
@@ -80,7 +80,7 @@
     return obj
   }
 
-  _.map = _.collect = (obj, iterator, context)-> {
+  _.map = _.collect = ->(obj, iterator, context) {
     results = []
     if(obj === null) {
       return results
@@ -90,7 +90,7 @@
       return obj.map(iterator, context)
     }
 
-    each(obj, (value, index, list)-> {
+    each->(obj, (value, index, list) {
       results.push(iterator.call(context, value, index, list))
     })
 
